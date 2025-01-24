@@ -334,9 +334,9 @@ namespace RPGCombatProject
 
         static void CleanBattleField(List<Creature> enemieTeam, List<Creature> playersTeam)
         {
-            // Process effects for all creatures
-            ProcessTurnEffects(enemieTeam);
-            ProcessTurnEffects(playersTeam);
+            // Check if any creatures are dead and remove them from the list
+            CheckIfDeadForAllCreatures(enemieTeam);
+            CheckIfDeadForAllCreatures(playersTeam);
             // Remove dead creatuers from the list
             DeleteDeadCreatures(enemieTeam);
             DeleteDeadCreatures(playersTeam);
