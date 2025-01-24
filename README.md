@@ -21,12 +21,7 @@ Demo Video Link Not Made Yet
 * IntelliCode for C# Dev Kit
 
 
-The code is written in C#, using:
-* System: Core functionality (data types, I/O).
-* System.Collections.Generic: Generic collections (e.g., List<T>, Dictionary<TKey, TValue>).
-* System.Linq: LINQ for querying and manipulating data.
-
-These are part of the .NET framework.
+The code is written in C#, no main librarys were added in the code.
 
 # Useful Websites
 
