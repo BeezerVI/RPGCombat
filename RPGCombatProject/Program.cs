@@ -49,6 +49,69 @@ namespace RPGCombatProject
                 IsDead = true;
             }
         }
+        public void ApplyDamage(int damage)
+        {
+            if (Shield > 0)
+            {
+                // Subtract damage from the shield first
+                if (damage <= Shield)
+                {
+                    Shield -= damage;
+                    damage = 0;
+                }
+                else
+                {
+                    damage -= Shield;
+                    Shield = 0;
+                }
+            }
+            // Apply remaining damage to health
+            Health -= damage;
+
+            // Check if the creature is dead
+            CheckIfDead();
+        }
+
+        public void ApplyHealing(int amount)
+        {
+            Health += amount;
+            if (Health > MaxHealth)
+                Health = MaxHealth; // Prevent overhealing
+        }
+
+        public void ApplyEffect(Effect effect)
+        {
+            Effects.Add(effect);
+        }
+
+        // Updated ability logic
+        public void ApplyShield(int amount)
+        {
+            Shield += amount;
+        }
+
+        // Method to process effects on the creature each turn (like damage-over-time)
+        public void ProcessEffects()
+        {
+            foreach (var effect in Effects.ToList()) // Use ToList to avoid modifying the list during iteration
+            {
+                switch (effect.EffectName)
+                {
+                    case "Frost":
+                        ApplyDamage(effect.Strength); // Frost deals damage over time
+                        break;
+                    case "Poisoned":
+                        ApplyDamage(effect.Strength); // Poison effect example
+                        break;
+                }
+
+                effect.Duration--;
+                if (effect.Duration <= 0)
+                {
+                    Effects.Remove(effect);
+                }
+            }
+        }
     }
 
     public class Card
@@ -66,27 +129,30 @@ namespace RPGCombatProject
 
         public void Ability(List<Creature> enemyTeam, List<Creature> playerTeam, ref int enemyTargeted, ref int playerTargeted)
         {
+            var targetEnemy = enemyTeam[enemyTargeted];
+            var targetPlayer = playerTeam[playerTargeted];
+
             switch (Name)
             {
                 case "Sword":
-                    enemyTeam[enemyTargeted].Health -= 6;
-                    Console.WriteLine($"Dealt 6 damage to {enemyTeam[enemyTargeted].Name}.");
+                    targetEnemy.ApplyDamage(6);
+                    Console.WriteLine($"Dealt 6 damage to {targetEnemy.Name}.");
                     break;
                 case "Deflect":
-                    playerTeam[playerTargeted].Shield += 5;
-                    Console.WriteLine($"Gained 5 Shield for {playerTeam[playerTargeted].Name}.");
+                    targetPlayer.ApplyShield(5);
+                    Console.WriteLine($"Gained 5 Shield for {targetPlayer.Name}.");
                     break;
                 case "Frost":
                     foreach (var enemy in enemyTeam)
                     {
-                        enemy.Health -= 1;
-                        enemy.Effects.Add(new Effect("Frost", 3, 1));
+                        enemy.ApplyDamage(1);
+                        enemy.ApplyEffect(new Effect("Frost", 3, 1));
                     }
                     Console.WriteLine("Dealt 1 damage to all enemies and afflicted 3 Frost.");
                     break;
                 case "One Shot":
-                    enemyTeam[enemyTargeted].Health = 0;
-                    Console.WriteLine($"{enemyTeam[enemyTargeted].Name} has been one-shotted!");
+                    targetEnemy.ApplyDamage(targetEnemy.Health); // Effectively reduces health to 0
+                    Console.WriteLine($"{targetEnemy.Name} has been one-shotted!");
                     break;
                 default:
                     Console.WriteLine("Card ability not implemented.");
@@ -146,7 +212,10 @@ namespace RPGCombatProject
 
             while (true)
             {
+                ProcessTurnEffects(playersTeam);
                 PlayersTurn(enemieTeam, playersTeam, playersHand,  ref enemieTargeted, ref playerTargeted);
+                
+                ProcessTurnEffects(enemieTeam);
                 EnemysTurn(enemieTeam, playersTeam, ref enemieTargeted, ref playerTargeted);
 
                     // Check if the combat is over
@@ -156,6 +225,7 @@ namespace RPGCombatProject
                     break;
                 }
             }
+            Write("Combat has fully ended.");
         }
 
         static void PlayersTurn(List<Creature>enemieTeam, List<Creature>playersTeam, List<Card>playersHand, ref int enemieTargeted, ref int playerTargeted){
@@ -251,16 +321,27 @@ namespace RPGCombatProject
             CleanBattleField(enemieTeam, playersTeam);
         }
 
+        static void ProcessTurnEffects(List<Creature> creatures)
+        {
+            foreach (var creature in creatures)
+            {
+                if (!creature.IsDead)
+                {
+                    creature.ProcessEffects();
+                }
+            }
+        }
+
         static void CleanBattleField(List<Creature> enemieTeam, List<Creature> playersTeam)
         {
-            // Check if any creatures are dead
-            CheckIfDeadForAllCreatures(enemieTeam);
-            CheckIfDeadForAllCreatures(playersTeam);
-
-            // Remove dead creatures from the battlefield
+            // Process effects for all creatures
+            ProcessTurnEffects(enemieTeam);
+            ProcessTurnEffects(playersTeam);
+            // Remove dead creatuers from the list
             DeleteDeadCreatures(enemieTeam);
             DeleteDeadCreatures(playersTeam);
         }
+
 
         static void PlayCard(Card card, List<Creature> enemyTeam, List<Creature> playerTeam, ref int actionsRemaining, ref int enemyTargeted, ref int playerTargeted)
         {
@@ -291,8 +372,10 @@ namespace RPGCombatProject
             }
         }
 
-        static void Write(string text, bool waitForInput = true, bool clearConsole = true)
-        // Write a line of text to the console and wait for the user to press Enter
+        static void Write(string text, bool waitForInput = true, bool clearConsole = false)
+        // Write a line of text to the console and wait for the user to press Enter if waitForInput is true
+        // clearConsole will clear the console after the text is displayed if true
+        // text is the string to be displayed
         {
             if (waitForInput)
             {
