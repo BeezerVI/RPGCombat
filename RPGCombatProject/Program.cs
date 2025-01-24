@@ -40,7 +40,8 @@ namespace RPGCombatProject
             Shield = shield;
             Effects = effects ?? new List<Effect>(); // Handle null list gracefully
         }
-            // Method to check if the creature is dead based on its health
+
+        // Method to check if the creature is dead based on its health
         public void CheckIfDead()
         {
             if (Health <= 0)
@@ -103,7 +104,7 @@ namespace RPGCombatProject
             var enemies = new List<Creature>
             {
                 new Creature("Slim"),
-                new Creature("Giant Bug", effects: new List<Effect>
+                new Creature("Giant Bug", health: 20, effects: new List<Effect>
                 {
                     new Effect("Frost", 1, 2),
                     new Effect("Poisoned", 2)
@@ -113,7 +114,7 @@ namespace RPGCombatProject
             // Making it a list to allow for multiple players in the future
             var player = new List<Creature>
             {
-                new Creature("You", true, false, 100, 56, 10),
+                new Creature("You", true, false, 100, 100, 10),
                 new Creature("Liam", true, false, 15000, 15000, 50),
             };
 
@@ -126,7 +127,7 @@ namespace RPGCombatProject
                 new Card("One Shot", 0, "One shots any creature")
             };
 
-            StartCombat(enemies, player, hand);
+            StartCombatLoop(enemies, player, hand);
             // Display game state
         }
 
@@ -136,12 +137,30 @@ namespace RPGCombatProject
             // This will include setting up the enemies, the player's team, and the player's hand
         }
         // This is the main combat loop
-        static void StartCombat(List<Creature>enemieTeam, List<Creature>playersTeam, List<Card>playersHand){
+        static void StartCombatLoop(List<Creature>enemieTeam, List<Creature>playersTeam, List<Card>playersHand){
             // This is where the combat will be handled
             // These vairbels will be moved to SetUpCombat when the combat is fully set up
-            int actionsRemaining = 3;
             int enemieTargeted = 0;
             int playerTargeted = 0;
+
+
+            while (true)
+            {
+                PlayersTurn(enemieTeam, playersTeam, playersHand,  ref enemieTargeted, ref playerTargeted);
+                EnemysTurn(enemieTeam, playersTeam, ref enemieTargeted, ref playerTargeted);
+
+                    // Check if the combat is over
+                if (IsCombatOver(enemieTeam, playersTeam) == true)
+                {
+                    // End the combat
+                    break;
+                }
+            }
+        }
+
+        static void PlayersTurn(List<Creature>enemieTeam, List<Creature>playersTeam, List<Card>playersHand, ref int enemieTargeted, ref int playerTargeted){
+            // This is where the player's turn will be handled
+            int actionsRemaining = 3;
 
             while (true)
             {
@@ -149,7 +168,7 @@ namespace RPGCombatProject
                 DisplayGameState(enemieTeam, playersTeam, enemieTargeted, playerTargeted, actionsRemaining, playersHand);
 
                 // Get the player's input
-                Console.Write("Enter the number of the card you want to play (or 'T' to target, 'E' to end turn): ");
+                Console.Write("Enter the number of the card you want to play (or 'T' to change target, 'E' to end turn): ");
                 string? input = Console.ReadLine();
                 if (input == null)
                 {
@@ -205,18 +224,42 @@ namespace RPGCombatProject
                 PlayCard(selectedCard, enemieTeam, playersTeam, ref actionsRemaining, ref enemieTargeted, ref playerTargeted);
                 Write($"You played the card: {selectedCard.Name}");
 
-                CheckIfDeadForAllCreatures(enemieTeam);
-                CheckIfDeadForAllCreatures(playersTeam);
-                DeleteDeadCreatures(enemieTeam);
-
-                // Check if the combat is over
-                if (IsCombatOver(enemieTeam, playersTeam))
+                CleanBattleField(enemieTeam, playersTeam);
+                if (IsCombatOver(enemieTeam, playersTeam) == true)
                 {
                     // End the combat
                     break;
                 }
             }
-            Write("Combat has ended.");
+            Write("Player's turn ended.");
+        }
+
+        static void EnemysTurn(List<Creature>enemieTeam, List<Creature>playersTeam, ref int enemieTargeted, ref int playerTargeted){
+            // This is where the enemy's turn will be handled
+            // This will include the enemy's AI and actions
+            Write("Enemy's turn.");
+            foreach (var enemy in enemieTeam)
+            {
+                if (enemy.IsDead) continue;
+
+                // Enemy AI goes here
+                // For now, the enemy will attack the player with the lowest health
+                var playerWithLowestHealth = playersTeam.OrderBy(p => p.Health).First();
+                playerWithLowestHealth.Health -= 5;
+                Write($"{enemy.Name} dealt 5 damage to {playerWithLowestHealth.Name}.");
+            }
+            CleanBattleField(enemieTeam, playersTeam);
+        }
+
+        static void CleanBattleField(List<Creature> enemieTeam, List<Creature> playersTeam)
+        {
+            // Check if any creatures are dead
+            CheckIfDeadForAllCreatures(enemieTeam);
+            CheckIfDeadForAllCreatures(playersTeam);
+
+            // Remove dead creatures from the battlefield
+            DeleteDeadCreatures(enemieTeam);
+            DeleteDeadCreatures(playersTeam);
         }
 
         static void PlayCard(Card card, List<Creature> enemyTeam, List<Creature> playerTeam, ref int actionsRemaining, ref int enemyTargeted, ref int playerTargeted)
@@ -286,27 +329,29 @@ namespace RPGCombatProject
             }
 
             // Check if there are no players left
-            if (playersTeam.Count == 0)
+            else if (playersTeam.Count == 0)
             {
                 Write("There are no players left. Game over!");
                 return true;
             }
 
             // Check if all enemies are dead
-            if (enemieTeam.All(e => e.IsDead))
+            else if (enemieTeam.All(e => e.IsDead))
             {
                 Write("You have defeated all enemies!");
                 return true;
             }
 
             // Check if all players are dead
-            if (playersTeam.All(p => p.IsDead))
+            else if (playersTeam.All(p => p.IsDead))
             {
                 Write("All players have been defeated. Game over!");
                 return true;
             }
 
-            return false;
+            else{
+                return false;
+            }
         }
 
         static void PrintCreatureList(string title, List<Creature> creatures, int targetedCreature = 0)
