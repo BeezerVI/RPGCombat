@@ -319,7 +319,7 @@ namespace RPGCombatProject
                 // Debug statement to confirm the card was played
                 Write($"You played the card: {selectedCard.Name}");
 
-                CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
+                CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam, gameState);
                 if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
                 {
                     // End the combat
@@ -365,7 +365,7 @@ namespace RPGCombatProject
                     viablePlayers.Remove(target);
                 }
             }
-            CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
+            CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam, gameState);
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace RPGCombatProject
             }
         }
 
-        static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam)
+        static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam, GameState gameState)
         {
             // Check if any creatures are dead and remove them from the list
             CheckIfDeadForAllCreatures(enemyTeam);
@@ -407,6 +407,19 @@ namespace RPGCombatProject
             // Remove dead creatures from the list
             DeleteDeadCreatures(enemyTeam);
             DeleteDeadCreatures(playerTeam);
+
+                    
+            // Ensure enemyTargeted is set to a living creature
+            if (gameState.EnemyTeam.Count > 0 && (gameState.EnemyTargeted >= gameState.EnemyTeam.Count || gameState.EnemyTeam[gameState.EnemyTargeted].IsDead))
+            {
+                gameState.EnemyTargeted = gameState.EnemyTeam.FindIndex(creature => !creature.IsDead);
+            }
+
+            // Ensure playerTargeted is set to a living creature
+            if (gameState.PlayerTeam.Count > 0 && (gameState.PlayerTargeted >= gameState.PlayerTeam.Count || gameState.PlayerTeam[gameState.PlayerTargeted].IsDead))
+            {
+                gameState.PlayerTargeted = gameState.PlayerTeam.FindIndex(creature => !creature.IsDead);
+            }
         }
 
         static void PlayCard(Card card, GameState gameState)
