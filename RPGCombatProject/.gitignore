@@ -1,4 +1,5 @@
 RPGCombatProject.csproj
 RPGCombatProject.csproj.user
-obj
-bin
+RPGCombat.sln
+obj/
+bin/
