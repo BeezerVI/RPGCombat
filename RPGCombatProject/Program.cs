@@ -420,36 +420,49 @@ namespace RPGCombatProject
                 creatureTeam.RemoveAll(c => c.IsDead);
             }
         }
+static List<string> messageLog = new List<string>(); // Keeps a history of messages
 
-        static void Write(string text, bool waitForInput = true, bool clearConsole = true)
-        // Write a line of text to the console and wait for the user to press Enter if waitForInput is true
-        // clearConsole will clear the console after the text is displayed if true
-        // text is the string to be displayed
+        static void Write(string text, bool waitForInput = false)
         {
-            if (clearConsole)
-            {
-                Console.Clear();
-            }
+            // Add the message to the log
+            messageLog.Add(text);
+
+            // Reprint the game state and messages
+            ReprintGameState();
+
             if (waitForInput)
             {
-                Console.WriteLine(text + "\nPress Enter to continue...");
+                Console.WriteLine("\nPress Enter to continue...");
                 Console.ReadLine();
             }
-            else
+        }
+
+        static void ReprintGameState()
+        {
+            Console.Clear();
+
+            // Re-display the stats
+            DisplayGameState(currentEnemyTeam, currentPlayerTeam, currentEnemyTargeted, currentPlayerTargeted, currentActionsRemaining, currentPlayerHand);
+
+            // Print all messages
+            foreach (var message in messageLog)
             {
-                Console.WriteLine(text);
+                Console.WriteLine(message);
             }
         }
 
-        static void DisplayGameState(List<Creature> enemieTeam, List<Creature> playersTeam, int enemieTargeted, int playerTargeted, int actionsRemaining, List<Card> playersHand)
-        // Display the current game state
+        // Example for DisplayGameState (keep your existing implementation)
+        static void DisplayGameState(List<Creature> enemyTeam, List<Creature> playerTeam, int enemyTargeted, int playerTargeted, int actionsRemaining, List<Card> playerHand)
         {
-            Console.Clear();
-            PrintCreatureList("Enemies", enemieTeam, enemieTargeted);
-            PrintCreatureList("Your Team", playersTeam, playerTargeted);
-            CombatOptions(actionsRemaining, playersHand);
-        }
+            // Print enemies
+            PrintCreatureList("Enemies", enemyTeam, enemyTargeted);
 
+            // Print players
+            PrintCreatureList("Your Team", playerTeam, playerTargeted);
+
+            // Print actions and cards
+            CombatOptions(actionsRemaining, playerHand);
+        }
 
         static bool IsCombatOver(List<Creature> enemieTeam, List<Creature> playersTeam)
         {
