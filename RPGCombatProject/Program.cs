@@ -316,19 +316,38 @@ namespace RPGCombatProject
             {
                 if (enemy.IsDead) continue;
 
-                // Enemy AI: Find a target based on lowest health (can be enhanced later for different strategies)
-                var target = playerTeam.OrderBy(p => p.Health + p.Shield).First();
+                // Ensure there's at least one alive player to target
+                var viablePlayers = playerTeam.Where(p => !p.IsDead).ToList();
+                if (!viablePlayers.Any())
+                {
+                    Write("All players are defeated! Enemies win!");
+                    return;
+                }
+
+                // Enemy AI: Target the player with the lowest combined health and shield
+                var target = viablePlayers.OrderBy(p => p.Health + p.Shield).First();
 
                 // Enemy attack power (can be dynamic)
                 int attackPower = 5;
 
-                // Apply damage with the reusable DamageCreature method
+                // Apply damage
                 DamageCreature(target, attackPower);
 
                 Write($"{enemy.Name} dealt {attackPower} damage to {target.Name}.");
+
+                // Update target index if needed
+                playerTargeted = playerTeam.IndexOf(target);
+
+                // Check if the target died and update the list
+                if (target.IsDead)
+                {
+                    Write($"{target.Name} has been defeated!");
+                    viablePlayers.Remove(target);
+                }
             }
             CleanBattleField(enemyTeam, playerTeam);
         }
+
 
         /// <summary>
         /// Handles applying damage to a creature, considering their shield and health.
@@ -402,11 +421,15 @@ namespace RPGCombatProject
             }
         }
 
-        static void Write(string text, bool waitForInput = true, bool clearConsole = false)
+        static void Write(string text, bool waitForInput = true, bool clearConsole = true)
         // Write a line of text to the console and wait for the user to press Enter if waitForInput is true
         // clearConsole will clear the console after the text is displayed if true
         // text is the string to be displayed
         {
+            if (clearConsole)
+            {
+                Console.Clear();
+            }
             if (waitForInput)
             {
                 Console.WriteLine(text + "\nPress Enter to continue...");
@@ -415,10 +438,6 @@ namespace RPGCombatProject
             else
             {
                 Console.WriteLine(text);
-            }
-            if (clearConsole)
-            {
-                Console.Clear();
             }
         }
 
