@@ -246,6 +246,8 @@ namespace RPGCombatProject
 
         static void PlayersTurn(GameState gameState)
         {
+            Write("Player's turn.");
+            gameState.ActionsRemaining = 3;
             while (true)
             {
                 // Display the current game state
