@@ -283,6 +283,9 @@ namespace RPGCombatProject
                 // Get the selected card from the player's hand
                 Card selectedCard = playersHand[cardNumber - 1];
 
+                // Debug statement to check the selected card
+                Write($"Selected card: {selectedCard.Name}");
+
                 // Check if the player has enough actions to play the card
                 if (selectedCard.Actions > actionsRemaining)
                 {
@@ -292,6 +295,8 @@ namespace RPGCombatProject
 
                 // Play the selected card
                 PlayCard(selectedCard, enemieTeam, playersTeam, ref actionsRemaining, ref enemieTargeted, ref playerTargeted);
+
+                // Debug statement to confirm the card was played
                 Write($"You played the card: {selectedCard.Name}");
 
                 CleanBattleField(enemieTeam, playersTeam);
@@ -304,22 +309,47 @@ namespace RPGCombatProject
             Write("Player's turn ended.");
         }
 
-        static void EnemysTurn(List<Creature>enemieTeam, List<Creature>playersTeam, ref int enemieTargeted, ref int playerTargeted){
-            // This is where the enemy's turn will be handled
-            // This will include the enemy's AI and actions
+        static void EnemysTurn(List<Creature> enemyTeam, List<Creature> playerTeam, ref int enemyTargeted, ref int playerTargeted)
+        {
             Write("Enemy's turn.");
-            foreach (var enemy in enemieTeam)
+            foreach (var enemy in enemyTeam)
             {
                 if (enemy.IsDead) continue;
 
-                // Enemy AI goes here
-                // For now, the enemy will attack the player with the lowest health
-                var playerWithLowestHealth = playersTeam.OrderBy(p => p.Health).First();
-                playerWithLowestHealth.Health -= 5;
-                Write($"{enemy.Name} dealt 5 damage to {playerWithLowestHealth.Name}.");
+                // Enemy AI: Find a target based on lowest health (can be enhanced later for different strategies)
+                var target = playerTeam.OrderBy(p => p.Health + p.Shield).First();
+
+                // Enemy attack power (can be dynamic)
+                int attackPower = 5;
+
+                // Apply damage with the reusable DamageCreature method
+                DamageCreature(target, attackPower);
+
+                Write($"{enemy.Name} dealt {attackPower} damage to {target.Name}.");
             }
-            CleanBattleField(enemieTeam, playersTeam);
+            CleanBattleField(enemyTeam, playerTeam);
         }
+
+        /// <summary>
+        /// Handles applying damage to a creature, considering their shield and health.
+        /// </summary>
+        static void DamageCreature(Creature target, int damage)
+        {
+            // Apply damage to shield first
+            if (target.Shield > 0)
+            {
+                int remainingDamage = Math.Max(0, damage - target.Shield);
+                target.Shield = Math.Max(0, target.Shield - damage);
+                damage = remainingDamage;
+            }
+
+            // Apply any remaining damage to health
+            target.Health = Math.Max(0, target.Health - damage);
+
+            // Check if the target is dead
+            target.CheckIfDead();
+        }
+
 
         static void ProcessTurnEffects(List<Creature> creatures)
         {
