@@ -1,4 +1,5 @@
 # Overview
+All code was made by me.
 
 I started this project out of curiosity to see if it was possible to create a fully polished and fleshed-out game entirely through the VScode terminal. I know at least some of us programmers have thought about it, and well, here it is!
 
@@ -21,11 +22,11 @@ Demo Video Link Not Made Yet
 * IntelliCode for C# Dev Kit
 
 
-The code is written in C#, no main librarys were added in the code.
+The code is written in C#.
 
 # Useful Websites
 
-- [ChatGPT](https://chatgpt.com) 
+- [ChatGPT](https://chatgpt.com) Was used to learn new code and librarys.
 - [MonsterWorld](https://scratch.mit.edu/projects/228016745/)
 Game of Inspiration on Scratch 
 
