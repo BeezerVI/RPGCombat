@@ -473,6 +473,9 @@ namespace RPGCombatProject
             }
         }
 
+        /// <summary>
+        /// Display the current game state, including the list of enemies, players, and available actions.
+        /// </summary>
         static void DisplayGameState(GameState gameState)
         {
             // Display the current game state
@@ -483,7 +486,7 @@ namespace RPGCombatProject
         }
 
         static bool IsCombatOver(List<Creature> enemyTeam, List<Creature> playerTeam)
-        {
+        {    
             // Check if there are no enemies left
             if (enemyTeam.Count == 0)
             {
@@ -518,6 +521,9 @@ namespace RPGCombatProject
             }
         }
 
+        /// <summary>
+        /// Print a list of creatures with their health, shield, and effects.
+        /// </summary
         static void PrintCreatureList(string title, List<Creature> creatures, int targetedCreature = 0)
         {
             // Print the title centered within a 60-character wide line, filled with '=' characters
@@ -546,13 +552,18 @@ namespace RPGCombatProject
                 index++;
             }
         }
-
+        /// <summary>
+        /// Create a string representation of a list of effects.
+        /// </summary
         static string EffectList(List<Effect> effects)
         {
             if (effects.Count == 0) return "None";
             return string.Join(", ", effects.Select(e => $"{e.EffectName}{new string('|', e.Duration)}{new string('*', e.Strength)}"));
         }
 
+        /// <summary>
+        /// Display the available combat options based on the player's hand and actions remaining.
+        /// </summary
         static void CombatOptions(int actionsRemaining, List<Card> playersHand)
         {
             Console.WriteLine(CreateCenteredText("Combat Options", 60, '-'));
@@ -565,6 +576,9 @@ namespace RPGCombatProject
             }
         }
 
+        /// <summary>
+        /// Create a centered text within a specified width and fill character.
+        /// </summary
         static string CreateCenteredText(string text = "Example", int width = 50, char fillChar = '-')
         {
             if (text.Length >= width) return text;
