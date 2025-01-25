@@ -247,7 +247,11 @@ namespace RPGCombatProject
         static void PlayersTurn(GameState gameState)
         {
             Write("Player's turn.");
+            
+            // Reset the number of actions for the player's turn
             gameState.ActionsRemaining = 3;
+
+            // Play the player's turn until they end it
             while (true)
             {
                 // Display the current game state
