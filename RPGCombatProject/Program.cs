@@ -19,29 +19,31 @@ namespace RPGCombatProject
         }
     }
 
-    public class Creature
+    // Abstract base class for creatures
+    public abstract class Creature
     {
         public string Name { get; set; }
-        public bool IsPlayer { get; set; }
         public bool IsDead { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
         public int Shield { get; set; }
         public List<Effect> Effects { get; set; }
 
-        // Constructor to initialize a Creature object
-        public Creature(string name, bool isPlayer = false, bool isDead = false, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null)
+        // Constructor for shared properties
+        public Creature(string name, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null)
         {
             Name = name;
-            IsPlayer = isPlayer;
-            IsDead = isDead;
+            IsDead = false;
             Health = health;
             MaxHealth = maxHealth;
             Shield = shield;
             Effects = effects ?? new List<Effect>(); // Handle null list gracefully
         }
 
-        // Method to check if the creature is dead based on its health
+        // Abstract method to attack (to be implemented by subclasses)
+        public abstract void Attack(Creature target);
+
+        // Method to check if the creature is dead
         public void CheckIfDead()
         {
             if (Health <= 0)
@@ -49,6 +51,8 @@ namespace RPGCombatProject
                 IsDead = true;
             }
         }
+
+        // Shared methods for applying damage, healing, and effects
         public void ApplyDamage(int damage)
         {
             if (Shield > 0)
@@ -67,8 +71,6 @@ namespace RPGCombatProject
             }
             // Apply remaining damage to health
             Health -= damage;
-
-            // Check if the creature is dead
             CheckIfDead();
         }
 
@@ -84,13 +86,12 @@ namespace RPGCombatProject
             Effects.Add(effect);
         }
 
-        // Updated ability logic
         public void ApplyShield(int amount)
         {
             Shield += amount;
         }
 
-        // Method to process effects on the creature each turn (like damage-over-time)
+        // Method to process effects on the creature each turn
         public void ProcessEffects()
         {
             foreach (var effect in Effects.ToList()) // Use ToList to avoid modifying the list during iteration
@@ -111,6 +112,47 @@ namespace RPGCombatProject
                     Effects.Remove(effect);
                 }
             }
+        }
+    }
+
+    // Subclass for player-controlled creatures
+    public class PlayerCreature : Creature
+    {
+        public int Stamina { get; set; }
+
+        public PlayerCreature(string name, int maxHealth = 100, int health = 100, int shield = 0, int stamina = 50)
+            : base(name, maxHealth, health, shield)
+        {
+            Stamina = stamina;
+        }
+
+        // Override the Attack method
+        public override void Attack(Creature target)
+        {
+            Console.WriteLine($"{Name} attacks {target.Name} for 10 damage!");
+            target.ApplyDamage(10);
+        }
+
+        // Additional behavior specific to player-controlled creatures
+        public void UseAbility(string abilityName)
+        {
+            Console.WriteLine($"{Name} uses the ability: {abilityName}");
+        }
+    }
+
+    // Subclass for enemy creatures
+    public class EnemyCreature : Creature
+    {
+        public EnemyCreature(string name, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null)
+            : base(name, maxHealth, health, shield, effects)
+        {
+        }
+
+        // Override the Attack method
+        public override void Attack(Creature target)
+        {
+            Console.WriteLine($"{Name} attacks {target.Name} for 5 damage!");
+            target.ApplyDamage(5);
         }
     }
 
@@ -139,8 +181,8 @@ namespace RPGCombatProject
                     Console.WriteLine($"Dealt 6 damage to {targetEnemy.Name}.");
                     break;
                 case "Deflect":
-                    targetPlayer.ApplyShield(5);
-                    Console.WriteLine($"Gained 5 Shield for {targetPlayer.Name}.");
+                    targetPlayer.ApplyShield(4);
+                    Console.WriteLine($"Gained 4 Shield for {targetPlayer.Name}.");
                     break;
                 case "Frost":
                     foreach (var enemy in enemyTeam)
@@ -188,19 +230,19 @@ namespace RPGCombatProject
             // Example data for testing
             var enemies = new List<Creature>
             {
-                new Creature("Slim"),
-                new Creature("Giant Bug", health: 20, effects: new List<Effect>
+                new EnemyCreature("Slim"),
+                new EnemyCreature("Giant Bug", health: 20, effects: new List<Effect>
                 {
                     new Effect("Frost", 1, 2),
                     new Effect("Poisoned", 2)
                 })
             };
-
+            
             // Making it a list to allow for multiple players in the future
             var player = new List<Creature>
             {
-                new Creature("You", true, false, 100, 100, 10),
-                new Creature("Liam", true, false, 15000, 15000, 50),
+                new PlayerCreature("You", 30, 21, 10),
+                new PlayerCreature("Liam", 15000, 5, 0),
             };
 
             // This is an example hand of cards that the player can use
@@ -208,8 +250,8 @@ namespace RPGCombatProject
             {
                 new Card("Sword", 1, "Deal 6 damage"),
                 new Card("Frost", 0, "Deal 1 damage to all enemies. Afflict 3 Frost."),
-                new Card("Deflect", 1, "Gain 5 Shield"),
-                new Card("One Shot", 0, "One shots any creature")
+                new Card("Deflect", 1, "Gain 4 Shield"),
+            //    new Card("One Shot", 0, "One shots any creature")
             };
 
             GameState gameState = new GameState(enemies, player, 0, 0, 3, hand);
