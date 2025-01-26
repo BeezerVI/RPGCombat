@@ -7,9 +7,8 @@ I haven’t decided on a name for the game yet, so for now, it’s called RPGCom
 
 Currently, the game is in very early development, so you won’t see much content yet. There are missing features, incomplete sections, But I do intentd to finsh the game entirely soon.
 
-Demo Video Link Not Made Yet
-
-[Game Demo Video Not Made](http://youtube.link.goes.here)
+This is a tutoral explaning the game.
+[Video Demo](https://www.youtube.com/watch?v=wr_GwDA3vfk)
 
 # Development Environment
 * VScode
@@ -32,8 +31,7 @@ Game of Inspiration on Scratch
 
 # Future Work
 
-{Make a list of things that you need to fix, improve, and add in the future.}
-
-- Item 1
-- Item 2
-- Item 3
+- I want to add more enumeys and abilutys
+- Make new ecounters that you can have
+- Add tons of new content to the game
+- Make it multyplayer
