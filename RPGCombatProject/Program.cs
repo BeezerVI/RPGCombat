@@ -10,7 +10,6 @@ namespace RPGCombatProject
     {
         public static void Main(string[] args)
         {
-            // Example data for testing
             var enemies = new List<Creature>
             {
                 new EnemyCreature("Slim"),
@@ -20,27 +19,31 @@ namespace RPGCombatProject
                     new Effect("Poisoned", 2)
                 })
             };
-            
-            // Making it a list to allow for multiple players in the future
+
+            // Initialize each player with a unique hand.
             var player = new List<Creature>
             {
-                new PlayerCreature("You", 30, 21, 10),
-                new PlayerCreature("Liam", 15000, 5, 0),
+                new PlayerCreature("You", 30, 21, 10, 50, new List<Card>
+                {
+                    new Card("Sword", 1, "Deal 6 damage"),
+                    new Card("Frost", 0, "Deal 1 damage to all enemies. Afflict 3 Frost."),
+                    new Card("Deflect", 1, "Gain 4 Shield")
+                }),
+                new PlayerCreature("Liam", 15000, 5, 0, 50, new List<Card>
+                {
+                    new Card("Sword", 1, "Deal 6 damage"),
+                    new Card("Deflect", 1, "Gain 4 Shield"),
+                    new Card("One Shot", 3, "One Shot any creature")
+                }),
             };
 
-            // This is an example hand of cards that the player can use
-            var hand = new List<Card>
-            {
-                new Card("Sword", 1, "Deal 6 damage"),
-                new Card("Frost", 0, "Deal 1 damage to all enemies. Afflict 3 Frost."),
-                new Card("Deflect", 1, "Gain 4 Shield"),
-            //    new Card("One Shot", 0, "One shots any creature")
-            };
 
-            GameState gameState = new GameState(enemies, player, 0, 0, 3, hand);
+            // The enemies remain the same, and you no longer need a shared hand.
+            GameState gameState = new GameState(enemies, player, 0, 0, 3);
 
             StartCombatLoop(gameState);
         }
+
 
         static void SetUpCombat()
         {
@@ -53,49 +56,66 @@ namespace RPGCombatProject
         {
             while (true)
             {
+                // Process effects on all players at the start of the round
                 ProcessTurnEffects(gameState.PlayerTeam);
-                PlayersTurn(gameState);
 
+                // Each living player takes a turn
+                for (int i = 0; i < gameState.PlayerTeam.Count; i++)
+                {
+                    if (!gameState.PlayerTeam[i].IsDead)
+                    {
+                        PlayerTurnForPlayer(gameState, i);
+                    }
+                    else
+                    {
+                        Write($"{gameState.PlayerTeam[i].Name} is dead and cannot act.");
+                    }
+                }
+
+                // After all players have finished, process enemy effects and then enemy turn
                 ProcessTurnEffects(gameState.EnemyTeam);
                 EnemysTurn(gameState);
 
                 // Check if the combat is over
                 if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
                 {
-                    // End the combat
                     break;
                 }
             }
             Write("Combat has fully ended.");
         }
-
-        static void PlayersTurn(GameState gameState)
+        static void PlayerTurnForPlayer(GameState gameState, int playerIndex)
         {
-            Write("Player's turn.");
-            
-            // Reset the number of actions for the player's turn
-            gameState.ActionsRemaining = 3;
-
-            // Play the player's turn until they end it
-            while (true)
+            // Get the current player.
+            PlayerCreature? currentPlayer = gameState.PlayerTeam[playerIndex] as PlayerCreature;
+            if (currentPlayer == null)
             {
-                // Display the current game state
-                DisplayGameState(gameState);
+                Write("Error: The current player is not a PlayerCreature.");
+                return;
+            }
 
-                // Get the player's input
+            int actionsRemaining = 3;
+            Write($"{currentPlayer.Name}'s turn begins.");
+
+            while (actionsRemaining > 0)
+            {
+                // Display game state (you may update DisplayGameState to show the current player's hand)
+                DisplayGameState(gameState, playerIndex);
+
+                Console.WriteLine($"{currentPlayer.Name}, you have {actionsRemaining} action(s) remaining.");
                 Console.Write("Enter the number of the card you want to play (or 'T' to change target, 'E' to end turn): ");
                 string? input = Console.ReadLine();
+
                 if (input == null)
                 {
                     Write("Input cannot be null. Please enter a valid input.");
                     continue;
                 }
 
-                // Handle special commands
                 if (input.ToUpper() == "E")
                 {
-                    Write("Ending turn.");
-                    break; // End the turn
+                    Write($"{currentPlayer.Name} has ended their turn.");
+                    break;
                 }
                 else if (input.ToUpper() == "T")
                 {
@@ -107,52 +127,39 @@ namespace RPGCombatProject
                         continue;
                     }
                     gameState.EnemyTargeted = targetNumber - 1;
-                    Write($"Targeted enemy: {gameState.EnemyTeam[gameState.EnemyTargeted].Name}");
+                    Write($"{currentPlayer.Name} targeted enemy: {gameState.EnemyTeam[gameState.EnemyTargeted].Name}");
                     continue;
                 }
 
-                // Check if the input is a valid number
-                if (!int.TryParse(input, out int cardNumber))
+                if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
                 {
-                    Write("Invalid input. Please enter a number.");
+                    Write("Invalid input. Please enter a valid card number.");
                     continue;
                 }
 
-                // Check if the input is within the range of the player's hand
-                if (cardNumber < 1 || cardNumber > gameState.PlayerHand.Count)
-                {
-                    Write("Invalid input. Please enter a number within the range of your hand.");
-                    continue;
-                }
+                // Get the selected card from the current player's hand.
+                Card selectedCard = currentPlayer.Hand[cardNumber - 1];
+                Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
 
-                // Get the selected card from the player's hand
-                Card selectedCard = gameState.PlayerHand[cardNumber - 1];
-
-                // Debug statement to check the selected card
-                Write($"Selected card: {selectedCard.Name}");
-
-                // Check if the player has enough actions to play the card
-                if (selectedCard.Actions > gameState.ActionsRemaining)
+                if (selectedCard.Actions > actionsRemaining)
                 {
                     Write("Not enough actions to play this card. Please select another card.");
                     continue;
                 }
 
-                // Play the selected card
+                actionsRemaining -= selectedCard.Actions;
                 PlayCard(selectedCard, gameState);
-
-                // Debug statement to confirm the card was played
-                Write($"You played the card: {selectedCard.Name}");
+                Write($"{currentPlayer.Name} played the card: {selectedCard.Name}");
 
                 CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam, gameState);
                 if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
                 {
-                    // End the combat
                     break;
                 }
             }
-            Write("Player's turn ended.");
+            Write($"{currentPlayer.Name}'s turn is over.");
         }
+
 
         static void EnemysTurn(GameState gameState)
         {
@@ -301,14 +308,28 @@ namespace RPGCombatProject
         /// <summary>
         /// Display the current game state, including the list of enemies, players, and available actions.
         /// </summary>
-        static void DisplayGameState(GameState gameState)
+        static void DisplayGameState(GameState gameState, int currentPlayerIndex)
         {
-            // Display the current game state
             Console.Clear();
+
+            // Display the enemies
             PrintCreatureList("Enemies", gameState.EnemyTeam, gameState.EnemyTargeted);
+
+            // Display the players
             PrintCreatureList("Your Team", gameState.PlayerTeam, gameState.PlayerTargeted);
-            CombatOptions(gameState.ActionsRemaining, gameState.PlayerHand);
+
+            // Get the current player
+            if (gameState.PlayerTeam[currentPlayerIndex] is PlayerCreature currentPlayer)
+            {
+                // Display the current player's hand
+                CombatOptions(gameState.ActionsRemaining, currentPlayer.Hand);
+            }
+            else
+            {
+                Console.WriteLine("Error: Current player is not a PlayerCreature.");
+            }
         }
+
 
         static bool IsCombatOver(List<Creature> enemyTeam, List<Creature> playerTeam)
         {    

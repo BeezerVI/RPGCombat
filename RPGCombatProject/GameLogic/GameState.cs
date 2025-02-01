@@ -10,16 +10,15 @@ namespace RPGCombatProject.GameLogic
         public int EnemyTargeted { get; set; }
         public int PlayerTargeted { get; set; }
         public int ActionsRemaining { get; set; }
-        public List<Card> PlayerHand { get; set; }
 
-        public GameState(List<Creature> enemyTeam, List<Creature> playerTeam, int enemyTargeted, int playerTargeted, int actionsRemaining, List<Card> playerHand)
+        public GameState(List<Creature> enemyTeam, List<Creature> playerTeam, int enemyTargeted, int playerTargeted, int actionsRemaining)
         {
             EnemyTeam = enemyTeam;
             PlayerTeam = playerTeam;
             EnemyTargeted = enemyTargeted;
             PlayerTargeted = playerTargeted;
             ActionsRemaining = actionsRemaining;
-            PlayerHand = playerHand;
         }
     }
+
 }
