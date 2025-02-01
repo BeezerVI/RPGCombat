@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using RPGCombatProject.Models;
 using RPGCombatProject.GameLogic;
-//using RPGCombatProject.Utilities;  // ✅ Include the UIHelper namespace
 using GameState = RPGCombatProject.GameLogic.GameState;
 
 namespace RPGCombatProject
