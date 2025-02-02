@@ -6,7 +6,7 @@ using GameState = RPGCombatProject.GameLogic.GameState;
 
 namespace RPGCombatProject
 {
-    public class Program //test
+    public class Program
     {
         public static void Main(string[] args)
         {
