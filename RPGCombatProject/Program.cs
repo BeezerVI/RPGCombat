@@ -192,8 +192,6 @@ namespace RPGCombatProject
 
                 Write($"{enemy.Name} dealt {attackPower} damage to {target.Name}.");
 
-                // Update target index if needed
-                gameState.PlayerTargeted = gameState.PlayerTeam.IndexOf(target);
 
                 // Check if the target died and update the list
                 if (target.IsDead)
@@ -246,17 +244,17 @@ namespace RPGCombatProject
             DeleteDeadCreatures(playerTeam);
 
                     
-            // Ensure enemyTargeted is set to a living creature
-            if (gameState.EnemyTeam.Count > 0 && (gameState.EnemyTargeted >= gameState.EnemyTeam.Count || gameState.EnemyTeam[gameState.EnemyTargeted].IsDead))
-            {
-                gameState.EnemyTargeted = gameState.EnemyTeam.FindIndex(creature => !creature.IsDead);
-            }
+            // // Ensure enemyTargeted is set to a living creature
+            // if (gameState.EnemyTeam.Count > 0 && (gameState.EnemyTargeted >= gameState.EnemyTeam.Count || gameState.EnemyTeam[gameState.EnemyTargeted].IsDead))
+            // {
+            //     gameState.EnemyTargeted = gameState.EnemyTeam.FindIndex(creature => !creature.IsDead);
+            // }
 
-            // Ensure playerTargeted is set to a living creature
-            if (gameState.PlayerTeam.Count > 0 && (gameState.PlayerTargeted >= gameState.PlayerTeam.Count || gameState.PlayerTeam[gameState.PlayerTargeted].IsDead))
-            {
-                gameState.PlayerTargeted = gameState.PlayerTeam.FindIndex(creature => !creature.IsDead);
-            }
+            // // Ensure playerTargeted is set to a living creature
+            // if (gameState.PlayerTeam.Count > 0 && (gameState.PlayerTargeted >= gameState.PlayerTeam.Count || gameState.PlayerTeam[gameState.PlayerTargeted].IsDead))
+            // {
+            //     gameState.PlayerTargeted = gameState.PlayerTeam.FindIndex(creature => !creature.IsDead);
+            // }
         }
 
         static void PlayCard(Card card, GameState gameState, PlayerCreature actor)
@@ -315,10 +313,10 @@ namespace RPGCombatProject
             Console.Clear();
 
             // Display the enemies
-            PrintCreatureList("Enemies", gameState.EnemyTeam, gameState.EnemyTargeted);
+            PrintCreatureList("Enemies", gameState.EnemyTeam, currentPlayerIndex, gameState);
 
             // Display the players
-            PrintCreatureList("Your Team", gameState.PlayerTeam, gameState.PlayerTargeted);
+            PrintCreatureList("Your Team", gameState.PlayerTeam, currentPlayerIndex, gameState);
 
             // Get the current player (assumed to be a PlayerCreature)
             if (gameState.PlayerTeam[currentPlayerIndex] is PlayerCreature currentPlayer)
@@ -373,7 +371,7 @@ namespace RPGCombatProject
         /// <summary>
         /// Print a list of creatures with their health, shield, and effects.
         /// </summary
-        static void PrintCreatureList(string title, List<Creature> creatures, int targetedCreature = 0)
+        static void PrintCreatureList(string title, List<Creature> creatures, int currentPlayerIndex, GameState gameState)
         {
             // Print the title centered within a 60-character wide line, filled with '=' characters
             Console.WriteLine(CreateCenteredText(title, 60, '='));
@@ -384,9 +382,10 @@ namespace RPGCombatProject
             // Iterate through each creature in the list
             foreach (var creature in creatures)
             {
-                // Determine if the current creature is the target by comparing indices
-                string marker = index == targetedCreature ? ">> " : "   ";
-
+                // Determine if the current creature is the target and if it is dead
+                string marker = creature == gameState.PlayerTeam[currentPlayerIndex].Target ? ">> " : "   ";
+                string status = creature.IsDead ? " [DEAD]" : "";
+                Console.WriteLine($"{marker}{creature.Name}{status}");
                 // Print the creature's name with a marker if it is the target
                 Console.WriteLine($"{marker}{creature.Name}");
 
