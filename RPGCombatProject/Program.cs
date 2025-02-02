@@ -39,7 +39,7 @@ namespace RPGCombatProject
 
 
             // The enemies remain the same, and you no longer need a shared hand.
-            GameState gameState = new GameState(enemies, player, 0, 0, 3);
+            GameState gameState = new GameState(enemies, player, 3);
 
             StartCombatLoop(gameState);
         }
@@ -99,7 +99,7 @@ namespace RPGCombatProject
 
             while (actionsRemaining > 0)
             {
-                // Display game state (you may update DisplayGameState to show the current player's hand)
+                // Display game state with the current player's hand
                 DisplayGameState(gameState, playerIndex);
 
                 Console.WriteLine($"{currentPlayer.Name}, you have {actionsRemaining} action(s) remaining.");
@@ -121,13 +121,16 @@ namespace RPGCombatProject
                 {
                     Console.Write("Enter the number of the enemy you want to target: ");
                     string? targetInput = Console.ReadLine();
-                    if (targetInput == null || !int.TryParse(targetInput, out int targetNumber) || targetNumber < 1 || targetNumber > gameState.EnemyTeam.Count)
+                    if (targetInput != null && int.TryParse(targetInput, out int targetNumber) && targetNumber >= 1 && targetNumber <= gameState.EnemyTeam.Count)
+                    {
+                        // Set the current player's Target to the chosen enemy.
+                        currentPlayer.Target = gameState.EnemyTeam[targetNumber - 1];
+                        Write($"{currentPlayer.Name} targeted enemy: {currentPlayer.Target.Name}");
+                    }
+                    else
                     {
                         Write("Invalid target number. Please enter a valid number.");
-                        continue;
                     }
-                    gameState.EnemyTargeted = targetNumber - 1;
-                    Write($"{currentPlayer.Name} targeted enemy: {gameState.EnemyTeam[gameState.EnemyTargeted].Name}");
                     continue;
                 }
 
@@ -148,7 +151,8 @@ namespace RPGCombatProject
                 }
 
                 actionsRemaining -= selectedCard.Actions;
-                PlayCard(selectedCard, gameState);
+                // Pass the current player to PlayCard so that Ability can use currentPlayer.Target.
+                PlayCard(selectedCard, gameState, currentPlayer);
                 Write($"{currentPlayer.Name} played the card: {selectedCard.Name}");
 
                 CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam, gameState);
@@ -159,6 +163,7 @@ namespace RPGCombatProject
             }
             Write($"{currentPlayer.Name}'s turn is over.");
         }
+
 
 
         static void EnemysTurn(GameState gameState)
@@ -254,23 +259,20 @@ namespace RPGCombatProject
             }
         }
 
-        static void PlayCard(Card card, GameState gameState)
+        static void PlayCard(Card card, GameState gameState, PlayerCreature actor)
         {
-            // Check if the player has enough actions to play the card
+            // Check if the player has enough actions (this check may now be redundant if done in turn logic)
             if (card.Actions > gameState.ActionsRemaining)
             {
                 Console.WriteLine("Not enough actions to play this card.");
                 return;
             }
 
-            // Deduct actions and call the card's ability
             gameState.ActionsRemaining -= card.Actions;
-            int enemyTargeted = gameState.EnemyTargeted;
-            int playerTargeted = gameState.PlayerTargeted;
-            card.Ability(gameState.EnemyTeam, gameState.PlayerTeam, ref enemyTargeted, ref playerTargeted);
-            gameState.EnemyTargeted = enemyTargeted;
-            gameState.PlayerTargeted = playerTargeted;
+            // Pass the acting player to the card ability.
+            card.Ability(gameState.EnemyTeam, gameState.PlayerTeam, actor);
         }
+
 
         static void CheckIfDeadForAllCreatures(List<Creature> creatureTeam)
         {
@@ -318,7 +320,7 @@ namespace RPGCombatProject
             // Display the players
             PrintCreatureList("Your Team", gameState.PlayerTeam, gameState.PlayerTargeted);
 
-            // Get the current player
+            // Get the current player (assumed to be a PlayerCreature)
             if (gameState.PlayerTeam[currentPlayerIndex] is PlayerCreature currentPlayer)
             {
                 // Display the current player's hand
@@ -329,6 +331,7 @@ namespace RPGCombatProject
                 Console.WriteLine("Error: Current player is not a PlayerCreature.");
             }
         }
+
 
 
         static bool IsCombatOver(List<Creature> enemyTeam, List<Creature> playerTeam)

@@ -17,20 +17,21 @@ namespace RPGCombatProject.Models
             CardAbilitys = cardAbilitys;
         }
 
-        public void Ability(List<Creature> enemyTeam, List<Creature> playerTeam, ref int enemyTargeted, ref int playerTargeted)
+        // NEW: Ability now accepts the acting creature.
+        public void Ability(List<Creature> enemyTeam, List<Creature> playerTeam, Creature actor)
         {
-            var targetEnemy = enemyTeam[enemyTargeted];
-            var targetPlayer = playerTeam[playerTargeted];
-
             switch (Name)
             {
                 case "Sword":
+                    // Use the actor's target if set; otherwise, default to the first enemy.
+                    Creature targetEnemy = actor.Target ?? enemyTeam[0];
                     targetEnemy.ApplyDamage(6);
                     Console.WriteLine($"Dealt 6 damage to {targetEnemy.Name}.");
                     break;
                 case "Deflect":
-                    targetPlayer.ApplyShield(4);
-                    Console.WriteLine($"Gained 4 Shield for {targetPlayer.Name}.");
+                    // Self-targeted ability.
+                    actor.ApplyShield(4);
+                    Console.WriteLine($"Gained 4 Shield for {actor.Name}.");
                     break;
                 case "Frost":
                     foreach (var enemy in enemyTeam)
@@ -39,6 +40,12 @@ namespace RPGCombatProject.Models
                         enemy.ApplyEffect(new Effect("Frost", 3, 1));
                     }
                     Console.WriteLine("Dealt 1 damage to all enemies and afflicted 3 Frost.");
+                    break;
+                case "One Shot":
+                    // Example: target enemy is set on actor.Target (or default to first enemy)
+                    Creature target = actor.Target ?? enemyTeam[0];
+                    target.ApplyDamage(target.Health); // Reduce health to 0
+                    Console.WriteLine($"{target.Name} has been one-shotted!");
                     break;
                 default:
                     Console.WriteLine("Card ability not implemented.");
