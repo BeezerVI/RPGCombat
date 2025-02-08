@@ -29,6 +29,10 @@ namespace RPGCombatProject.Models
 
         public abstract void Attack(Creature target);
 
+
+        /// <summary>
+        /// Check if the creature is dead and set the IsDead property accordingly.
+        /// </summary>
         public void CheckIfDead()
         {
             if (Health <= 0)

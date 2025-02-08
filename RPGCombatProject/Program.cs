@@ -8,7 +8,7 @@ namespace RPGCombatProject
 {
     public class Program
     {
-        private static GameState? gameState;
+        private static GameState gameState = null!;
         private static int playerIndex;
 
         public static void Main(string[] args)
@@ -41,11 +41,13 @@ namespace RPGCombatProject
             };
 
             gameState = new GameState(enemies, player)!;
+            playerIndex = 0; // Assign a default value to playerIndex
 
             if (gameState == null)
             {
                 throw new InvalidOperationException("Game state must be initialized.");
             }
+
 
             StartCombatLoop();
         }
@@ -244,7 +246,7 @@ namespace RPGCombatProject
             CheckIfDeadForAllCreatures(playerTeam);
             // Remove dead creatures from the list
             DeleteDeadCreatures(enemyTeam);
-            DeleteDeadCreatures(playerTeam);
+        //    DeleteDeadCreatures(playerTeam);
 
                     
             // // Ensure enemyTargeted is set to a living creature
@@ -274,6 +276,10 @@ namespace RPGCombatProject
             card.Ability(gameState.EnemyTeam, gameState.PlayerTeam, actor);
         }
 
+
+        /// <summary>
+        /// Check if any creatures are dead and set the IsDead property accordingly.
+        /// </summary>
         static void CheckIfDeadForAllCreatures(List<Creature> creatureTeam)
         {
             foreach (var creature in creatureTeam)
@@ -287,6 +293,9 @@ namespace RPGCombatProject
             creatureTeam.RemoveAll(c => c.IsDead);
         }
 
+        /// <summary>
+        /// Write a line of text to the console and wait for the user to press Enter if waitForInput is true.
+        /// </summary>        
         static void Write(string text, bool waitForInput = true, bool clearConsole = true)
         // Write a line of text to the console and wait for the user to press Enter if waitForInput is true
         // clearConsole will clear the console after the text is displayed if true
@@ -328,7 +337,7 @@ namespace RPGCombatProject
             if (gameState.PlayerTeam[playerIndex] is PlayerCreature currentPlayer)
             {
                 // Display the current player's hand
-                CombatOptions(currentPlayer.Stamina, currentPlayer.Hand);
+                CombatOptions(currentPlayer);
             }
             else
             {
@@ -380,18 +389,14 @@ namespace RPGCombatProject
             // Print the title centered within a 60-character wide line, filled with '=' characters
             Console.WriteLine(CreateCenteredText(title, 60, '='));
 
-            // Initialize an index variable to keep track of the current index in the foreach loop
-            int index = 0;
-
             // Iterate through each creature in the list
             foreach (var creature in creatures)
             {
                 // Determine if the current creature is the target and if it is dead
                 string marker = creature == gameState.PlayerTeam[playerIndex].Target ? ">> " : "   ";
                 string status = creature.IsDead ? " [DEAD]" : "";
-                Console.WriteLine($"{marker}{creature.Name}{status}");
                 // Print the creature's name with a marker if it is the target
-                Console.WriteLine($"{marker}{creature.Name}");
+                Console.WriteLine($"{marker}{creature.Name}{status}");
 
                 // Print the creature's health, max health, and shield (if any)
                 Console.WriteLine($"   - HP: {creature.Health} / {creature.MaxHealth}" +
@@ -399,9 +404,6 @@ namespace RPGCombatProject
 
                 // Print the list of effects on the creature
                 Console.WriteLine($"   - Effects: {EffectList(creature.Effects)}\n");
-
-                // Increment the index variable
-                index++;
             }
         }
 
@@ -417,10 +419,11 @@ namespace RPGCombatProject
         /// <summary>
         /// Display the available combat options based on the player's hand and actions remaining.
         /// </summary>
-        static void CombatOptions(int actionsRemaining, List<Card> playersHand)
+        static void CombatOptions(PlayerCreature currentPlayer)
         {
+            var playersHand = currentPlayer.Hand;
             Console.WriteLine(CreateCenteredText("Combat Options", 60, '-'));
-            Console.WriteLine($"[{actionsRemaining} Actions Remaining]\n");
+            Console.WriteLine($"[{currentPlayer.Stamina} Actions Remaining]\n");
             for (int i = 0; i < playersHand.Count; i++)
             {
                 var card = playersHand[i];
