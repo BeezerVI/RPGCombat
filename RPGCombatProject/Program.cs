@@ -38,15 +38,15 @@ namespace RPGCombatProject
             {
                 new PlayerCreature("You", 30, 21, 10, 50, new List<Card>
                 {
-                    new Card("Sword", 1, "Deal 6 damage"),
-                    new Card("Frost", 0, "Deal 1 damage to all enemies. Afflict 3 Frost."),
-                    new Card("Deflect", 1, "Gain 4 Shield")
+                    new Card("Sword"),
+                    new Card("Frost"),
+                    new Card("Deflect")
                 }),
                 new PlayerCreature("Liam", 15000, 5, 0, 50, new List<Card>
                 {
-                    new Card("Sword", 1, "Deal 6 damage"),
-                    new Card("Deflect", 1, "Gain 4 Shield"),
-                    new Card("One Shot", 3, "One Shot any creature")
+                    new Card("Deflect"),
+                    new Card("Sword"),
+                    new Card("One Shot")
                 }),
             };
 
@@ -72,6 +72,7 @@ namespace RPGCombatProject
                 {
                     if (!gameState.PlayerTeam[i].IsDead)
                     {
+                        playerIndex = i;
                         PlayerTurnForPlayer(i);
                     }
                     else
@@ -161,7 +162,7 @@ namespace RPGCombatProject
 
         static bool PlayerCombatOptions(PlayerCreature currentPlayer)
         {
-            Console.Write("Enter the number of the card you want to play (or 'T' to change target, 'E' to end turn): ");
+            Console.Write("Enter the number of the card you want to play (or 'E' to end turn): ");
             string? input = Console.ReadLine();
 
             if (input == null)
@@ -174,22 +175,6 @@ namespace RPGCombatProject
             {
                 Write($"{currentPlayer.Name} has ended their turn.");
                 return false;
-            }
-            else if (input.ToUpper() == "T")
-            {
-                Console.Write("Enter the number of the enemy you want to target: ");
-                string? targetInput = Console.ReadLine();
-                if (targetInput != null && int.TryParse(targetInput, out int targetNumber) && targetNumber >= 1 && targetNumber <= gameState.EnemyTeam.Count)
-                {
-                    // Set the current player's Target to the chosen enemy.
-                    currentPlayer.Target = gameState.EnemyTeam[targetNumber - 1];
-                    Write($"{currentPlayer.Name} targeted enemy: {currentPlayer.Target.Name}");
-                }
-                else
-                {
-                    Write("Invalid target number. Please enter a valid number.");
-                }
-                return true;
             }
 
             if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
@@ -208,13 +193,12 @@ namespace RPGCombatProject
                 return true;
             }
 
-            currentPlayer.Stamina -= selectedCard.Actions;
-            // Pass the current player to PlayCard so that Ability can use currentPlayer.Target.
-            PlayCard(selectedCard, currentPlayer);
-            Write($"{currentPlayer.Name} played the card: {selectedCard.Name}");
-            return false;
+            // Ask for a target if needed and execute ability
+            selectedCard.Play(gameState, currentPlayer);
 
+            return true;
         }
+
         /// <summary>
         /// Handles applying damage to a creature, considering their shield and health.
         /// </summary>
@@ -268,21 +252,6 @@ namespace RPGCombatProject
             //     gameState.PlayerTargeted = gameState.PlayerTeam.FindIndex(creature => !creature.IsDead);
             // }
         }
-
-        static void PlayCard(Card card, PlayerCreature actor)
-        {
-            // Check if the player has enough actions (this check may now be redundant if done in turn logic)
-            if (card.Actions > actor.Stamina)
-            {
-                Console.WriteLine("Not enough actions to play this card.");
-                return;
-            }
-
-            actor.Stamina -= card.Actions;
-            // Pass the acting player to the card ability.
-            card.Ability(gameState.EnemyTeam, gameState.PlayerTeam, actor);
-        }
-
 
         /// <summary>
         /// Check if any creatures are dead and set the IsDead property accordingly.
@@ -341,14 +310,14 @@ namespace RPGCombatProject
             PrintCreatureList("Your Team", gameState.PlayerTeam);
 
             // Get the current player (assumed to be a PlayerCreature)
-            if (gameState.PlayerTeam[playerIndex] is PlayerCreature currentPlayer)
+            if (playerIndex >= 0 && playerIndex < gameState.PlayerTeam.Count && gameState.PlayerTeam[playerIndex] is PlayerCreature currentPlayer)
             {
                 // Display the current player's hand
                 CombatOptions(currentPlayer);
             }
             else
             {
-                Console.WriteLine("Error: Current player is not a PlayerCreature.");
+                Console.WriteLine("Error: Current player is not a PlayerCreature or index out of bounds.");
             }
         }
 
@@ -400,8 +369,11 @@ namespace RPGCombatProject
             foreach (var creature in creatures)
             {
                 // Determine if the current creature is the target and if it is dead
-                string marker = creature == gameState.PlayerTeam[playerIndex].Target ? ">> " : "   ";
+                // string marker = (creature == gameState.PlayerTeam[playerIndex] || creature == gameState.EnemyTeam[playerIndex]) ? ">> " : "   ";
+                //string marker =  $"{creatures.IndexOf(creature) + 1}. ";
+                string marker =  "   ";
                 string status = creature.IsDead ? " [DEAD]" : "";
+                
                 // Print the creature's name with a marker if it is the target
                 Console.WriteLine($"{marker}{creature.Name}{status}");
 
