@@ -8,6 +8,9 @@ namespace RPGCombatProject
 {
     public class Program
     {
+        private static GameState? gameState;
+        private static int playerIndex;
+
         public static void Main(string[] args)
         {
             var enemies = new List<Creature>
@@ -37,13 +40,15 @@ namespace RPGCombatProject
                 }),
             };
 
+            gameState = new GameState(enemies, player)!;
 
-            // The enemies remain the same, and you no longer need a shared hand.
-            GameState gameState = new GameState(enemies, player, 3);
+            if (gameState == null)
+            {
+                throw new InvalidOperationException("Game state must be initialized.");
+            }
 
-            StartCombatLoop(gameState);
+            StartCombatLoop();
         }
-
 
         static void SetUpCombat()
         {
@@ -52,7 +57,7 @@ namespace RPGCombatProject
         }
 
         // This is the main combat loop
-        static void StartCombatLoop(GameState gameState)
+        static void StartCombatLoop()
         {
             while (true)
             {
@@ -64,7 +69,7 @@ namespace RPGCombatProject
                 {
                     if (!gameState.PlayerTeam[i].IsDead)
                     {
-                        PlayerTurnForPlayer(gameState, i);
+                        PlayerTurnForPlayer(i);
                     }
                     else
                     {
@@ -74,7 +79,7 @@ namespace RPGCombatProject
 
                 // After all players have finished, process enemy effects and then enemy turn
                 ProcessTurnEffects(gameState.EnemyTeam);
-                EnemysTurn(gameState);
+                EnemysTurn();
 
                 // Check if the combat is over
                 if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
@@ -84,7 +89,8 @@ namespace RPGCombatProject
             }
             Write("Combat has fully ended.");
         }
-        static void PlayerTurnForPlayer(GameState gameState, int playerIndex)
+
+        static void PlayerTurnForPlayer(int playerIndex)
         {
             // Get the current player.
             PlayerCreature? currentPlayer = gameState.PlayerTeam[playerIndex] as PlayerCreature;
@@ -100,7 +106,7 @@ namespace RPGCombatProject
             while (actionsRemaining > 0)
             {
                 // Display game state with the current player's hand
-                DisplayGameState(gameState, playerIndex);
+                DisplayGameState();
 
                 Console.WriteLine($"{currentPlayer.Name}, you have {actionsRemaining} action(s) remaining.");
                 Console.Write("Enter the number of the card you want to play (or 'T' to change target, 'E' to end turn): ");
@@ -152,10 +158,10 @@ namespace RPGCombatProject
 
                 actionsRemaining -= selectedCard.Actions;
                 // Pass the current player to PlayCard so that Ability can use currentPlayer.Target.
-                PlayCard(selectedCard, gameState, currentPlayer);
+                PlayCard(selectedCard, currentPlayer);
                 Write($"{currentPlayer.Name} played the card: {selectedCard.Name}");
 
-                CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam, gameState);
+                CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
                 if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
                 {
                     break;
@@ -164,9 +170,7 @@ namespace RPGCombatProject
             Write($"{currentPlayer.Name}'s turn is over.");
         }
 
-
-
-        static void EnemysTurn(GameState gameState)
+        static void EnemysTurn()
         {
             Write("Enemy's turn.");
             foreach (var enemy in gameState.EnemyTeam)
@@ -192,7 +196,6 @@ namespace RPGCombatProject
 
                 Write($"{enemy.Name} dealt {attackPower} damage to {target.Name}.");
 
-
                 // Check if the target died and update the list
                 if (target.IsDead)
                 {
@@ -200,7 +203,7 @@ namespace RPGCombatProject
                     viablePlayers.Remove(target);
                 }
             }
-            CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam, gameState);
+            CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
         }
 
         /// <summary>
@@ -234,7 +237,7 @@ namespace RPGCombatProject
             }
         }
 
-        static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam, GameState gameState)
+        static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam)
         {
             // Check if any creatures are dead and remove them from the list
             CheckIfDeadForAllCreatures(enemyTeam);
@@ -257,20 +260,19 @@ namespace RPGCombatProject
             // }
         }
 
-        static void PlayCard(Card card, GameState gameState, PlayerCreature actor)
+        static void PlayCard(Card card, PlayerCreature actor)
         {
             // Check if the player has enough actions (this check may now be redundant if done in turn logic)
-            if (card.Actions > gameState.ActionsRemaining)
+            if (card.Actions > actor.Stamina)
             {
                 Console.WriteLine("Not enough actions to play this card.");
                 return;
             }
 
-            gameState.ActionsRemaining -= card.Actions;
+            actor.Stamina -= card.Actions;
             // Pass the acting player to the card ability.
             card.Ability(gameState.EnemyTeam, gameState.PlayerTeam, actor);
         }
-
 
         static void CheckIfDeadForAllCreatures(List<Creature> creatureTeam)
         {
@@ -293,6 +295,10 @@ namespace RPGCombatProject
             if (clearConsole)
             {
                 Console.Clear();
+                if (gameState != null)
+                {
+                    DisplayGameState();
+                }
             }
             if (waitForInput)
             {
@@ -308,21 +314,21 @@ namespace RPGCombatProject
         /// <summary>
         /// Display the current game state, including the list of enemies, players, and available actions.
         /// </summary>
-        static void DisplayGameState(GameState gameState, int currentPlayerIndex)
+        static void DisplayGameState()
         {
             Console.Clear();
 
             // Display the enemies
-            PrintCreatureList("Enemies", gameState.EnemyTeam, currentPlayerIndex, gameState);
+            PrintCreatureList("Enemies", gameState.EnemyTeam);
 
             // Display the players
-            PrintCreatureList("Your Team", gameState.PlayerTeam, currentPlayerIndex, gameState);
+            PrintCreatureList("Your Team", gameState.PlayerTeam);
 
             // Get the current player (assumed to be a PlayerCreature)
-            if (gameState.PlayerTeam[currentPlayerIndex] is PlayerCreature currentPlayer)
+            if (gameState.PlayerTeam[playerIndex] is PlayerCreature currentPlayer)
             {
                 // Display the current player's hand
-                CombatOptions(gameState.ActionsRemaining, currentPlayer.Hand);
+                CombatOptions(currentPlayer.Stamina, currentPlayer.Hand);
             }
             else
             {
@@ -330,10 +336,8 @@ namespace RPGCombatProject
             }
         }
 
-
-
         static bool IsCombatOver(List<Creature> enemyTeam, List<Creature> playerTeam)
-        {    
+        {
             // Check if there are no enemies left
             if (enemyTeam.Count == 0)
             {
@@ -370,8 +374,8 @@ namespace RPGCombatProject
 
         /// <summary>
         /// Print a list of creatures with their health, shield, and effects.
-        /// </summary
-        static void PrintCreatureList(string title, List<Creature> creatures, int currentPlayerIndex, GameState gameState)
+        /// </summary>
+        static void PrintCreatureList(string title, List<Creature> creatures)
         {
             // Print the title centered within a 60-character wide line, filled with '=' characters
             Console.WriteLine(CreateCenteredText(title, 60, '='));
@@ -383,7 +387,7 @@ namespace RPGCombatProject
             foreach (var creature in creatures)
             {
                 // Determine if the current creature is the target and if it is dead
-                string marker = creature == gameState.PlayerTeam[currentPlayerIndex].Target ? ">> " : "   ";
+                string marker = creature == gameState.PlayerTeam[playerIndex].Target ? ">> " : "   ";
                 string status = creature.IsDead ? " [DEAD]" : "";
                 Console.WriteLine($"{marker}{creature.Name}{status}");
                 // Print the creature's name with a marker if it is the target
@@ -400,9 +404,10 @@ namespace RPGCombatProject
                 index++;
             }
         }
+
         /// <summary>
         /// Create a string representation of a list of effects.
-        /// </summary
+        /// </summary>
         static string EffectList(List<Effect> effects)
         {
             if (effects.Count == 0) return "None";
@@ -411,7 +416,7 @@ namespace RPGCombatProject
 
         /// <summary>
         /// Display the available combat options based on the player's hand and actions remaining.
-        /// </summary
+        /// </summary>
         static void CombatOptions(int actionsRemaining, List<Card> playersHand)
         {
             Console.WriteLine(CreateCenteredText("Combat Options", 60, '-'));
@@ -426,7 +431,7 @@ namespace RPGCombatProject
 
         /// <summary>
         /// Create a centered text within a specified width and fill character.
-        /// </summary
+        /// </summary>
         static string CreateCenteredText(string text = "Example", int width = 50, char fillChar = '-')
         {
             if (text.Length >= width) return text;

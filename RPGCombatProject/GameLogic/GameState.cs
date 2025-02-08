@@ -7,13 +7,11 @@ namespace RPGCombatProject.GameLogic
     {
         public List<Creature> EnemyTeam { get; set; }
         public List<Creature> PlayerTeam { get; set; }
-        public int ActionsRemaining { get; set; }
 
-        public GameState(List<Creature> enemyTeam, List<Creature> playerTeam, int actionsRemaining)
+        public GameState(List<Creature> enemyTeam, List<Creature> playerTeam)
         {
             EnemyTeam = enemyTeam;
             PlayerTeam = playerTeam;
-            ActionsRemaining = actionsRemaining;
         }
     }
 
