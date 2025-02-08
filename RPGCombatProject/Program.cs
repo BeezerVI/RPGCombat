@@ -13,6 +13,16 @@ namespace RPGCombatProject
 
         public static void Main(string[] args)
         {
+
+            SetUpCombat();
+
+            StartCombatLoop();
+        }
+
+        static void SetUpCombat()
+        {
+            // This is where the combat will be set up
+            // This will include setting up the enemies, the player's team, and the player's hand
             var enemies = new List<Creature>
             {
                 new EnemyCreature("Slim"),
@@ -47,15 +57,6 @@ namespace RPGCombatProject
             {
                 throw new InvalidOperationException("Game state must be initialized.");
             }
-
-
-            StartCombatLoop();
-        }
-
-        static void SetUpCombat()
-        {
-            // This is where the combat will be set up
-            // This will include setting up the enemies, the player's team, and the player's hand
         }
 
         // This is the main combat loop
@@ -102,66 +103,16 @@ namespace RPGCombatProject
                 return;
             }
 
-            int actionsRemaining = 3;
+            currentPlayer.Stamina = 3;
             Write($"{currentPlayer.Name}'s turn begins.");
 
-            while (actionsRemaining > 0)
+            bool isPlayerTurn = true;
+            while (isPlayerTurn == true)
             {
-                // Display game state with the current player's hand
+                // Display game state
                 DisplayGameState();
 
-                Console.WriteLine($"{currentPlayer.Name}, you have {actionsRemaining} action(s) remaining.");
-                Console.Write("Enter the number of the card you want to play (or 'T' to change target, 'E' to end turn): ");
-                string? input = Console.ReadLine();
-
-                if (input == null)
-                {
-                    Write("Input cannot be null. Please enter a valid input.");
-                    continue;
-                }
-
-                if (input.ToUpper() == "E")
-                {
-                    Write($"{currentPlayer.Name} has ended their turn.");
-                    break;
-                }
-                else if (input.ToUpper() == "T")
-                {
-                    Console.Write("Enter the number of the enemy you want to target: ");
-                    string? targetInput = Console.ReadLine();
-                    if (targetInput != null && int.TryParse(targetInput, out int targetNumber) && targetNumber >= 1 && targetNumber <= gameState.EnemyTeam.Count)
-                    {
-                        // Set the current player's Target to the chosen enemy.
-                        currentPlayer.Target = gameState.EnemyTeam[targetNumber - 1];
-                        Write($"{currentPlayer.Name} targeted enemy: {currentPlayer.Target.Name}");
-                    }
-                    else
-                    {
-                        Write("Invalid target number. Please enter a valid number.");
-                    }
-                    continue;
-                }
-
-                if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
-                {
-                    Write("Invalid input. Please enter a valid card number.");
-                    continue;
-                }
-
-                // Get the selected card from the current player's hand.
-                Card selectedCard = currentPlayer.Hand[cardNumber - 1];
-                Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
-
-                if (selectedCard.Actions > actionsRemaining)
-                {
-                    Write("Not enough actions to play this card. Please select another card.");
-                    continue;
-                }
-
-                actionsRemaining -= selectedCard.Actions;
-                // Pass the current player to PlayCard so that Ability can use currentPlayer.Target.
-                PlayCard(selectedCard, currentPlayer);
-                Write($"{currentPlayer.Name} played the card: {selectedCard.Name}");
+                isPlayerTurn = PlayerCombatOptions(currentPlayer);
 
                 CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
                 if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
@@ -208,6 +159,62 @@ namespace RPGCombatProject
             CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
         }
 
+        static bool PlayerCombatOptions(PlayerCreature currentPlayer)
+        {
+            Console.Write("Enter the number of the card you want to play (or 'T' to change target, 'E' to end turn): ");
+            string? input = Console.ReadLine();
+
+            if (input == null)
+            {
+                Write("Input cannot be null. Please enter a valid input.");
+                return true;
+            }
+
+            if (input.ToUpper() == "E")
+            {
+                Write($"{currentPlayer.Name} has ended their turn.");
+                return false;
+            }
+            else if (input.ToUpper() == "T")
+            {
+                Console.Write("Enter the number of the enemy you want to target: ");
+                string? targetInput = Console.ReadLine();
+                if (targetInput != null && int.TryParse(targetInput, out int targetNumber) && targetNumber >= 1 && targetNumber <= gameState.EnemyTeam.Count)
+                {
+                    // Set the current player's Target to the chosen enemy.
+                    currentPlayer.Target = gameState.EnemyTeam[targetNumber - 1];
+                    Write($"{currentPlayer.Name} targeted enemy: {currentPlayer.Target.Name}");
+                }
+                else
+                {
+                    Write("Invalid target number. Please enter a valid number.");
+                }
+                return true;
+            }
+
+            if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
+            {
+                Write("Invalid input. Please enter a valid card number.");
+                return true;
+            }
+
+            // Get the selected card from the current player's hand.
+            Card selectedCard = currentPlayer.Hand[cardNumber - 1];
+            Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
+
+            if (selectedCard.Actions > currentPlayer.Stamina)
+            {
+                Write("Not enough actions to play this card. Please select another card.");
+                return true;
+            }
+
+            currentPlayer.Stamina -= selectedCard.Actions;
+            // Pass the current player to PlayCard so that Ability can use currentPlayer.Target.
+            PlayCard(selectedCard, currentPlayer);
+            Write($"{currentPlayer.Name} played the card: {selectedCard.Name}");
+            return false;
+
+        }
         /// <summary>
         /// Handles applying damage to a creature, considering their shield and health.
         /// </summary>
