@@ -26,11 +26,7 @@ namespace RPGCombatProject
             var enemies = new List<Creature>
             {
                 new EnemyCreature("Slim"),
-                new EnemyCreature("Giant Bug", health: 20, effects: new List<Effect>
-                {
-                    new Effect("Frost", 1, 2),
-                    new Effect("Poisoned", 2)
-                })
+                new EnemyCreature("Giant Bug")
             };
 
             // Initialize each player with a unique hand.
@@ -131,7 +127,7 @@ namespace RPGCombatProject
             {
                 if (enemy.IsDead) continue;
 
-                // Ensure there's at least one alive player to target
+                // Get a list of alive players.
                 var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
                 if (!viablePlayers.Any())
                 {
@@ -139,26 +135,26 @@ namespace RPGCombatProject
                     return;
                 }
 
-                // Enemy AI: Target the player with the lowest combined health and shield
-                var target = viablePlayers.OrderBy(p => p.Health + p.Shield).First();
-
-                // Enemy attack power (can be dynamic)
-                int attackPower = 5;
-
-                // Apply damage
-                DamageCreature(target, attackPower);
-
-                Write($"{enemy.Name} dealt {attackPower} damage to {target.Name}.");
-
-                // Check if the target died and update the list
-                if (target.IsDead)
+                // If the enemy is an EnemyCreature (it should be), use its Act method.
+                if (enemy is EnemyCreature e)
                 {
-                    Write($"{target.Name} has been defeated!");
-                    viablePlayers.Remove(target);
+                    Console.Clear();                    
+                    DisplayGameState();
+                    Console.WriteLine($"{enemy.Name}'s turn.");
+                    e.Act(viablePlayers);
+                    Console.ReadLine();
+                }
+                else
+                {
+                    // Fallback behavior if enemy is not of type EnemyCreature.
+                    var target = viablePlayers.OrderBy(p => p.Health + p.Shield).First();
+                    enemy.Attack(target);
                 }
             }
+
             CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
         }
+
 
         static bool PlayerCombatOptions(PlayerCreature currentPlayer)
         {
