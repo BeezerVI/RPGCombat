@@ -34,4 +34,8 @@ Game of Inspiration on Scratch
 - I want to add more enumeys and abilutys
 - Make new ecounters that you can have
 - Add tons of new content to the game
-- Make it multyplayer
+
+# Update Log
+
+- 1.0 Published the game
+- 1.1 I have added hot couch multiplayer to the game, as well as massively improved card abilities and enemy AI, including fixing small bugs.
