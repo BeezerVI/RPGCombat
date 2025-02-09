@@ -37,5 +37,5 @@ Game of Inspiration on Scratch
 
 # Update Log
 
-- 1.0 Published the game
-- 1.1 I have added hot couch multiplayer to the game, as well as massively improved card abilities and enemy AI, including fixing small bugs.
+- 1.00 Published the game
+- 1.01 I have added hot couch multiplayer to the game, as well as massively improved card abilities and enemy AI, including fixing small bugs.
