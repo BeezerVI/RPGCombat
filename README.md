@@ -8,7 +8,12 @@ I haven’t decided on a name for the game yet, so for now, it’s called RPGCom
 Currently, the game is in very early development, so you won’t see much content yet. There are missing features, incomplete sections, But I do intentd to finsh the game entirely soon.
 
 This is a tutoral explaning the game.
-[Video Demo](https://www.youtube.com/watch?v=wr_GwDA3vfk)
+
+[Video Demo NEW 1.01](https://youtu.be/K2lNMMITx70)
+
+Old Videos are placed here
+
+* [Video Demo OLD 1.00](https://www.youtube.com/watch?v=wr_GwDA3vfk)
 
 # Development Environment
 * VScode
