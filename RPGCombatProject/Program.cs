@@ -46,7 +46,7 @@ namespace RPGCombatProject
                 {
                     new Card("Deflect"),
                     new Card("Sword"),
-                    new Card("One Shot")
+                    new Card("Heal")
                 }),
             };
 
@@ -238,19 +238,6 @@ namespace RPGCombatProject
             // Remove dead creatures from the list
             DeleteDeadCreatures(enemyTeam);
         //    DeleteDeadCreatures(playerTeam);
-
-                    
-            // // Ensure enemyTargeted is set to a living creature
-            // if (gameState.EnemyTeam.Count > 0 && (gameState.EnemyTargeted >= gameState.EnemyTeam.Count || gameState.EnemyTeam[gameState.EnemyTargeted].IsDead))
-            // {
-            //     gameState.EnemyTargeted = gameState.EnemyTeam.FindIndex(creature => !creature.IsDead);
-            // }
-
-            // // Ensure playerTargeted is set to a living creature
-            // if (gameState.PlayerTeam.Count > 0 && (gameState.PlayerTargeted >= gameState.PlayerTeam.Count || gameState.PlayerTeam[gameState.PlayerTargeted].IsDead))
-            // {
-            //     gameState.PlayerTargeted = gameState.PlayerTeam.FindIndex(creature => !creature.IsDead);
-            // }
         }
 
         /// <summary>

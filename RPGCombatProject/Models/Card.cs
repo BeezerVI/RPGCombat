@@ -261,6 +261,7 @@ namespace RPGCombatProject.Models
         // Prompts the user to choose a target from a given team.
         private Creature? ChooseTarget(List<Creature> team, string prompt)
         {
+            Console.Clear();
             Console.WriteLine(prompt);
             for (int i = 0; i < team.Count; i++)
             {
