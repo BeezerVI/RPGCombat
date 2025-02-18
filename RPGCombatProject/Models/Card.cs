@@ -38,13 +38,12 @@ namespace RPGCombatProject.Models
 
         // For cards with split effects (like Frost), additional damage/effect applied to all
         public int AdditionalDamage { get; set; }
-        public int AdditionalEffectDuration { get; set; }
-        public int AdditionalEffectStrength { get; set; }
+        public List<Effect> Effects { get; set; }
 
         // Constructor that allows you to specify all properties.
         public Card(string name, int actions, CardCategory category, CardTargetType targetType,
                     int damage = 0, int shieldAmount = 0, int healing = 0,
-                    int additionalDamage = 0, int additionalEffectDuration = 0, int additionalEffectStrength = 0)
+                    int additionalDamage = 0, List<Effect>? effects = null)
         {
             Name = name;
             Actions = actions;
@@ -54,8 +53,7 @@ namespace RPGCombatProject.Models
             ShieldAmount = shieldAmount;
             Healing = healing;
             AdditionalDamage = additionalDamage;
-            AdditionalEffectDuration = additionalEffectDuration;
-            AdditionalEffectStrength = additionalEffectStrength;
+            Effects = effects ?? new List<Effect>();
             CardAbilitys = GenerateDescription();
         }
 
@@ -72,8 +70,7 @@ namespace RPGCombatProject.Models
             ShieldAmount = 0;
             Healing = 0;
             AdditionalDamage = 0;
-            AdditionalEffectDuration = 0;
-            AdditionalEffectStrength = 0;
+            Effects = new List<Effect>();
 
             // Set presets based on the card name.
             // You can expand this switch as you add more cards.
@@ -91,8 +88,8 @@ namespace RPGCombatProject.Models
                     TargetType = CardTargetType.Split;
                     Damage = 1;
                     AdditionalDamage = 2;
-                    AdditionalEffectDuration = 3;
-                    AdditionalEffectStrength = 1;
+                    Effects.Add(new Effect("Frost", 2, 1));
+                    Effects.Add(new Effect("Poison", 1, 3));
                     break;
                 case "Deflect":
                     Actions = 1;
@@ -138,7 +135,7 @@ namespace RPGCombatProject.Models
                 }
                 else if (TargetType == CardTargetType.Split)
                 {
-                    return $"Deal {Damage} damage to one enemy and {AdditionalDamage} additional damage to all enemies with an effect (Duration: {AdditionalEffectDuration}, Strength: {AdditionalEffectStrength}).";
+                    return $"Deal {Damage} damage to one enemy and {AdditionalDamage} additional damage to all enemies with an effect (Duration: ?, Strength: ?).";
                 }
             }
             else if (Category == CardCategory.Heal)
@@ -229,7 +226,8 @@ namespace RPGCombatProject.Models
             {
                 if (Name == "One Shot")
                 {
-                    target.ApplyDamage(target.Health); // One shot: reduce HP to 0
+                    target.ApplyDamage(target.Shield); // Remove shield first
+                    target.ApplyDamage(target.Health); // Reduce HP to 0
                     Console.WriteLine($"{target.Name} has been one-shotted!");
                 }
                 else
@@ -248,31 +246,55 @@ namespace RPGCombatProject.Models
                 target.ApplyShield(ShieldAmount);
                 Console.WriteLine($"{target.Name} gained {ShieldAmount} shield.");
             }
+
+            // Apply any additional effects stored inside the card
+            foreach (var effect in Effects)
+            {
+                target.ApplyEffect(new Effect(effect.EffectName, effect.Duration, effect.Strength));
+                Console.WriteLine($"{target.Name} is now affected by {effect.EffectName} (Duration: {effect.Duration}, Strength: {effect.Strength}).");
+            }
         }
+
 
         // Applies an additional effect, used by split cards.
         private void ApplyAdditionalEffect(Creature target)
         {
+            // Apply additional damage
             target.ApplyDamage(AdditionalDamage);
-            target.ApplyEffect(new Effect("Frost", AdditionalEffectDuration, AdditionalEffectStrength));
-            Console.WriteLine($"Also dealt {AdditionalDamage} additional damage and applied Frost effect to {target.Name}.");
+            Console.WriteLine($"Also dealt {AdditionalDamage} additional damage to {target.Name}.");
+
+            // Apply card-specific effects to the target
+            foreach (var effect in Effects)
+            {
+                target.ApplyEffect(new Effect(effect.EffectName, effect.Duration, effect.Strength));
+                Console.WriteLine($"{target.Name} is affected by {effect.EffectName} (Duration: {effect.Duration}, Strength: {effect.Strength}).");
+            }
         }
 
         // Prompts the user to choose a target from a given team.
         private Creature? ChooseTarget(List<Creature> team, string prompt)
         {
+            if (team.Count == 0)
+            {
+                Console.WriteLine("No available targets.");
+                return null;
+            }
+
             Console.Clear();
             Console.WriteLine(prompt);
             for (int i = 0; i < team.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {team[i].Name} (HP: {team[i].Health}/{team[i].MaxHealth})");
             }
+
             Console.Write("Enter target number: ");
             string? input = Console.ReadLine();
             if (int.TryParse(input, out int targetIndex) && targetIndex >= 1 && targetIndex <= team.Count)
             {
                 return team[targetIndex - 1];
             }
+
+            Console.WriteLine("Invalid selection. No target chosen.");
             return null;
         }
     }
