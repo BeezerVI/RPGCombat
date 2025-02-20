@@ -26,20 +26,19 @@ namespace RPGCombatProject
             var enemies = new List<Creature>
             {
                 new EnemyCreature("Slim"),
-                new EnemyCreature("Giant Bug"),
+                new EnemyCreature("Giant Bug")
+            };
+
+            // Initialize each player with a unique hand.
+            var player = new List<Creature>
+            {
                 new PlayerCreature("You", 30, 21, 10, 50, new List<Card>
                 {
                     new Card("Sword"),
                     new Card("Frost"),
                     new Card("Deflect"),
                     new Card("One Shot")
-                }),                
-            };
-
-            // Initialize each player with a unique hand.
-            var player = new List<Creature>
-            {
-
+                }),
                 new PlayerCreature("Liam", 15000, 5, 0, 50, new List<Card>
                 {
                     new Card("Deflect"),

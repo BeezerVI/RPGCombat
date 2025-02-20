@@ -1,0 +1,96 @@
+  {
+    "cards": [
+      {
+        "id": "Sword",
+        "name": "Sword",
+        "cost": 1,
+        "targetSelector": "Single",
+        "effects": [
+          { "type": "DamageEffect", "value": 6 }
+        ]
+      },
+      {
+        "id": "Heal",
+        "name": "Heal",
+        "cost": 1,
+        "targetSelector": "Single",
+        "effects": [
+          { "type": "HealEffect", "value": 10 }
+        ]
+      },
+      {
+        "id": "Deflect",
+        "name": "Deflect",
+        "cost": 1,
+        "targetSelector": "Single",
+        "effects": [
+          { "type": "ShieldEffect", "value": 4 }
+        ]
+      },
+      {
+        "id": "Frost",
+        "name": "Frost",
+        "cost": 1,
+        "targetSelector": "Single",
+        "effects": [
+          { "type": "DamageEffect", "value": 1 },
+          { "type": "DamageEffect", "value": 2 }
+        ]
+      },
+      {
+        "id": "OneShot",
+        "name": "One Shot",
+        "cost": 3,
+        "targetSelector": "Single",
+        "effects": [
+          { "type": "DamageEffect", "value": 9999 }
+        ]
+      },
+      {
+        "id": "Fireball",
+        "name": "Fireball",
+        "cost": 2,
+        "targetSelector": "Single",
+        "effects": [
+          { "type": "DamageEffect", "value": 5 }
+        ]
+      },
+      {
+        "id": "Lightning",
+        "name": "Lightning",
+        "cost": 2,
+        "targetSelector": "Single",
+        "effects": [
+          { "type": "DamageEffect", "value": 6 }
+        ]
+      },
+      {
+        "id": "HealAll",
+        "name": "Heal All",
+        "cost": 2,
+        "targetSelector": "All",
+        "effects": [
+          { "type": "HealEffect", "value": 5 }
+        ]
+      },
+      {
+        "id": "ShieldAll",
+        "name": "Shield All",
+        "cost": 2,
+        "targetSelector": "All",
+        "effects": [
+          { "type": "ShieldEffect", "value": 3 }
+        ]
+      },
+      {
+        "id": "Whirlwind",
+        "name": "Whirlwind",
+        "cost": 2,
+        "targetSelector": "All",
+        "effects": [
+          { "type": "DamageEffect", "value": 4 }
+        ]
+      }
+    ]
+  }
+    
