@@ -18,37 +18,68 @@ namespace RPGCombatProject
 
             StartCombatLoop();
         }
-
         static void SetUpCombat()
         {
-            // This is where the combat will be set up
-            // This will include setting up the enemies, the player's team, and the player's hand
+            // Set up enemies as before.
             var enemies = new List<Creature>
             {
                 new EnemyCreature("Slim"),
                 new EnemyCreature("Giant Bug")
             };
 
-            // Initialize each player with a unique hand.
-            var player = new List<Creature>
+            // Ask how many players are participating.
+            Console.Clear();
+            Console.Write("Enter the number of players: ");
+            int numPlayers = 0;
+            while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers <= 0)
             {
-                new PlayerCreature("You", 30, 21, 10, 50, new List<Card>
-                {
-                    new Card("Sword"),
-                    new Card("Frost"),
-                    new Card("Deflect"),
-                    new Card("One Shot")
-                }),
-                new PlayerCreature("Liam", 15000, 5, 0, 50, new List<Card>
-                {
-                    new Card("Deflect"),
-                    new Card("Sword"),
-                    new Card("Heal")
-                }),
-                new EnemyCreature("Giant Bug")
-            };
+                Console.Write("Invalid input. Please enter a positive integer: ");
+            }
 
-            gameState = new GameState(enemies, player)!;
+            var players = new List<Creature>();
+
+            // For each player, ask for their name and class.
+            for (int i = 0; i < numPlayers; i++)
+            {
+                Console.Clear();
+                Console.WriteLine($"\n--- Setting up Player {i + 1} ---");
+
+                // Ask for player's name.
+                Console.Write("Enter your name: ");
+                string name = Console.ReadLine() ?? $"Player{i + 1}";
+
+                // Ask for player's class.
+                Console.WriteLine("Choose a class:");
+                Console.WriteLine("1. Warrior");
+                Console.WriteLine("2. Mage");
+                Console.WriteLine("3. Rogue");
+                Console.Write("Enter your choice (1-3): ");
+                string classChoice = Console.ReadLine() ?? "1";
+
+                string chosenClass;
+                switch (classChoice)
+                {
+                    case "1":
+                        chosenClass = "Warrior";
+                        break;
+                    case "2":
+                        chosenClass = "Mage";
+                        break;
+                    case "3":
+                        chosenClass = "Rogue";
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice; defaulting to Warrior.");
+                        chosenClass = "Warrior";
+                        break;
+                }
+
+                // Create a new player creature using the factory method in PlayerCreature.
+                PlayerCreature newPlayer = PlayerCreature.CreatePlayer(name, chosenClass);
+                players.Add(newPlayer);
+            }
+
+            gameState = new GameState(enemies, players)!;
             playerIndex = 0; // Assign a default value to playerIndex
 
             if (gameState == null)
