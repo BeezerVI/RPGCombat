@@ -80,13 +80,5 @@ namespace RPGCombatProject.Models
                     break;
             }
         }
-
-        /// <summary>
-        /// Overrides the abstract Attack method. For compatibility, it wraps the target in a list and calls Act.
-        /// </summary>
-        public override void Attack(Creature target)
-        {
-            Act(new List<Creature> { target });
-        }
     }
 }

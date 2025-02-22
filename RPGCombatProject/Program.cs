@@ -17,6 +17,10 @@ namespace RPGCombatProject
             SetUpCombat();
 
             StartCombatLoop();
+
+            LevelUpPlayers(gameState.PlayerTeam.Cast<PlayerCreature>().ToList());
+
+            DisplayGameState();
         }
         static void SetUpCombat()
         {
@@ -400,6 +404,31 @@ namespace RPGCombatProject
                 Console.WriteLine($"   - Effects: {EffectList(creature.Effects)}\n");
             }
         }
+        static void LevelUpPlayers(List<PlayerCreature> players)
+        {
+            Console.WriteLine("\n--- Leveling Up ---");
+            
+            foreach (var player in players)
+            {
+                player.LevelUp(); // Give them a level and an Upgrade Point
+
+                Console.WriteLine($"\n{player.Name} (Level {player.Level}) - Upgrade Points: {player.UpgradePoints}");
+                Console.WriteLine("Would you like to spend your upgrade points now? (Y/N)");
+
+                string? input = Console.ReadLine();
+                if (input?.ToUpper() == "Y")
+                {
+                    player.UpgradeMenu(); // Allow them to spend upgrade points
+                }
+                else
+                {
+                    Console.WriteLine($"{player.Name} saved their points for later.");
+                }
+            }
+
+            Console.WriteLine("--- All Players Finished Leveling Up ---\n");
+        }
+
 
         /// <summary>
         /// Create a string representation of a list of effects.
