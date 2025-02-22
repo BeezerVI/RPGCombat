@@ -180,8 +180,7 @@ namespace RPGCombatProject
                 else
                 {
                     // Fallback behavior if enemy is not of type EnemyCreature.
-                    var target = viablePlayers.OrderBy(p => p.Health + p.Shield).First();
-                    enemy.Attack(target);
+                    Write("Error: Enemy is not an EnemyCreature.");
                 }
             }
 

@@ -7,17 +7,11 @@ namespace RPGCombatProject.Models
         public int Stamina { get; set; }
         public List<Card> Hand { get; set; }
 
-        public PlayerCreature(string name, int maxHealth, int health, int shield, int stamina, List<Card>? hand = null)
+        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 0, List<Card>? hand = null, string className = "warrior", int level = 0)
             : base(name, maxHealth, health, shield)
         {
             Stamina = stamina;
             Hand = hand ?? new List<Card>();
-        }
-
-        public override void Attack(Creature target)
-        {
-            System.Console.WriteLine($"{Name} attacks {target.Name} for 10 damage!");
-            target.ApplyDamage(10);
         }
 
         // Factory method: creates a new player based on the chosen class.
@@ -33,7 +27,9 @@ namespace RPGCombatProject.Models
                         health: 120,
                         shield: 15,        // Better starting shield
                         stamina: 3,
-                        hand: GetDefaultHand("warrior")
+                        hand: GetDefaultHand("warrior"),
+                        className: "warrior",
+                        level: 0
                     );
                 case "mage":
                     return new PlayerCreature(
@@ -42,7 +38,9 @@ namespace RPGCombatProject.Models
                         health: 80,
                         shield: 5,         // Lower shield, but maybe higher action cost or special cards
                         stamina: 4,
-                        hand: GetDefaultHand("mage")
+                        hand: GetDefaultHand("mage"),
+                        className: "mage",
+                        level: 0
                     );
                 case "rogue":
                     return new PlayerCreature(
@@ -51,7 +49,9 @@ namespace RPGCombatProject.Models
                         health: 100,
                         shield: 10,        // Moderate shield
                         stamina: 4,
-                        hand: GetDefaultHand("rogue")
+                        hand: GetDefaultHand("rogue"),
+                        className: "rogue",
+                        level: 0
                     );
                 default:
                     // Default to Warrior if no valid class was chosen.
@@ -61,7 +61,9 @@ namespace RPGCombatProject.Models
                         health: 120,
                         shield: 15,
                         stamina: 3,
-                        hand: GetDefaultHand("warrior")
+                        hand: GetDefaultHand("warrior"),
+                        className: "warrior",
+                        level: 0
                     );
             }
         }
