@@ -1,3 +1,4 @@
+// Purpose: Contains the GameState class, which is used to store the current state of the game. This includes the player and enemy teams.
 using System.Collections.Generic;
 using RPGCombatProject.Models;
 

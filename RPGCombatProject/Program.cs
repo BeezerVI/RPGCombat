@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using RPGCombatProject.Models;
 using RPGCombatProject.GameLogic;
+using RPGCombatProject.Utilityes;
+using System.Linq;
 using GameState = RPGCombatProject.GameLogic.GameState;
 
 namespace RPGCombatProject
@@ -13,14 +15,18 @@ namespace RPGCombatProject
 
         public static void Main(string[] args)
         {
-
+            Console.WriteLine("Welcome to the RPG Combat Game!");
+            
             SetUpCombat();
+
+            UIManager.SetGameState(gameState);
+            StartCombatLoop();
 
             StartCombatLoop();
 
             LevelUpPlayers(gameState.PlayerTeam.Cast<PlayerCreature>().ToList());
 
-            DisplayGameState();
+            UIManager.DisplayGameState();
         }
         static void SetUpCombat()
         {
@@ -106,13 +112,15 @@ namespace RPGCombatProject
                     if (!gameState.PlayerTeam[i].IsDead)
                     {
                         playerIndex = i;
+                        UIManager.SetCurrentPlayerIndex(playerIndex); // Update UIManager with the current player's index
                         PlayerTurnForPlayer(i);
                     }
                     else
                     {
-                        Write($"{gameState.PlayerTeam[i].Name} is dead and cannot act.");
+                        UIManager.Write($"{gameState.PlayerTeam[i].Name} is dead and cannot act.");
                     }
                 }
+
 
                 // After all players have finished, process enemy effects and then enemy turn
                 ProcessTurnEffects(gameState.EnemyTeam);
@@ -124,7 +132,7 @@ namespace RPGCombatProject
                     break;
                 }
             }
-            Write("Combat has fully ended.");
+            UIManager.Write("Combat has fully ended.");
         }
 
         static void PlayerTurnForPlayer(int playerIndex)
@@ -133,18 +141,18 @@ namespace RPGCombatProject
             PlayerCreature? currentPlayer = gameState.PlayerTeam[playerIndex] as PlayerCreature;
             if (currentPlayer == null)
             {
-                Write("Error: The current player is not a PlayerCreature.");
+                UIManager.Write("Error: The current player is not a PlayerCreature.");
                 return;
             }
 
             currentPlayer.Stamina = 3;
-            Write($"{currentPlayer.Name}'s turn begins.");
+            UIManager.Write($"{currentPlayer.Name}'s turn begins.");
 
             bool isPlayerTurn = true;
             while (isPlayerTurn == true)
             {
                 // Display game state
-                DisplayGameState();
+                UIManager.DisplayGameState();
 
                 isPlayerTurn = PlayerCombatOptions(currentPlayer);
 
@@ -154,12 +162,12 @@ namespace RPGCombatProject
                     break;
                 }
             }
-            Write($"{currentPlayer.Name}'s turn is over.");
+            UIManager.Write($"{currentPlayer.Name}'s turn is over.");
         }
 
         static void EnemysTurn()
         {
-            Write("Enemy's turn.");
+            UIManager.Write("Enemy's turn.");
             foreach (var enemy in gameState.EnemyTeam)
             {
                 if (enemy.IsDead) continue;
@@ -168,7 +176,7 @@ namespace RPGCombatProject
                 var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
                 if (!viablePlayers.Any())
                 {
-                    Write("All players are defeated! Enemies win!");
+                    UIManager.Write("All players are defeated! Enemies win!");
                     return;
                 }
 
@@ -176,7 +184,7 @@ namespace RPGCombatProject
                 if (enemy is EnemyCreature e)
                 {
                     Console.Clear();                    
-                    DisplayGameState();
+                    UIManager.DisplayGameState();
                     Console.WriteLine($"{enemy.Name}'s turn.");
                     e.Act(viablePlayers);
                     Console.ReadLine();
@@ -184,7 +192,7 @@ namespace RPGCombatProject
                 else
                 {
                     // Fallback behavior if enemy is not of type EnemyCreature.
-                    Write("Error: Enemy is not an EnemyCreature.");
+                    UIManager.Write("Error: Enemy is not an EnemyCreature.");
                 }
             }
 
@@ -199,29 +207,29 @@ namespace RPGCombatProject
 
             if (input == null)
             {
-                Write("Input cannot be null. Please enter a valid input.");
+                UIManager.Write("Input cannot be null. Please enter a valid input.");
                 return true;
             }
 
             if (input.ToUpper() == "E")
             {
-                Write($"{currentPlayer.Name} has ended their turn.");
+                UIManager.Write($"{currentPlayer.Name} has ended their turn.");
                 return false;
             }
 
             if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
             {
-                Write("Invalid input. Please enter a valid card number.");
+                UIManager.Write("Invalid input. Please enter a valid card number.");
                 return true;
             }
 
             // Get the selected card from the current player's hand.
             Card selectedCard = currentPlayer.Hand[cardNumber - 1];
-            Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
+            UIManager.Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
 
             if (selectedCard.Actions > currentPlayer.Stamina)
             {
-                Write("Not enough actions to play this card. Please select another card.");
+                UIManager.Write("Not enough actions to play this card. Please select another card.");
                 return true;
             }
 
@@ -288,85 +296,33 @@ namespace RPGCombatProject
             creatureTeam.RemoveAll(c => c.IsDead);
         }
 
-        /// <summary>
-        /// Write a line of text to the console and wait for the user to press Enter if waitForInput is true.
-        /// </summary>        
-        static void Write(string text, bool waitForInput = true, bool clearConsole = true)
-        // Write a line of text to the console and wait for the user to press Enter if waitForInput is true
-        // clearConsole will clear the console after the text is displayed if true
-        // text is the string to be displayed
-        {
-            if (clearConsole)
-            {
-                Console.Clear();
-                if (gameState != null)
-                {
-                    DisplayGameState();
-                }
-            }
-            if (waitForInput)
-            {
-                Console.WriteLine(text + "\nPress Enter to continue...");
-                Console.ReadLine();
-            }
-            else
-            {
-                Console.WriteLine(text);
-            }
-        }
-
-        /// <summary>
-        /// Display the current game state, including the list of enemies, players, and available actions.
-        /// </summary>
-        static void DisplayGameState()
-        {
-            Console.Clear();
-
-            // Display the enemies
-            PrintCreatureList("Enemies", gameState.EnemyTeam);
-
-            // Display the players
-            PrintCreatureList("Your Team", gameState.PlayerTeam);
-
-            // Get the current player (assumed to be a PlayerCreature)
-            if (playerIndex >= 0 && playerIndex < gameState.PlayerTeam.Count && gameState.PlayerTeam[playerIndex] is PlayerCreature currentPlayer)
-            {
-                // Display the current player's hand
-                CombatOptions(currentPlayer);
-            }
-            else
-            {
-                Console.WriteLine("Error: Current player is not a PlayerCreature or index out of bounds.");
-            }
-        }
-
         static bool IsCombatOver(List<Creature> enemyTeam, List<Creature> playerTeam)
         {
             // Check if there are no enemies left
             if (enemyTeam.Count == 0)
             {
-                Write("There are no enemies left. You have won!");
+                UIManager.Write("There are no enemies left. You have won!");
                 return true;
             }
 
             // Check if there are no players left
             else if (playerTeam.Count == 0)
             {
-                Write("There are no players left. Game over!");
+                UIManager.Write("There are no players left. Game over!");
                 return true;
             }
 
             // Check if all enemies are dead
             else if (enemyTeam.All(e => e.IsDead))
             {
-                Write("You have defeated all enemies!");
+                UIManager.Write("You have defeated all enemies!");
                 return true;
             }
 
             // Check if all players are dead
             else if (playerTeam.All(p => p.IsDead))
             {
-                Write("All players have been defeated. Game over!");
+                UIManager.Write("All players have been defeated. Game over!");
                 return true;
             }
 
@@ -376,34 +332,6 @@ namespace RPGCombatProject
             }
         }
 
-        /// <summary>
-        /// Print a list of creatures with their health, shield, and effects.
-        /// </summary>
-        static void PrintCreatureList(string title, List<Creature> creatures)
-        {
-            // Print the title centered within a 60-character wide line, filled with '=' characters
-            Console.WriteLine(CreateCenteredText(title, 60, '='));
-
-            // Iterate through each creature in the list
-            foreach (var creature in creatures)
-            {
-                // Determine if the current creature is the target and if it is dead
-                // string marker = (creature == gameState.PlayerTeam[playerIndex] || creature == gameState.EnemyTeam[playerIndex]) ? ">> " : "   ";
-                //string marker =  $"{creatures.IndexOf(creature) + 1}. ";
-                string marker =  "   ";
-                string status = creature.IsDead ? " [DEAD]" : "";
-                
-                // Print the creature's name with a marker if it is the target
-                Console.WriteLine($"{marker}{creature.Name}{status}");
-
-                // Print the creature's health, max health, and shield (if any)
-                Console.WriteLine($"   - HP: {creature.Health} / {creature.MaxHealth}" +
-                                $"{(creature.Shield > 0 ? $" | Shield: {creature.Shield}" : "")}");
-
-                // Print the list of effects on the creature
-                Console.WriteLine($"   - Effects: {EffectList(creature.Effects)}\n");
-            }
-        }
         static void LevelUpPlayers(List<PlayerCreature> players)
         {
             Console.WriteLine("\n--- Leveling Up ---");
@@ -427,43 +355,6 @@ namespace RPGCombatProject
             }
 
             Console.WriteLine("--- All Players Finished Leveling Up ---\n");
-        }
-
-
-        /// <summary>
-        /// Create a string representation of a list of effects.
-        /// </summary>
-        static string EffectList(List<Effect> effects)
-        {
-            if (effects.Count == 0) return "None";
-            return string.Join(", ", effects.Select(e => $"{e.EffectName}{new string('|', e.Duration)}{new string('*', e.Strength)}"));
-        }
-
-        /// <summary>
-        /// Display the available combat options based on the player's hand and actions remaining.
-        /// </summary>
-        static void CombatOptions(PlayerCreature currentPlayer)
-        {
-            var playersHand = currentPlayer.Hand;
-            Console.WriteLine(CreateCenteredText("Combat Options", 60, '-'));
-            Console.WriteLine($"[{currentPlayer.Stamina} Actions Remaining]\n");
-            for (int i = 0; i < playersHand.Count; i++)
-            {
-                var card = playersHand[i];
-                Console.WriteLine($"{i + 1}. {card.Name}    [Cost: {card.Actions} Action(s)]");
-                Console.WriteLine($"   - {card.CardAbilitys}\n");
-            }
-        }
-
-        /// <summary>
-        /// Create a centered text within a specified width and fill character.
-        /// </summary>
-        static string CreateCenteredText(string text = "Example", int width = 50, char fillChar = '-')
-        {
-            if (text.Length >= width) return text;
-            int leftPadding = (width - text.Length) / 2;
-            int rightPadding = width - text.Length - leftPadding;
-            return new string(fillChar, leftPadding) + text + new string(fillChar, rightPadding);
         }
     }
 }
