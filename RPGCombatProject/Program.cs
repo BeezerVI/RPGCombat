@@ -225,17 +225,17 @@ namespace RPGCombatProject
             }
 
             // Get the selected card from the current player's hand.
-            Card selectedCard = currentPlayer.Hand[cardNumber - 1];
+            Ability selectedCard = currentPlayer.Hand[cardNumber - 1];
             UIManager.Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
 
-            if (selectedCard.Actions > currentPlayer.Stamina)
+            if (selectedCard.Cost > currentPlayer.Stamina)
             {
                 UIManager.Write("Not enough actions to play this card. Please select another card.");
                 return true;
             }
 
             // Ask for a target if needed and execute ability
-            selectedCard.Play(gameState, currentPlayer);
+            selectedCard.Execute(gameState, currentPlayer);
 
             return true;
         }

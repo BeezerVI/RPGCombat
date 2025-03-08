@@ -147,8 +147,8 @@ namespace RPGCombatProject.Utilityes
             for (int i = 0; i < playersHand.Count; i++)
             {
                 var card = playersHand[i];
-                Console.WriteLine($"{i + 1}. {card.Name}    [Cost: {card.Actions} Action(s)]");
-                Console.WriteLine($"   - {card.CardAbilitys}\n");
+                Console.WriteLine($"{i + 1}. {card.Name}    [Cost: {card.Cost} Action(s)]");
+                //Console.WriteLine($"   - {card.CardAbilitys}\n");
             }
         }
     }

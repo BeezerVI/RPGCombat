@@ -6,16 +6,16 @@ namespace RPGCombatProject.Models
     {
         public int Stamina { get; set; }
         public int MaxStamina { get; set; } // New property for MaxStamina
-        public List<Card> Hand { get; set; }
+        public List<Ability> Hand { get; set; }
         public int Level { get; set; }
         public int UpgradePoints { get; set; }
 
-        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 3, int maxStamina = 3, List<Card>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
+        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 3, int maxStamina = 3, List<Ability>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
             : base(name, maxHealth, health, shield)
         {
             Stamina = stamina;
             MaxStamina = maxStamina; // Initialize MaxStamina
-            Hand = hand ?? new List<Card>();
+            Hand = hand ?? new List<Ability>();
             Level = level;
             UpgradePoints = upgradePoints;
         }
@@ -77,37 +77,39 @@ namespace RPGCombatProject.Models
             }
         }
 
-        // Returns a default hand of cards based on the player's class.
-        private static List<Card> GetDefaultHand(string playerClass)
+        // Returns a default hand of Abilitys based on the player's class.
+        private static List<Ability> GetDefaultHand(string playerClass)
         {
             switch (playerClass.ToLower())
             {
                 case "warrior":
-                    return new List<Card>
+                    return new List<Ability>
                     {
-                        new Card("Sword"),
-                        new Card("Deflect"),
-                        new Card("One Shot")
+                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
+    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
+
                     };
                 case "mage":
-                    return new List<Card>
+                    return new List<Ability>
                     {
-                        new Card("Frost"),
-                        new Card("Heal"),
-                        new Card("Deflect")
+                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
+    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
+
                     };
                 case "rogue":
-                    return new List<Card>
+                    return new List<Ability>
                     {
-                        new Card("Sword"),
-                        new Card("Deflect")
-                        // You can add a special Rogue card here.
+                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
+    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
+
+                        // You can add a special Rogue Ability here.
                     };
                 default:
-                    return new List<Card>
+                    return new List<Ability>
                     {
-                        new Card("Sword"),
-                        new Card("Deflect")
+                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
+    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
+
                     };
             }
         }
@@ -119,7 +121,7 @@ namespace RPGCombatProject.Models
                 Console.WriteLine($"\n--- Upgrade Store (Points: {UpgradePoints}) ---");
                 Console.WriteLine("1. Increase Max HP by 10 (Cost: 1)");
                 Console.WriteLine("2. Increase Stamina by 1 (Cost: 2)");
-                Console.WriteLine("3. Upgrade Abilities (Unlock new card / improve existing ones) (Cost: 1)");
+                Console.WriteLine("3. Upgrade Abilities (Unlock new Ability / improve existing ones) (Cost: 1)");
                 Console.WriteLine("4. Save Upgrade Points for later");
                 Console.Write("Enter your choice (1-4): ");
 
