@@ -15,20 +15,19 @@ namespace RPGCombatProject
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the RPG Combat Game!");
+            UIManager.Write("Welcome to the RPG Combat Game!", clearConsole : 1);
             
-            SetUpCombat();
+            SetUpGame();
 
             UIManager.SetGameState(gameState);
-            StartCombatLoop();
 
             StartCombatLoop();
 
             LevelUpPlayers(gameState.PlayerTeam.Cast<PlayerCreature>().ToList());
 
-            UIManager.DisplayGameState();
+            UIManager.DisplayGameState(); //for debugging purposes
         }
-        static void SetUpCombat()
+        static void SetUpGame()
         {
             // Set up enemies as before.
             var enemies = new List<Creature>
@@ -38,7 +37,7 @@ namespace RPGCombatProject
             };
 
             // Ask how many players are participating.
-            Console.Clear();
+            //Console.Clear();
             Console.Write("Enter the number of players: ");
             int numPlayers = 0;
             while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers <= 0)
@@ -52,10 +51,11 @@ namespace RPGCombatProject
             for (int i = 0; i < numPlayers; i++)
             {
                 Console.Clear();
-                Console.WriteLine($"\n--- Setting up Player {i + 1} ---");
+                UIManager.Write(UIManager.CreateCenteredText($"Setting up Player {i + 1}", 10, '-'), clearConsole : 1);
 
                 // Ask for player's name.
-                Console.Write("Enter your name: ");
+                Console.Clear();
+                Console.Write($"Enter Player {i + 1} name: ");
                 string name = Console.ReadLine() ?? $"Player{i + 1}";
 
                 // Ask for player's class.
@@ -79,7 +79,7 @@ namespace RPGCombatProject
                         chosenClass = "Rogue";
                         break;
                     default:
-                        Console.WriteLine("Invalid choice; defaulting to Warrior.");
+                        UIManager.Write("Invalid choice; defaulting to Warrior.", clearConsole : 1);
                         chosenClass = "Warrior";
                         break;
                 }
@@ -87,6 +87,7 @@ namespace RPGCombatProject
                 // Create a new player creature using the factory method in PlayerCreature.
                 PlayerCreature newPlayer = PlayerCreature.CreatePlayer(name, chosenClass);
                 players.Add(newPlayer);
+                UIManager.Write($"Player {name} has joined the adventure as a {chosenClass}.", clearConsole : 1); // Display the player's name and class
             }
 
             gameState = new GameState(enemies, players)!;
@@ -145,7 +146,7 @@ namespace RPGCombatProject
                 return;
             }
 
-            currentPlayer.Stamina = 3;
+            currentPlayer.Stamina = currentPlayer.MaxStamina; // Reset stamina at the start of the turn
             UIManager.Write($"{currentPlayer.Name}'s turn begins.");
 
             bool isPlayerTurn = true;

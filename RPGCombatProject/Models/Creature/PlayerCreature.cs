@@ -5,14 +5,16 @@ namespace RPGCombatProject.Models
     public class PlayerCreature : Creature
     {
         public int Stamina { get; set; }
+        public int MaxStamina { get; set; } // New property for MaxStamina
         public List<Card> Hand { get; set; }
         public int Level { get; set; }
         public int UpgradePoints { get; set; }
 
-        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 0, List<Card>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
+        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 3, int maxStamina = 3, List<Card>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
             : base(name, maxHealth, health, shield)
         {
             Stamina = stamina;
+            MaxStamina = maxStamina; // Initialize MaxStamina
             Hand = hand ?? new List<Card>();
             Level = level;
             UpgradePoints = upgradePoints;
@@ -30,6 +32,7 @@ namespace RPGCombatProject.Models
                         health: 120,
                         shield: 15,        // Better starting shield
                         stamina: 3,
+                        maxStamina: 3,     // Initialize MaxStamina
                         hand: GetDefaultHand("warrior"),
                         className: "warrior",
                         level: 1
@@ -41,6 +44,7 @@ namespace RPGCombatProject.Models
                         health: 80,
                         shield: 5,
                         stamina: 4,
+                        maxStamina: 4,     // Initialize MaxStamina
                         hand: GetDefaultHand("mage"),
                         className: "mage",
                         level: 1
@@ -52,6 +56,7 @@ namespace RPGCombatProject.Models
                         health: 100,
                         shield: 10,
                         stamina: 4,
+                        maxStamina: 4,     // Initialize MaxStamina
                         hand: GetDefaultHand("rogue"),
                         className: "rogue",
                         level: 1
@@ -64,6 +69,7 @@ namespace RPGCombatProject.Models
                         health: 120,
                         shield: 15,
                         stamina: 3,
+                        maxStamina: 3,     // Initialize MaxStamina
                         hand: GetDefaultHand("warrior"),
                         className: "warrior",
                         level: 1
@@ -106,7 +112,6 @@ namespace RPGCombatProject.Models
             }
         }
 
-        // New method: Prompts the player to choose an upgrade from the upgrade store.
         public void UpgradeMenu()
         {
             while (true)
@@ -145,9 +150,10 @@ namespace RPGCombatProject.Models
                     case 2:
                         if (UpgradePoints >= 2)
                         {
-                            Stamina += 1;
+                            MaxStamina += 1; // Increase MaxStamina
+                            Stamina = MaxStamina; // Reset current Stamina to MaxStamina
                             UpgradePoints -= 2;
-                            Console.WriteLine($"{Name}'s Stamina increased to {Stamina}.");
+                            Console.WriteLine($"{Name}'s Max Stamina increased to {MaxStamina}.");
                         }
                         else
                         {

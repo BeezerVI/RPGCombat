@@ -36,10 +36,14 @@ namespace RPGCombatProject.Utilityes
         /// </summary>
         /// <param name="text">The message to display.</param>
         /// <param name="waitForInput">If true, waits for user input before continuing.</param>
-        /// <param name="clearConsole">If true, clears the console before displaying text.</param>
-        public static void Write(string text, bool waitForInput = true, bool clearConsole = true)
+        /// <param name="clearConsole">If 1, clears the console before displaying text. If 2, clears console and then calls DisplayGameState</param>
+        public static void Write(string text, bool waitForInput = true, int clearConsole = 2)
         {
-            if (clearConsole)
+            if (clearConsole == 1)
+            {
+                Console.Clear();
+            }
+            else if (clearConsole == 2)
             {
                 Console.Clear();
                 DisplayGameState();
@@ -60,6 +64,8 @@ namespace RPGCombatProject.Utilityes
         /// </summary>
         public static void DisplayGameState()
         {
+            Console.Clear();
+            Console.WriteLine(CreateCenteredText("Combat Table", 60, ' '));
             if (gameState == null)
             {
                 Console.WriteLine("Error: Game state is not set.");
