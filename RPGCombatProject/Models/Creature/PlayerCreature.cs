@@ -85,31 +85,28 @@ namespace RPGCombatProject.Models
                 case "warrior":
                     return new List<Ability>
                     {
-                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
-    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
-
+                        Abilities.GetAbility("sword_strike"),
+                        Abilities.GetAbility("shield_up")
                     };
+                    
                 case "mage":
                     return new List<Ability>
                     {
-                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
-    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
-
+                        Abilities.GetAbility("fireball"),
+                        Abilities.GetAbility("heal")
                     };
+
                 case "rogue":
                     return new List<Ability>
                     {
-                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
-    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
-
-                        // You can add a special Rogue Ability here.
+                        Abilities.GetAbility("sword_strike"),
+                        Abilities.GetAbility("fireball") // Example: Could replace with a custom rogue ability later
                     };
+
                 default:
                     return new List<Ability>
                     {
-                        new Ability("Sword Strike", 1, AbilityType.Attack, TargetingMethod.Single, TargetTeam.Enemies, false, 
-    new List<Effect> { new Effect("damage", duration: 0, strength: 6) })
-
+                        Abilities.GetAbility("sword_strike")
                     };
             }
         }

@@ -240,26 +240,6 @@ namespace RPGCombatProject
             return true;
         }
 
-        /// <summary>
-        /// Handles applying damage to a creature, considering their shield and health.
-        /// </summary>
-        static void DamageCreature(Creature target, int damage)
-        {
-            // Apply damage to shield first
-            if (target.Shield > 0)
-            {
-                int remainingDamage = Math.Max(0, damage - target.Shield);
-                target.Shield = Math.Max(0, target.Shield - damage);
-                damage = remainingDamage;
-            }
-
-            // Apply any remaining damage to health
-            target.Health = Math.Max(0, target.Health - damage);
-
-            // Check if the target is dead
-            target.CheckIfDead();
-        }
-
         static void ProcessTurnEffects(List<Creature> creatures)
         {
             foreach (var creature in creatures)

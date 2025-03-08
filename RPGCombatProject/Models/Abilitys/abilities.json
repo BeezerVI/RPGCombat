@@ -1,0 +1,35 @@
+[
+    {
+        "Name": "Sword Strike",
+        "Cost": 1,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 }
+        ]
+    },
+    {
+        "Name": "Heal",
+        "Cost": 1,
+        "Type": "Heal",
+        "Targeting": "Single",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "heal", "Duration": 0, "Strength": 10 }
+        ]
+    },
+    {
+        "Name": "Fireball",
+        "Cost": 2,
+        "Type": "Attack",
+        "Targeting": "All",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 8 }
+        ]
+    }
+]
