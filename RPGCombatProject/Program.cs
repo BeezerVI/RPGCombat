@@ -13,10 +13,6 @@ namespace RPGCombatProject
         private static GameState gameState = null!;
         private static int playerIndex;
 
-
-
-        
-
         public static void Main(string[] args)
         {
             UIManager.Write("Welcome to the RPG Combat Game!", clearConsole : 1);
