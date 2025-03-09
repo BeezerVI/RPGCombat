@@ -7,11 +7,11 @@ I haven’t decided on a name for the game yet, so for now, it’s called **RPGC
 
 Currently, the game is in very early development, so you won’t see much content yet. There are missing features, incomplete sections, but I do intend to finish the game entirely soon.  
 
-This is a tutorial explaining the game.  
-
-[Video Demo NEW 1.02](https://youtu.be/yfPR-MDi1Uo)  
+This is a tutorial explaining the new content of the game.  
+[Video Demo NEW 1.03](https://www.youtube.com/watch?v=iRXw389TukM)  
 
 ## **Old Videos**  
+- [Video Demo 1.02](https://youtu.be/yfPR-MDi1Uo) 
 - [Video Demo 1.01](https://youtu.be/K2lNMMITx70)  
 - [Video Demo 1.00](https://www.youtube.com/watch?v=wr_GwDA3vfk)  
 
@@ -39,6 +39,25 @@ The code is written in **C#**.
 - Add **tons of new content** to the game.  
 
 # **Update Log**  
+### **1.03 - Abilities Revamp and New Status Effects**
+- **Revamping Abilities**:  
+  - Characters can now use **abilities** or **cards** to attack creatures.  
+  - Simplified ability addition by defining just a few parameters; the code handles the rest.  
+  - All creatures (not just **PlayerCreatures**) can now use abilities. (though no enumy AI has used this yet)
+
+- **New Ability Behavior Rules**:  
+  - Introduced new **targeting types**:  
+    - **Single Target**: Targets a single player from the team.  
+    - **Random Target**: Chooses a random target from the set team.  
+    - **All Targets**: Targets all creatures on the team.  
+  - Ability effects include **Damage**, **Healing**, **Shielding**, and **Status Effects**.  
+  - Ability effects now include **Normal Damage**, **Piercing Damage**, **Health Restoration**, **Gold Health** (planned), and more.  
+
+- **New Status Effects**:  
+  - Added **Burning 🔥**, **Frozen ❄**, **Bleeding 🩸**, **Poison ☠️**, **Stun ⚡**, **Weaken 🛑**, and **Regeneration 🌿**.  
+  - Effects now expire automatically at the end of their duration or cause **damage over time**.  
+  - Each effect has a specific **type**, **description**, and can be applied based on the action taken.
+
 ### **1.02 - Player Leveling, Upgrades, and Balance Changes**  
 - **Added Player Leveling**:  
   - After each battle, **players now level up** and can choose upgrades.  
