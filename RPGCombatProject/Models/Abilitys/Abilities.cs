@@ -64,11 +64,13 @@ namespace RPGCombatProject.Models
         // Retrieves an ability by name
         public static Ability GetAbility(string abilityName)
         {
-            if (abilityRegistry.TryGetValue(abilityName.ToLower(), out Ability? ability))
+            string formattedAbilityName = abilityName.Trim().ToLower();
+            Console.WriteLine($"Looking for ability: {formattedAbilityName}");
+            if (abilityRegistry.TryGetValue(formattedAbilityName, out Ability? ability))
             {
                 return new Ability(ability.Name, ability.Cost, ability.Type, ability.Targeting, ability.TeamTarget, ability.CanTargetSelf, new List<Effect>(ability.Effects), ability.ChainAction);
             }
-            throw new ArgumentException($"Ability '{abilityName}' not found.");
+            throw new ArgumentException($"Ability '{formattedAbilityName}' not found.");
         }
     }
 

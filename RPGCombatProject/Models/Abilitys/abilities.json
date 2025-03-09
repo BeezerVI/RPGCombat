@@ -11,6 +11,17 @@
         ]
     },
     {
+        "Name": "Dagger Strike",
+        "Cost": 1,
+        "Type": "Attack",
+        "Targeting": "Random",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 }
+        ]
+    },
+    {
         "Name": "Heavy Slash",
         "Cost": 2,
         "Type": "Attack",
@@ -186,6 +197,28 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "stun", "Duration": 1, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Shield Breaker",
+        "Cost": 2,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "bludgeoning", "Duration": 0, "Strength": 18 }
+        ]
+    },
+    {
+        "Name": "Hammer Slam",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "All",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "bludgeoning", "Duration": 0, "Strength": 10 }
         ]
     }
 ]

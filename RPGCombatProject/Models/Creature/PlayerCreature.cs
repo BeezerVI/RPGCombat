@@ -85,28 +85,32 @@ namespace RPGCombatProject.Models
                 case "warrior":
                     return new List<Ability>
                     {
-                        Abilities.GetAbility("sword_strike"),
-                        Abilities.GetAbility("shield_up")
+                        Abilities.GetAbility("Sword Strike"),
+                        Abilities.GetAbility("Heavy Slash"),
+                        Abilities.GetAbility("Fortify"),
                     };
                     
                 case "mage":
                     return new List<Ability>
                     {
-                        Abilities.GetAbility("fireball"),
-                        Abilities.GetAbility("heal")
+                        Abilities.GetAbility("Fireball"),
+                        Abilities.GetAbility("Lightning Bolt"),
+                        Abilities.GetAbility("Mass Heal"),
                     };
 
                 case "rogue":
                     return new List<Ability>
                     {
-                        Abilities.GetAbility("sword_strike"),
-                        Abilities.GetAbility("fireball") // Example: Could replace with a custom rogue ability later
+                        Abilities.GetAbility("Poison"),
+                        Abilities.GetAbility("Stun"),
+                        Abilities.GetAbility("Speed Boost"),
+                       // Abilities.GetAbility("Dagger Strike"),
                     };
 
                 default:
                     return new List<Ability>
                     {
-                        Abilities.GetAbility("sword_strike")
+                        Abilities.GetAbility("Sword Strike")
                     };
             }
         }

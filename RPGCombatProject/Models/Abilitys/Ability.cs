@@ -183,6 +183,14 @@ namespace RPGCombatProject.Models
                         target.ApplyShield(effect.Strength);
                         Console.WriteLine($"{target.Name} gains {effect.Strength} shield.");
                         break;
+                    case "piercing":
+                        target.ApplyPiercingDamage(effect.Strength);
+                        Console.WriteLine($"{target.Name} takes {effect.Strength} piercing damage.");
+                        break;
+                    case "bludgeoning":
+                        target.ApplyBludgeoningDamage(effect.Strength);
+                        Console.WriteLine($"{target.Name} takes {effect.Strength} bludgeoning damage.");
+                        break;
                     default:
                         // For custom or status effects.
                         target.ApplyEffect(effect);

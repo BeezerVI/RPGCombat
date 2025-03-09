@@ -81,6 +81,28 @@ namespace RPGCombatProject.Models
             Console.WriteLine($"{Name} gains {amount} shield.");
         }
 
+        /// <summary>
+        /// Applies bludgeoning damage: 
+        /// - Deals FULL damage to SHIELDS first.
+        /// - If no shield remains, it deals normal health damage.
+        /// </summary>
+        public void ApplyBludgeoningDamage(int damage)
+        {
+            if (Shield > 0)
+            {
+                // Damage shield first
+                Shield = Math.Max(0, Shield - damage);
+                Console.WriteLine($"{Name} takes {damage} bludgeoning damage to their shield!");
+            }
+            else
+            {
+                // If no shield remains, apply damage normally to health
+                Health = Math.Max(0, Health - damage);
+                Console.WriteLine($"{Name} takes {damage} bludgeoning damage to their health!");
+            }
+        }
+
+
         public bool IsStunned()
         {
             return Effects.Any(effect => effect.EffectName.ToLower() == "stun" && effect.Duration > 0);
@@ -96,6 +118,10 @@ namespace RPGCombatProject.Models
             {
                 switch (effect.EffectName.ToLower())
                 {
+                    case "stun":
+                        Console.WriteLine($"{Name} is stunned and cannot act.");
+                        break;
+
                     case "burning":
                         ApplyDamage(effect.Strength);
                         Console.WriteLine($"{Name} suffers {effect.Strength} burn damage.");
@@ -115,10 +141,6 @@ namespace RPGCombatProject.Models
                         Console.WriteLine($"{Name} takes {effect.Strength} poison damage.");
                         break;
 
-                    case "stun":
-                        Console.WriteLine($"{Name} is stunned and cannot act this turn.");
-                        break;
-
                     case "weaken":
                         Console.WriteLine($"{Name}'s attack power is reduced.");
                         break;
@@ -129,8 +151,10 @@ namespace RPGCombatProject.Models
                         break;
                 }
 
-                // Decrease effect duration and remove it if expired
+                // Reduce effect duration
                 effect.Duration--;
+
+                // Remove expired effects
                 if (effect.Duration <= 0)
                 {
                     Console.WriteLine($"{effect.EffectName} on {Name} has ended.");
@@ -138,5 +162,6 @@ namespace RPGCombatProject.Models
                 }
             }
         }
+
     }
 }
