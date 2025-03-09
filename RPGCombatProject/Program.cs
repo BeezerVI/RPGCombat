@@ -137,34 +137,41 @@ namespace RPGCombatProject
         }
 
         static void PlayerTurnForPlayer(int playerIndex)
-        {
-            // Get the current player.
-            PlayerCreature? currentPlayer = gameState.PlayerTeam[playerIndex] as PlayerCreature;
-            if (currentPlayer == null)
             {
-                UIManager.Write("Error: The current player is not a PlayerCreature.");
-                return;
-            }
-
-            currentPlayer.Stamina = currentPlayer.MaxStamina; // Reset stamina at the start of the turn
-            UIManager.Write($"{currentPlayer.Name}'s turn begins.");
-
-            bool isPlayerTurn = true;
-            while (isPlayerTurn == true)
-            {
-                // Display game state
-                UIManager.DisplayGameState();
-
-                isPlayerTurn = PlayerCombatOptions(currentPlayer);
-
-                CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
-                if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
+                PlayerCreature? currentPlayer = gameState.PlayerTeam[playerIndex] as PlayerCreature;
+                if (currentPlayer == null)
                 {
-                    break;
+                    UIManager.Write("Error: The current player is not a PlayerCreature.");
+                    return;
                 }
+
+                // Check if the player is stunned
+                if (currentPlayer.IsStunned())
+                {
+                    UIManager.Write($"{currentPlayer.Name} is stunned and skips their turn.");
+                    return;
+                }
+
+                currentPlayer.Stamina = currentPlayer.MaxStamina; // Reset stamina at the start of the turn
+                UIManager.Write($"{currentPlayer.Name}'s turn begins.");
+
+                bool isPlayerTurn = true;
+                while (isPlayerTurn)
+                {
+                    // Display game state
+                    UIManager.DisplayGameState();
+
+                    isPlayerTurn = PlayerCombatOptions(currentPlayer);
+
+                    CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
+                    if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
+                    {
+                        break;
+                    }
+                }
+                UIManager.Write($"{currentPlayer.Name}'s turn is over.");
             }
-            UIManager.Write($"{currentPlayer.Name}'s turn is over.");
-        }
+
 
         static void EnemysTurn()
         {
@@ -172,6 +179,13 @@ namespace RPGCombatProject
             foreach (var enemy in gameState.EnemyTeam)
             {
                 if (enemy.IsDead) continue;
+
+                // Check if the enemy is stunned
+                if (enemy.IsStunned())
+                {
+                    UIManager.Write($"{enemy.Name} is stunned and skips their turn.");
+                    continue;
+                }
 
                 // Get a list of alive players.
                 var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
@@ -181,7 +195,6 @@ namespace RPGCombatProject
                     return;
                 }
 
-                // If the enemy is an EnemyCreature (it should be), use its Act method.
                 if (enemy is EnemyCreature e)
                 {
                     Console.Clear();                    
@@ -192,13 +205,13 @@ namespace RPGCombatProject
                 }
                 else
                 {
-                    // Fallback behavior if enemy is not of type EnemyCreature.
                     UIManager.Write("Error: Enemy is not an EnemyCreature.");
                 }
             }
 
             CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
         }
+
 
 
         static bool PlayerCombatOptions(PlayerCreature currentPlayer)

@@ -12,8 +12,6 @@ namespace RPGCombatProject.Models
         public int MaxHealth { get; set; }
         public int Shield { get; set; }
         public List<Effect> Effects { get; set; }
-
-        // NEW: Store a reference to the creature that this creature is targeting.
         public Creature? Target { get; set; }
 
         public Creature(string name, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null)
@@ -35,9 +33,13 @@ namespace RPGCombatProject.Models
             if (Health <= 0)
             {
                 IsDead = true;
+                Console.WriteLine($"{Name} has died!");
             }
         }
 
+        /// <summary>
+        /// Applies standard damage, first reducing the shield, then applying remaining damage to health.
+        /// </summary>
         public void ApplyDamage(int damage)
         {
             if (Shield > 0)
@@ -47,36 +49,93 @@ namespace RPGCombatProject.Models
                 damage = remainingDamage;
             }
             Health = Math.Max(0, Health - damage);
+            Console.WriteLine($"{Name} takes {damage} damage!");
+            CheckIfDead();
+        }
+
+        /// <summary>
+        /// Applies piercing damage directly to health, bypassing shields.
+        /// </summary>
+        public void ApplyPiercingDamage(int damage)
+        {
+            Health = Math.Max(0, Health - damage);
+            Console.WriteLine($"{Name} takes {damage} piercing damage! (Bypassed shield)");
             CheckIfDead();
         }
 
         public void ApplyHealing(int amount)
         {
             Health = Math.Min(MaxHealth, Health + amount);
+            Console.WriteLine($"{Name} heals for {amount} HP.");
         }
 
         public void ApplyEffect(Effect effect)
         {
             Effects.Add(effect);
+            Console.WriteLine($"{Name} is affected by {effect.EffectName} for {effect.Duration} turns.");
         }
 
         public void ApplyShield(int amount)
         {
             Shield += amount;
+            Console.WriteLine($"{Name} gains {amount} shield.");
         }
 
+        public bool IsStunned()
+        {
+            return Effects.Any(effect => effect.EffectName.ToLower() == "stun" && effect.Duration > 0);
+        }
+
+
+        /// <summary>
+        /// Processes all active effects (poison, burn, regeneration, stun, etc.).
+        /// </summary>
         public void ProcessEffects()
         {
             foreach (var effect in Effects.ToList())
             {
-                if (effect.EffectName == "Frost")
-                    ApplyDamage(effect.Strength);
-                if (effect.EffectName == "Poisoned")
-                    ApplyDamage(effect.Strength);
+                switch (effect.EffectName.ToLower())
+                {
+                    case "burning":
+                        ApplyDamage(effect.Strength);
+                        Console.WriteLine($"{Name} suffers {effect.Strength} burn damage.");
+                        break;
 
+                    case "frozen":
+                        Console.WriteLine($"{Name} is frozen and skips this turn.");
+                        break;
+
+                    case "bleeding":
+                        ApplyDamage(effect.Strength);
+                        Console.WriteLine($"{Name} bleeds for {effect.Strength} damage.");
+                        break;
+
+                    case "poison":
+                        ApplyDamage(effect.Strength);
+                        Console.WriteLine($"{Name} takes {effect.Strength} poison damage.");
+                        break;
+
+                    case "stun":
+                        Console.WriteLine($"{Name} is stunned and cannot act this turn.");
+                        break;
+
+                    case "weaken":
+                        Console.WriteLine($"{Name}'s attack power is reduced.");
+                        break;
+
+                    case "regeneration":
+                        ApplyHealing(effect.Strength);
+                        Console.WriteLine($"{Name} regenerates {effect.Strength} health.");
+                        break;
+                }
+
+                // Decrease effect duration and remove it if expired
                 effect.Duration--;
                 if (effect.Duration <= 0)
+                {
+                    Console.WriteLine($"{effect.EffectName} on {Name} has ended.");
                     Effects.Remove(effect);
+                }
             }
         }
     }

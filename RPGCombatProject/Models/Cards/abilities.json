@@ -11,14 +11,25 @@
         ]
     },
     {
-        "Name": "Heal",
-        "Cost": 1,
-        "Type": "Heal",
+        "Name": "Heavy Slash",
+        "Cost": 2,
+        "Type": "Attack",
         "Targeting": "Single",
-        "TeamTarget": "Allies",
-        "CanTargetSelf": true,
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "heal", "Duration": 0, "Strength": 10 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 12 }
+        ]
+    },
+    {
+        "Name": "Piercing Strike",
+        "Cost": 2,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "piercing_damage", "Duration": 0, "Strength": 8 }
         ]
     },
     {
@@ -30,6 +41,151 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 8 }
+        ]
+    },
+    {
+        "Name": "Lightning Bolt",
+        "Cost": 2,
+        "Type": "Attack",
+        "Targeting": "Random",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 10 },
+            { "EffectName": "stun", "Duration": 1, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Ice Shard",
+        "Cost": 1,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 5 },
+            { "EffectName": "slow", "Duration": 2, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Meteor Strike",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "All",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 15 }
+        ]
+    },
+    {
+        "Name": "Heal",
+        "Cost": 1,
+        "Type": "Heal",
+        "Targeting": "Single",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "heal", "Duration": 0, "Strength": 10 }
+        ]
+    },
+    {
+        "Name": "Mass Heal",
+        "Cost": 3,
+        "Type": "Heal",
+        "Targeting": "All",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "heal", "Duration": 0, "Strength": 8 }
+        ]
+    },
+    {
+        "Name": "Regeneration",
+        "Cost": 2,
+        "Type": "Heal",
+        "Targeting": "Single",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "heal", "Duration": 3, "Strength": 4 }
+        ]
+    },
+    {
+        "Name": "Revive",
+        "Cost": 5,
+        "Type": "Heal",
+        "Targeting": "Single",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "revive", "Duration": 0, "Strength": 50 }
+        ]
+    },
+    {
+        "Name": "Fortify",
+        "Cost": 2,
+        "Type": "Buff",
+        "Targeting": "Single",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "shield", "Duration": 0, "Strength": 10 }
+        ]
+    },
+    {
+        "Name": "Magic Barrier",
+        "Cost": 3,
+        "Type": "Buff",
+        "Targeting": "All",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "shield", "Duration": 0, "Strength": 8 }
+        ]
+    },
+    {
+        "Name": "Speed Boost",
+        "Cost": 1,
+        "Type": "Buff",
+        "Targeting": "Single",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "speed", "Duration": 3, "Strength": 2 }
+        ]
+    },
+    {
+        "Name": "Weaken",
+        "Cost": 2,
+        "Type": "Debuff",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "weaken", "Duration": 3, "Strength": -2 }
+        ]
+    },
+    {
+        "Name": "Poison",
+        "Cost": 2,
+        "Type": "Debuff",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "poison", "Duration": 4, "Strength": 3 }
+        ]
+    },
+    {
+        "Name": "Stun",
+        "Cost": 3,
+        "Type": "Debuff",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "stun", "Duration": 1, "Strength": 1 }
         ]
     }
 ]

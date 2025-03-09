@@ -19,7 +19,6 @@ namespace RPGCombatProject.Models
         private static void LoadAbilitiesFromJson(string fileName)
         {
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Abilitys", fileName);
-            Console.WriteLine($"Looking for abilities.json at: {filePath}");
             if (!File.Exists(filePath))
             {
                 Console.WriteLine($"Error: {filePath} not found.");
