@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using RPGCombatProject.GameLogic;
+using RPGCombatProject.Utilityes;
 
 namespace RPGCombatProject.Models
 {
@@ -10,6 +11,7 @@ namespace RPGCombatProject.Models
         Attack,
         Heal,
         Buff,
+        Debuff,
         Custom
     }
 
@@ -62,7 +64,7 @@ namespace RPGCombatProject.Models
             {
                 if (player.Stamina < Cost)
                 {
-                    Console.WriteLine("Not enough stamina to use this ability.");
+                    UIManager.Write("Not enough stamina to use this ability.");
                     return;
                 }
                 player.Stamina -= Cost;
@@ -73,7 +75,7 @@ namespace RPGCombatProject.Models
             List<Creature> possibleTargets = DetermineTargets(gameState, user);
             if (possibleTargets.Count == 0)
             {
-                Console.WriteLine("No valid targets available for ability.");
+                UIManager.Write("No valid targets available for ability.");
                 return;
             }
 
@@ -84,18 +86,18 @@ namespace RPGCombatProject.Models
                 {
                     ApplyEffects(target);
                 }
-                Console.WriteLine($"{user.Name} used {Name} on all applicable targets.");
+                UIManager.Write($"{user.Name} used {Name} on all applicable targets.");
             }
             else
             {
                 Creature target = SelectTarget(possibleTargets, user);
                 if (target == null)
                 {
-                    Console.WriteLine("No target selected. Ability canceled.");
+                    UIManager.Write("No target selected. Ability canceled.");
                     return;
                 }
                 ApplyEffects(target);
-                Console.WriteLine($"{user.Name} used {Name} on {target.Name}.");
+                UIManager.Write($"{user.Name} used {Name} on {target.Name}.");
             }
 
             // Execute any chained action after the main effects.
@@ -173,28 +175,28 @@ namespace RPGCombatProject.Models
                 {
                     case "damage":
                         target.ApplyDamage(effect.Strength);
-                        Console.WriteLine($"{target.Name} takes {effect.Strength} damage.");
+                        UIManager.Write($"{target.Name} takes {effect.Strength} damage.");
                         break;
                     case "heal":
                         target.ApplyHealing(effect.Strength);
-                        Console.WriteLine($"{target.Name} heals for {effect.Strength} HP.");
+                        UIManager.Write($"{target.Name} heals for {effect.Strength} HP.");
                         break;
                     case "shield":
                         target.ApplyShield(effect.Strength);
-                        Console.WriteLine($"{target.Name} gains {effect.Strength} shield.");
+                        UIManager.Write($"{target.Name} gains {effect.Strength} shield.");
                         break;
                     case "piercing":
                         target.ApplyPiercingDamage(effect.Strength);
-                        Console.WriteLine($"{target.Name} takes {effect.Strength} piercing damage.");
+                        UIManager.Write($"{target.Name} takes {effect.Strength} piercing damage.");
                         break;
                     case "bludgeoning":
                         target.ApplyBludgeoningDamage(effect.Strength);
-                        Console.WriteLine($"{target.Name} takes {effect.Strength} bludgeoning damage.");
+                        UIManager.Write($"{target.Name} takes {effect.Strength} bludgeoning damage.");
                         break;
                     default:
                         // For custom or status effects.
                         target.ApplyEffect(effect);
-                        Console.WriteLine($"{target.Name} is affected by {effect.EffectName} (Duration: {effect.Duration}, Strength: {effect.Strength}).");
+                        UIManager.Write($"{target.Name} is affected by {effect.EffectName} (Duration: {effect.Duration}, Strength: {effect.Strength}).");
                         break;
                 }
             }

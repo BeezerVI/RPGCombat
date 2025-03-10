@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPGCombatProject.Utilityes;
 
 namespace RPGCombatProject.Models
 {
@@ -13,8 +14,11 @@ namespace RPGCombatProject.Models
         public int Shield { get; set; }
         public List<Effect> Effects { get; set; }
         public Creature? Target { get; set; }
+        public int Stamina { get; set; }
+        public int MaxStamina { get; set; }
+        public List<Ability> Hand { get; set; }
 
-        public Creature(string name, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null)
+        public Creature(string name, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null, int stamina = 1, int maxStamina = 1, List<Ability>? hand = null)
         {
             Name = name;
             IsDead = false;
@@ -23,7 +27,15 @@ namespace RPGCombatProject.Models
             Shield = shield;
             Effects = effects ?? new List<Effect>();
             Target = null;
+            Stamina = stamina;
+            MaxStamina = maxStamina;
+            Hand = hand ?? new List<Ability>();
         }
+
+        /// <summary>
+        /// Abstract method to be implemented by subclasses to play creatures turn.
+        /// </summary>
+        public abstract void PlayTurn();
 
         /// <summary>
         /// Check if the creature is dead and set the IsDead property accordingly.

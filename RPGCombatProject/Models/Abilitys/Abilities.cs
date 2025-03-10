@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using RPGCombatProject.GameLogic;
+using RPGCombatProject.Utilityes;
 
 namespace RPGCombatProject.Models
 {
@@ -64,6 +65,7 @@ namespace RPGCombatProject.Models
         // Retrieves an ability by name
         public static Ability GetAbility(string abilityName)
         {
+        //    UIManager.Write($"Looking for ability: {abilityName}"); for debugging
             string formattedAbilityName = abilityName.Trim().ToLower();
             Console.WriteLine($"Looking for ability: {formattedAbilityName}");
             if (abilityRegistry.TryGetValue(formattedAbilityName, out Ability? ability))

@@ -104,9 +104,6 @@ namespace RPGCombatProject
         {
             while (true)
             {
-                // Process effects on all players at the start of the round
-                ProcessTurnEffects(gameState.PlayerTeam);
-
                 // Each living player takes a turn
                 for (int i = 0; i < gameState.PlayerTeam.Count; i++)
                 {
@@ -123,8 +120,7 @@ namespace RPGCombatProject
                 }
 
 
-                // After all players have finished, process enemy effects and then enemy turn
-                ProcessTurnEffects(gameState.EnemyTeam);
+                // After all players have finished, play enemy turn
                 EnemysTurn();
 
                 // Check if the combat is over
@@ -139,37 +135,14 @@ namespace RPGCombatProject
         static void PlayerTurnForPlayer(int playerIndex)
             {
                 PlayerCreature? currentPlayer = gameState.PlayerTeam[playerIndex] as PlayerCreature;
-                if (currentPlayer == null)
-                {
-                    UIManager.Write("Error: The current player is not a PlayerCreature.");
-                    return;
-                }
-
-                // Check if the player is stunned
-                if (currentPlayer.IsStunned())
-                {
-                    UIManager.Write($"{currentPlayer.Name} is stunned and skips their turn.");
-                    return;
-                }
-
-                currentPlayer.Stamina = currentPlayer.MaxStamina; // Reset stamina at the start of the turn
-                UIManager.Write($"{currentPlayer.Name}'s turn begins.");
-
-                bool isPlayerTurn = true;
-                while (isPlayerTurn)
-                {
-                    // Display game state
-                    UIManager.DisplayGameState();
-
-                    isPlayerTurn = PlayerCombatOptions(currentPlayer);
 
                     CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
-                    if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
+                    if (currentPlayer == null)
                     {
-                        break;
+                        UIManager.Write("Error: Current player is not a PlayerCreature.");
+                        return;
                     }
-                }
-                UIManager.Write($"{currentPlayer.Name}'s turn is over.");
+                currentPlayer.PlayTurn();
             }
 
 
@@ -184,9 +157,11 @@ namespace RPGCombatProject
                 if (enemy.IsStunned())
                 {
                     UIManager.Write($"{enemy.Name} is stunned and skips their turn.");
+                    ProcessTurnEffects(enemy);
                     continue;
                 }
 
+                ProcessTurnEffects(enemy);
                 // Get a list of alive players.
                 var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
                 if (!viablePlayers.Any())
@@ -211,57 +186,12 @@ namespace RPGCombatProject
 
             CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
         }
-
-
-
-        static bool PlayerCombatOptions(PlayerCreature currentPlayer)
+        static void ProcessTurnEffects(Creature creature)
         {
-            Console.Write("Enter the number of the card you want to play (or 'E' to end turn): ");
-            string? input = Console.ReadLine();
-
-            if (input == null)
-            {
-                UIManager.Write("Input cannot be null. Please enter a valid input.");
-                return true;
-            }
-
-            if (input.ToUpper() == "E")
-            {
-                UIManager.Write($"{currentPlayer.Name} has ended their turn.");
-                return false;
-            }
-
-            if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
-            {
-                UIManager.Write("Invalid input. Please enter a valid card number.");
-                return true;
-            }
-
-            // Get the selected card from the current player's hand.
-            Ability selectedCard = currentPlayer.Hand[cardNumber - 1];
-            UIManager.Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
-
-            if (selectedCard.Cost > currentPlayer.Stamina)
-            {
-                UIManager.Write("Not enough actions to play this card. Please select another card.");
-                return true;
-            }
-
-            // Ask for a target if needed and execute ability
-            selectedCard.Execute(gameState, currentPlayer);
-
-            return true;
-        }
-
-        static void ProcessTurnEffects(List<Creature> creatures)
-        {
-            foreach (var creature in creatures)
-            {
                 if (!creature.IsDead)
                 {
                     creature.ProcessEffects();
                 }
-            }
         }
 
         static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam)

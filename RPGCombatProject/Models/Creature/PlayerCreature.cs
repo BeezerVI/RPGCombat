@@ -1,23 +1,21 @@
 using System.Collections.Generic;
+using RPGCombatProject.Utilityes;
 
 namespace RPGCombatProject.Models
 {
     public class PlayerCreature : Creature
     {
-        public int Stamina { get; set; }
-        public int MaxStamina { get; set; } // New property for MaxStamina
-        public List<Ability> Hand { get; set; }
         public int Level { get; set; }
         public int UpgradePoints { get; set; }
 
-        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 3, int maxStamina = 3, List<Ability>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
-            : base(name, maxHealth, health, shield)
+        public string ClassName  { get; set; }
+
+        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, List<Effect>? effects = null, int stamina = 3, int maxStamina = 3, List<Ability>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
+            : base(name, maxHealth, health, shield, effects, stamina, maxStamina, hand)
         {
-            Stamina = stamina;
-            MaxStamina = maxStamina; // Initialize MaxStamina
-            Hand = hand ?? new List<Ability>();
             Level = level;
             UpgradePoints = upgradePoints;
+            ClassName = className;
         }
 
         // Factory method: creates a new player based on the chosen class.
@@ -110,10 +108,39 @@ namespace RPGCombatProject.Models
                 default:
                     return new List<Ability>
                     {
-                        Abilities.GetAbility("Sword Strike")
+                        Abilities.GetAbility("Sword Strike"),
+                        Abilities.GetAbility("Heavy Slash"),
+                        Abilities.GetAbility("Fortify"),
                     };
             }
         }
+
+        public override void PlayTurn()
+            {
+                // Check if the player is stunned
+                if (this.IsStunned())
+                {
+                    UIManager.Write($"{this.Name} is stunned and skips their turn.");
+                    this.ProcessEffects();
+                    return;
+                }
+                this.ProcessEffects();
+
+                this.Stamina = this.MaxStamina; // Reset stamina at the start of the turn
+                UIManager.Write($"{this.Name}'s turn begins.");
+
+                bool isTurn = true;
+                while (isTurn)
+                {
+                    // Display game state
+                    UIManager.DisplayGameState();
+
+                    isTurn = UIManager.PlayerCombatOptions(this);
+                }
+                UIManager.Write($"{this.Name}'s turn is over.");
+            }
+
+
 
         public void UpgradeMenu()
         {

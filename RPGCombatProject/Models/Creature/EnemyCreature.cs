@@ -80,5 +80,9 @@ namespace RPGCombatProject.Models
                     break;
             }
         }
+        public override void PlayTurn()
+        {
+            //Nuthing in here yet
+        }
     }
 }
