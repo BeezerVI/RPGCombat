@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPGCombatProject.Utilityes;
 
 namespace RPGCombatProject.Models
 {
@@ -43,6 +44,16 @@ namespace RPGCombatProject.Models
         /// <param name="players">The list of alive player creatures.</param>
         public void Act(List<Creature> players)
         {
+                CheckIfDead();
+                if (IsDead) return;
+                ProcessEffects();
+
+                // Check if the enemy is stunned
+                if (IsStunned())
+                {
+                    UIManager.Write($"{Name} is stunned and skips their turn.");
+                    return;
+                }
             if (players == null || players.Count == 0) return;
 
             // Switch on the enemy's name (in lower case) to decide its behavior.
@@ -82,7 +93,8 @@ namespace RPGCombatProject.Models
         }
         public override void PlayTurn()
         {
-            //Nuthing in here yet
+            // Placeholder for enemy AI behavior.
+            Console.WriteLine($"{Name} is thinking...");
         }
     }
 }

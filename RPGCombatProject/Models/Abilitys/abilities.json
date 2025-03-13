@@ -51,7 +51,7 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 8 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 10 }
         ]
     },
     {

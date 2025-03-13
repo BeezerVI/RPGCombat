@@ -126,51 +126,54 @@ namespace RPGCombatProject.Models
         /// </summary>
         public void ProcessEffects()
         {
-            foreach (var effect in Effects.ToList())
+            if (!this.IsDead)
             {
-                switch (effect.EffectName.ToLower())
+                foreach (var effect in Effects.ToList())
                 {
-                    case "stun":
-                        Console.WriteLine($"{Name} is stunned and cannot act.");
-                        break;
+                    switch (effect.EffectName.ToLower())
+                    {
+                        case "stun":
+                            Console.WriteLine($"{Name} is stunned and cannot act.");
+                            break;
 
-                    case "burning":
-                        ApplyDamage(effect.Strength);
-                        Console.WriteLine($"{Name} suffers {effect.Strength} burn damage.");
-                        break;
+                        case "burning":
+                            ApplyDamage(effect.Strength);
+                            Console.WriteLine($"{Name} suffers {effect.Strength} burn damage.");
+                            break;
 
-                    case "frozen":
-                        Console.WriteLine($"{Name} is frozen and skips this turn.");
-                        break;
+                        case "frozen":
+                            Console.WriteLine($"{Name} is frozen and skips this turn.");
+                            break;
 
-                    case "bleeding":
-                        ApplyDamage(effect.Strength);
-                        Console.WriteLine($"{Name} bleeds for {effect.Strength} damage.");
-                        break;
+                        case "bleeding":
+                            ApplyDamage(effect.Strength);
+                            Console.WriteLine($"{Name} bleeds for {effect.Strength} damage.");
+                            break;
 
-                    case "poison":
-                        ApplyDamage(effect.Strength);
-                        Console.WriteLine($"{Name} takes {effect.Strength} poison damage.");
-                        break;
+                        case "poison":
+                            ApplyDamage(effect.Strength);
+                            Console.WriteLine($"{Name} takes {effect.Strength} poison damage.");
+                            break;
 
-                    case "weaken":
-                        Console.WriteLine($"{Name}'s attack power is reduced.");
-                        break;
+                        case "weaken":
+                            Console.WriteLine($"{Name}'s attack power is reduced.");
+                            break;
 
-                    case "regeneration":
-                        ApplyHealing(effect.Strength);
-                        Console.WriteLine($"{Name} regenerates {effect.Strength} health.");
-                        break;
-                }
+                        case "regeneration":
+                            ApplyHealing(effect.Strength);
+                            Console.WriteLine($"{Name} regenerates {effect.Strength} health.");
+                            break;
+                    }
 
-                // Reduce effect duration
-                effect.Duration--;
+                    // Reduce effect duration
+                    effect.Duration--;
 
-                // Remove expired effects
-                if (effect.Duration <= 0)
-                {
-                    Console.WriteLine($"{effect.EffectName} on {Name} has ended.");
-                    Effects.Remove(effect);
+                    // Remove expired effects
+                    if (effect.Duration <= 0)
+                    {
+                        Console.WriteLine($"{effect.EffectName} on {Name} has ended.");
+                        Effects.Remove(effect);
+                    }
                 }
             }
         }

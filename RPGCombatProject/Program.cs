@@ -151,17 +151,6 @@ namespace RPGCombatProject
             UIManager.Write("Enemy's turn.");
             foreach (var enemy in gameState.EnemyTeam)
             {
-                if (enemy.IsDead) continue;
-
-                // Check if the enemy is stunned
-                if (enemy.IsStunned())
-                {
-                    UIManager.Write($"{enemy.Name} is stunned and skips their turn.");
-                    ProcessTurnEffects(enemy);
-                    continue;
-                }
-
-                ProcessTurnEffects(enemy);
                 // Get a list of alive players.
                 var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
                 if (!viablePlayers.Any())
@@ -185,13 +174,6 @@ namespace RPGCombatProject
             }
 
             CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
-        }
-        static void ProcessTurnEffects(Creature creature)
-        {
-                if (!creature.IsDead)
-                {
-                    creature.ProcessEffects();
-                }
         }
 
         static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam)

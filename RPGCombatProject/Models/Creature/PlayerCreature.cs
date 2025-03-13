@@ -117,17 +117,16 @@ namespace RPGCombatProject.Models
 
         public override void PlayTurn()
             {
+                ProcessEffects();
                 // Check if the player is stunned
-                if (this.IsStunned())
+                if (IsStunned())
                 {
-                    UIManager.Write($"{this.Name} is stunned and skips their turn.");
-                    this.ProcessEffects();
+                    UIManager.Write($"{Name} is stunned and skips their turn.");
                     return;
                 }
-                this.ProcessEffects();
 
-                this.Stamina = this.MaxStamina; // Reset stamina at the start of the turn
-                UIManager.Write($"{this.Name}'s turn begins.");
+                Stamina = MaxStamina; // Reset stamina at the start of the turn
+                UIManager.Write($"{Name}'s turn begins.");
 
                 bool isTurn = true;
                 while (isTurn)
@@ -137,7 +136,7 @@ namespace RPGCombatProject.Models
 
                     isTurn = UIManager.PlayerCombatOptions(this);
                 }
-                UIManager.Write($"{this.Name}'s turn is over.");
+                UIManager.Write($"{Name}'s turn is over.");
             }
 
 
