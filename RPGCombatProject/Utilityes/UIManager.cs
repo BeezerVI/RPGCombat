@@ -163,40 +163,40 @@ namespace RPGCombatProject.Utilityes
 
             if (input == null)
             {
-                UIManager.Write("Input cannot be null. Please enter a valid input.");
+                Write("Input cannot be null. Please enter a valid input.");
                 return true;
             }
 
             if (input.ToUpper() == "E")
             {
-                UIManager.Write($"{currentPlayer.Name} has ended their turn.");
+                Write($"{currentPlayer.Name} has ended their turn.");
                 return false;
             }
 
             if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
             {
-                UIManager.Write("Invalid input. Please enter a valid card number.");
+                Write("Invalid input. Please enter a valid card number.");
                 return true;
             }
 
             // Get the selected card from the current player's hand.
             Ability selectedCard = currentPlayer.Hand[cardNumber - 1];
-            UIManager.Write($"{currentPlayer.Name} selected card: {selectedCard.Name}");
+            Write($"{currentPlayer.Name} played: {selectedCard.Name}", waitForInput: false);
 
             if (selectedCard.Cost > currentPlayer.Stamina)
             {
-                UIManager.Write("Not enough actions to play this card. Please select another card.");
+                Write("Not enough actions to play this card. Please select another card.");
                 return true;
             }
 
-            // Ask for a target if needed and execute ability
+            // Execute ability
             if (gameState != null)
             {
                 selectedCard.Execute(gameState, currentPlayer);
             }
             else
             {
-                UIManager.Write("Error: Game state is not set.");
+                Write("Error: Game state is not set.");
             }
 
             return true;
