@@ -72,7 +72,7 @@ namespace RPGCombatProject.Models
                         className: "phoenix",
                         level: 1
                     );
-                    
+
                 default:
                     // Default to Warrior if an invalid class is chosen.
                     return new PlayerCreature(
@@ -122,14 +122,6 @@ namespace RPGCombatProject.Models
                 case "phoenix":
                     return new List<Ability>
                     {
-                        Abilities.GetAbility("Fireball"),
-                        Abilities.GetAbility("Lightning Bolt"),
-                        Abilities.GetAbility("Mass Heal"),
-                    };
-
-                default:
-                    return new List<Ability>
-                    {
                         Abilities.GetAbility("Sword Strike"),
                         Abilities.GetAbility("Dagger Strike"),
                         Abilities.GetAbility("Heavy Slash"),
@@ -150,6 +142,14 @@ namespace RPGCombatProject.Models
                         Abilities.GetAbility("Stun"),
                         Abilities.GetAbility("Shield Breaker"),
                         Abilities.GetAbility("Hammer Slam"),
+                    };
+
+                default:
+                    return new List<Ability>
+                    {
+                        Abilities.GetAbility("Sword Strike"),
+                        Abilities.GetAbility("Heavy Slash"),
+                        Abilities.GetAbility("Fortify"),
                     };
             }
         }
