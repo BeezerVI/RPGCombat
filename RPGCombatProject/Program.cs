@@ -10,8 +10,7 @@ namespace RPGCombatProject
 {
     public class Program
     {
-        private static GameState gameState = null!;
-        private static int playerIndex;
+        public static GameState gameState = null!;
 
         public static void Main(string[] args)
         {
@@ -91,7 +90,6 @@ namespace RPGCombatProject
             }
 
             gameState = new GameState(enemies, players)!;
-            playerIndex = 0; // Assign a default value to playerIndex
 
             if (gameState == null)
             {
@@ -99,91 +97,47 @@ namespace RPGCombatProject
             }
         }
 
-        // This is the main combat loop
         static void StartCombatLoop()
         {
             while (true)
             {
-                // Each living player takes a turn
-                for (int i = 0; i < gameState.PlayerTeam.Count; i++)
+                // Combine both teams into one list for turn order.
+                var allCreatures = gameState.PlayerTeam.Concat(gameState.EnemyTeam).ToList();
+
+                foreach (var creature in allCreatures)
                 {
-                    if (!gameState.PlayerTeam[i].IsDead)
-                    {
-                        playerIndex = i;
-                        UIManager.SetCurrentPlayerIndex(playerIndex); // Update UIManager with the current player's index
-                        PlayerTurnForPlayer(i);
-                    }
-                    else
-                    {
-                        UIManager.Write($"{gameState.PlayerTeam[i].Name} is dead and cannot act.");
-                    }
-                }
+                    if (creature.IsDead)
+                        continue;
 
-
-                // After all players have finished, play enemy turn
-                EnemysTurn();
-
-                // Check if the combat is over
-                if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
-                {
-                    break;
-                }
-            }
-            UIManager.Write("Combat has fully ended.");
-        }
-
-        static void PlayerTurnForPlayer(int playerIndex)
-            {
-                PlayerCreature? currentPlayer = gameState.PlayerTeam[playerIndex] as PlayerCreature;
-
-                    CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
-                    if (currentPlayer == null)
-                    {
-                        UIManager.Write("Error: Current player is not a PlayerCreature.");
-                        return;
-                    }
-                currentPlayer.PlayTurn();
-            }
-
-
-        static void EnemysTurn()
-        {
-            UIManager.Write("Enemy's turn.");
-            foreach (var enemy in gameState.EnemyTeam)
-            {
-                // Get a list of alive players.
-                var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
-                if (!viablePlayers.Any())
-                {
-                    UIManager.Write("All players are defeated! Enemies win!");
-                    return;
-                }
-
-                if (enemy is EnemyCreature e)
-                {
-                    Console.Clear();                    
+                    Console.Clear();
                     UIManager.DisplayGameState();
-                    Console.WriteLine($"{enemy.Name}'s turn.");
-                    e.Act(viablePlayers);
+                    Console.WriteLine($"{creature.Name}'s turn.");
+
+                    creature.PlayTurn();
+
                     Console.ReadLine();
-                }
-                else
-                {
-                    UIManager.Write("Error: Enemy is not an EnemyCreature.");
+
+                    // Clean up any dead creatures after each turn.
+                    CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
+
+                    if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
+                        return;
                 }
             }
-
-            CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
+            // Optionally, you can display a message when combat has ended.
+            // UIManager.Write("Combat has fully ended.");
         }
+
 
         static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam)
         {
             // Check if any creatures are dead and remove them from the list
             CheckIfDeadForAllCreatures(enemyTeam);
             CheckIfDeadForAllCreatures(playerTeam);
-            // Remove dead creatures from the list
+            // Remove dead creatures from the enemy team
             DeleteDeadCreatures(enemyTeam);
-        //    DeleteDeadCreatures(playerTeam);
+            // (Optional) You may remove dead players if desired
+            // DeleteDeadCreatures(playerTeam);
         }
 
         /// <summary>

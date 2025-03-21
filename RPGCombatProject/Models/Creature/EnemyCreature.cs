@@ -91,10 +91,22 @@ namespace RPGCombatProject.Models
                     break;
             }
         }
+        // Override PlayTurn so enemy AI uses Act.
         public override void PlayTurn()
         {
-            // Placeholder for enemy AI behavior.
-            Console.WriteLine($"{Name} is thinking...");
+            UIManager.Write($"{Name} starts there turn.");
+            ProcessEffects();
+            if (IsStunned())
+            {
+                UIManager.Write($"{Name} is stunned and skips their turn.");
+                return;
+            }
+
+            // Retrieve viable players from the public game state.
+            var viablePlayers = Program.gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
+            if (viablePlayers.Count == 0) return;
+
+            Act(viablePlayers);
         }
     }
 }
