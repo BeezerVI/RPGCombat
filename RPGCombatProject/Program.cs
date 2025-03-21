@@ -77,6 +77,9 @@ namespace RPGCombatProject
                     case "3":
                         chosenClass = "Rogue";
                         break;
+                    case "4":
+                        chosenClass = "Phoenix";
+                        break;
                     default:
                         UIManager.Write("Invalid choice; defaulting to Warrior.", clearConsole : 1);
                         chosenClass = "Warrior";
@@ -114,8 +117,6 @@ namespace RPGCombatProject
                     Console.WriteLine($"{creature.Name}'s turn.");
 
                     creature.PlayTurn();
-
-                    Console.ReadLine();
 
                     // Clean up any dead creatures after each turn.
                     CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);

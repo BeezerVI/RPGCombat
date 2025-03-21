@@ -105,12 +105,37 @@ namespace RPGCombatProject.Models
                        // Abilities.GetAbility("Dagger Strike"),
                     };
 
+                case "Phoenix":
+                    return new List<Ability>
+                    {
+                        Abilities.GetAbility("Fireball"),
+                        Abilities.GetAbility("Lightning Bolt"),
+                        Abilities.GetAbility("Mass Heal"),
+                    };
+
                 default:
                     return new List<Ability>
                     {
                         Abilities.GetAbility("Sword Strike"),
+                        Abilities.GetAbility("Dagger Strike"),
                         Abilities.GetAbility("Heavy Slash"),
+                        Abilities.GetAbility("Piercing Strike"),
+                        Abilities.GetAbility("Fireball"),
+                        Abilities.GetAbility("Lightning Bolt"),
+                        Abilities.GetAbility("Ice Shard"),
+                        Abilities.GetAbility("Meteor Strike"),
+                        Abilities.GetAbility("Heal"),
+                        Abilities.GetAbility("Mass Heal"),
+                        Abilities.GetAbility("Regeneration"),
+                        Abilities.GetAbility("Revive"),
                         Abilities.GetAbility("Fortify"),
+                        Abilities.GetAbility("Magic Barrier"),
+                        Abilities.GetAbility("Speed Boost"),
+                        Abilities.GetAbility("Weaken"),
+                        Abilities.GetAbility("Poison"),
+                        Abilities.GetAbility("Stun"),
+                        Abilities.GetAbility("Shield Breaker"),
+                        Abilities.GetAbility("Hammer Slam"),
                     };
             }
         }

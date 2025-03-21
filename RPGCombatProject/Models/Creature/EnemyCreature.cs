@@ -94,19 +94,21 @@ namespace RPGCombatProject.Models
         // Override PlayTurn so enemy AI uses Act.
         public override void PlayTurn()
         {
-            UIManager.Write($"{Name} starts there turn.");
-            ProcessEffects();
+            UIManager.Write($"{Name} starts there turn.", waitForInput: false);
             if (IsStunned())
             {
                 UIManager.Write($"{Name} is stunned and skips their turn.");
+                ProcessEffects();
                 return;
             }
+            ProcessEffects();
 
             // Retrieve viable players from the public game state.
             var viablePlayers = Program.gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
             if (viablePlayers.Count == 0) return;
 
             Act(viablePlayers);
+            UIManager.Write($"{Name} turn has ended.", clearConsole: 1);
         }
     }
 }

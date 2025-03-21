@@ -36,7 +36,7 @@ namespace RPGCombatProject.Utilityes
         /// </summary>
         /// <param name="text">The message to display.</param>
         /// <param name="waitForInput">If true, waits for user input before continuing.</param>
-        /// <param name="clearConsole">If 1, clears the console before displaying text. If 2, clears console and then calls DisplayGameState</param>
+        /// <param name="clearConsole">If 1, clears the console before displaying text. If 2, clears console and then calls DisplayGameState, if 3 does not claer console at all</param>
         public static void Write(string text, bool waitForInput = true, int clearConsole = 2)
         {
             if (clearConsole == 1)
@@ -47,6 +47,10 @@ namespace RPGCombatProject.Utilityes
             {
                 Console.Clear();
                 DisplayGameState();
+            }
+            else if (clearConsole == 3)
+            {
+                // Do nothing
             }
             if (waitForInput)
             {
