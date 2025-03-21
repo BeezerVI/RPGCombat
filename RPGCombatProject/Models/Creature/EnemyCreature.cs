@@ -108,7 +108,7 @@ namespace RPGCombatProject.Models
             if (viablePlayers.Count == 0) return;
 
             Act(viablePlayers);
-            UIManager.Write($"{Name} turn has ended.", clearConsole: 1);
+            UIManager.Write($"{Name} turn has ended.", clearConsole: 3);
         }
     }
 }
