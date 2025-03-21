@@ -59,6 +59,19 @@ namespace RPGCombatProject.Models
                         className: "rogue",
                         level: 1
                     );
+
+                case "Phoenix":
+                    return new PlayerCreature(
+                        name,
+                        maxHealth: 100,    // Phoenix has moderate HP
+                        health: 100,
+                        shield: 10,
+                        stamina: 1000,
+                        maxStamina: 1000,     // Initialize MaxStamina
+                        hand: GetDefaultHand("phoenix"),
+                        className: "phoenix",
+                        level: 1
+                    );
                 default:
                     // Default to Warrior if an invalid class is chosen.
                     return new PlayerCreature(
@@ -105,7 +118,7 @@ namespace RPGCombatProject.Models
                        // Abilities.GetAbility("Dagger Strike"),
                     };
 
-                case "Phoenix":
+                case "phoenix":
                     return new List<Ability>
                     {
                         Abilities.GetAbility("Fireball"),
