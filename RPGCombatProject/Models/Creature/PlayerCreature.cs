@@ -60,7 +60,7 @@ namespace RPGCombatProject.Models
                         level: 1
                     );
 
-                case "Phoenix":
+                case "phoenix":
                     return new PlayerCreature(
                         name,
                         maxHealth: 100,    // Phoenix has moderate HP
@@ -72,6 +72,7 @@ namespace RPGCombatProject.Models
                         className: "phoenix",
                         level: 1
                     );
+                    
                 default:
                     // Default to Warrior if an invalid class is chosen.
                     return new PlayerCreature(
