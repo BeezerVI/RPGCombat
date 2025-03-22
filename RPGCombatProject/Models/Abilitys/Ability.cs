@@ -119,41 +119,48 @@ namespace RPGCombatProject.Models
         {
             List<Creature> targets = new List<Creature>();
 
-            // If the ability targets enemies
+            // Find the user's team
+            Team? userTeam = gameState.Teams.FirstOrDefault(team => team.Members.Contains(user));
+            if (userTeam == null)
+            {
+                UIManager.Write("Error: User's team not found.");
+                return targets;
+            }
+
+            // Find all enemy teams (any team that isn't the user's team)
+            List<Team> enemyTeams = gameState.Teams.Where(team => team != userTeam).ToList();
+
             if (TeamTarget == TargetTeam.Enemies)
             {
-                // Add all living members from teams that are not the user's team
-                targets.AddRange(gameState.Teams
-                    .Where(team => team != user.Team)
-                    .SelectMany(team => team.Members)
-                    .Where(member => !member.IsDead));
-            }
-            // If the ability targets allies
-            else if (TeamTarget == TargetTeam.Allies)
-            {
-                if (user.Team != null)
+                // Add all living members from enemy teams
+                foreach (var team in enemyTeams)
                 {
-                    // Add all living members from the user's team
-                    targets.AddRange(user.Team.Members
-                        .Where(member => !member.IsDead));
+                    targets.AddRange(team.Members.Where(member => !member.IsDead));
                 }
             }
-            // If the ability targets both enemies and allies
+            else if (TeamTarget == TargetTeam.Allies)
+            {
+                // Add all living members from the user's team (excluding the user if `CanTargetSelf` is false)
+                targets.AddRange(userTeam.Members.Where(member => !member.IsDead));
+            }
             else if (TeamTarget == TargetTeam.Both)
             {
                 // Add all living members from all teams
-                targets.AddRange(gameState.Teams
-                    .SelectMany(team => team.Members)
-                    .Where(member => !member.IsDead));
+                foreach (var team in gameState.Teams)
+                {
+                    targets.AddRange(team.Members.Where(member => !member.IsDead));
+                }
             }
 
-            // If the ability cannot target the user itself, remove the user from the targets
+            // Remove self if not allowed
             if (!CanTargetSelf)
             {
                 targets.Remove(user);
             }
+
             return targets;
         }
+
 
         // Handles target selection: random if specified or prompting the player for a single target.
         private Creature SelectTarget(List<Creature> targets, Creature user)

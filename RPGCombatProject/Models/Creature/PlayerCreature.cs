@@ -142,6 +142,7 @@ namespace RPGCombatProject.Models
                         Abilities.GetAbility("Stun"),
                         Abilities.GetAbility("Shield Breaker"),
                         Abilities.GetAbility("Hammer Slam"),
+                        Abilities.GetAbility("Both Test"),
                     };
 
                 default:

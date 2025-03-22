@@ -220,5 +220,16 @@
         "Effects": [
             { "EffectName": "bludgeoning", "Duration": 0, "Strength": 10 }
         ]
+    },
+    {
+        "Name": "Both Test",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Both",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 }
+        ]
     }
 ]
