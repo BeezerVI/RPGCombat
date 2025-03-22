@@ -20,100 +20,25 @@ namespace RPGCombatProject
             gameState = new GameState(new List<Team> { enemyTeam, playerTeam });
             
             UIManager.Write("Welcome to the RPG Combat Game!", clearConsole: 1);
+
+            UIManager.SetGameState(gameState); //This is needed for UIManager to display the game state
             
-            SetUpGame();
+            SetUpGame(); // Set up the game with players and enemies
 
-            UIManager.SetGameState(gameState);
+            StartCombatLoop(); // Start the combat loop
 
-            StartCombatLoop();
-
-            LevelUpPlayers(playerTeam.Members);
+            LevelUpPlayers(playerTeam.Members); // Level up the players after combat
 
             UIManager.DisplayGameState(); //for debugging purposes
         }
 
         static void SetUpGame()
         {
-            // Set up enemies as before.
-            var enemies = new List<Creature>
-            {
-                new EnemyCreature("Slim"),
-                new EnemyCreature("Giant Bug")
-            };
+            // Initialize enemies
+            UIManager.InitializeEnemies();
 
-            // Ask how many players are participating.
-            Console.Write("Enter the number of players: ");
-            int numPlayers = 0;
-            while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers <= 0)
-            {
-                Console.Write("Invalid input. Please enter a positive integer: ");
-            }
-
-            var players = new List<Creature>();
-
-            // For each player, ask for their name and class.
-            for (int i = 0; i < numPlayers; i++)
-            {
-                Console.Clear();
-                UIManager.Write(UIManager.CreateCenteredText($"Setting up Player {i + 1}", 10, '-'), clearConsole: 1);
-
-                // Ask for player's name.
-                Console.Clear();
-                Console.Write($"Enter Player {i + 1} name: ");
-                string name = Console.ReadLine() ?? $"Player{i + 1}";
-
-                // Ask for player's class.
-                Console.WriteLine("Choose a class:");
-                Console.WriteLine("1. Warrior");
-                Console.WriteLine("2. Mage");
-                Console.WriteLine("3. Rogue");
-                Console.Write("Enter your choice (1-3): ");
-                string classChoice = Console.ReadLine() ?? "1";
-
-                string chosenClass;
-                switch (classChoice)
-                {
-                    case "1":
-                        chosenClass = "Warrior";
-                        break;
-                    case "2":
-                        chosenClass = "Mage";
-                        break;
-                    case "3":
-                        chosenClass = "Rogue";
-                        break;
-                    case "4":
-                        chosenClass = "Phoenix";
-                        break;
-                    default:
-                        UIManager.Write("Invalid choice; defaulting to Warrior.", clearConsole: 1);
-                        chosenClass = "Warrior";
-                        break;
-                }
-
-                // Create a new player creature using the factory method in PlayerCreature.
-                PlayerCreature newPlayer = PlayerCreature.CreatePlayer(name, chosenClass);
-                players.Add(newPlayer);
-                UIManager.Write($"Player {name} has joined the adventure as a {chosenClass}.", clearConsole: 1); // Display the player's name and class
-            }
-
-            // Add players to the player team
-            var playerTeam = gameState.Teams.FirstOrDefault(team => team.Name == "Player Team");
-            if (playerTeam != null)
-            {
-                playerTeam.Members.AddRange(players);
-            }
-            else
-            {
-                throw new InvalidOperationException("Player team not found in game state.");
-            }
-
-            if (gameState == null)
-            {
-                throw new InvalidOperationException("Game state must be initialized.");
-            }
+            UIManager.SetUpPlayers(); // Set up the players
         }
-
         static void StartCombatLoop()
         {
             while (true)

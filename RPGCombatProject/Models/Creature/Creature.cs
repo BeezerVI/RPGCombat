@@ -17,6 +17,7 @@ namespace RPGCombatProject.Models
         public int Stamina { get; set; }
         public int MaxStamina { get; set; }
         public List<Ability> Hand { get; set; }
+         public Team? Team { get; set; }
 
         public Creature(string name, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null, int stamina = 1, int maxStamina = 1, List<Ability>? hand = null)
         {
@@ -30,6 +31,7 @@ namespace RPGCombatProject.Models
             Stamina = stamina;
             MaxStamina = maxStamina;
             Hand = hand ?? new List<Ability>();
+            Team = null;
         }
 
         /// <summary>

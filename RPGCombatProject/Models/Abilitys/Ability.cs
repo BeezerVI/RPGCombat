@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RPGCombatProject.GameLogic;
 using RPGCombatProject.Utilityes;
 
@@ -118,27 +119,35 @@ namespace RPGCombatProject.Models
         {
             List<Creature> targets = new List<Creature>();
 
+            // If the ability targets enemies
             if (TeamTarget == TargetTeam.Enemies)
             {
+                // Add all living members from teams that are not the user's team
                 targets.AddRange(gameState.Teams
-                    .Where(team => team.Members.Any(member => !member.IsDead && !(member is EnemyCreature)))
+                    .Where(team => team != user.Team)
                     .SelectMany(team => team.Members)
-                    .Where(member => !member.IsDead && !(member is EnemyCreature)));
+                    .Where(member => !member.IsDead));
             }
+            // If the ability targets allies
             else if (TeamTarget == TargetTeam.Allies)
             {
-                targets.AddRange(gameState.Teams
-                    .Where(team => team.Members.Any(member => !member.IsDead && member.GetType() == user.GetType()))
-                    .SelectMany(team => team.Members)
-                    .Where(member => !member.IsDead && member.GetType() == user.GetType()));
+                if (user.Team != null)
+                {
+                    // Add all living members from the user's team
+                    targets.AddRange(user.Team.Members
+                        .Where(member => !member.IsDead));
+                }
             }
+            // If the ability targets both enemies and allies
             else if (TeamTarget == TargetTeam.Both)
             {
+                // Add all living members from all teams
                 targets.AddRange(gameState.Teams
                     .SelectMany(team => team.Members)
                     .Where(member => !member.IsDead));
             }
 
+            // If the ability cannot target the user itself, remove the user from the targets
             if (!CanTargetSelf)
             {
                 targets.Remove(user);

@@ -172,6 +172,7 @@ namespace RPGCombatProject.Models
                 {
                     // Display game state
                     UIManager.DisplayGameState();
+                    UIManager.CombatOptions(this);
 
                     isTurn = UIManager.PlayerCombatOptions(this);
                 }

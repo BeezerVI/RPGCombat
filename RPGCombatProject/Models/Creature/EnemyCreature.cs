@@ -135,6 +135,7 @@ namespace RPGCombatProject.Models
             {
                 // Display game state
                 UIManager.DisplayGameState();
+                UIManager.CombatOptions(this);
 
                 // Choose an ability based on AI logic.
                 Ability? chosenAbility = ChooseAbility(viableTargets, gameState);

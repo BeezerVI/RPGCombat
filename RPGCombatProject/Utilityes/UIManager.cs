@@ -137,6 +137,17 @@ namespace RPGCombatProject.Utilityes
 
         public static bool PlayerCombatOptions(Creature currentPlayer)
         {
+            if (currentPlayer is PlayerCreature){
+                if (currentPlayer == null)
+            {
+                Write("Current player is null. Ending turn.");
+                return false;
+            }
+            if (currentPlayer.Hand.Count == 0)
+            {
+                Write("No cards in hand. Ending turn.");
+                return false;
+            }
             Console.Write("Enter the number of the card you want to play (or 'E' to end turn): ");
             string? input = Console.ReadLine();
 
@@ -179,6 +190,106 @@ namespace RPGCombatProject.Utilityes
             }
 
             return true;
+            }
+            else
+            {
+                Console.WriteLine($"{currentPlayer.Name} is doing there turn.");
+                return true;
+            }
+        }
+
+        public static void SetUpPlayers(){
+            // Ask how many players are participating.
+            Console.Write("Enter the number of players: ");
+            int numPlayers = 0;
+            while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers <= 0)
+            {
+                Console.Write("Invalid input. Please enter a positive integer: ");
+            }
+
+            var players = new List<Creature>();
+
+            // For each player, ask for their name and class.
+            for (int i = 0; i < numPlayers; i++)
+            {
+                Console.Clear();
+                UIManager.Write(UIManager.CreateCenteredText($"Setting up Player {i + 1}", 10, '-'), clearConsole: 1);
+
+                // Ask for player's name.
+                Console.Clear();
+                Console.Write($"Enter Player {i + 1} name: ");
+                string name = Console.ReadLine() ?? $"Player{i + 1}";
+
+                // Ask for player's class.
+                Console.WriteLine("Choose a class:");
+                Console.WriteLine("1. Warrior");
+                Console.WriteLine("2. Mage");
+                Console.WriteLine("3. Rogue");
+                Console.Write("Enter your choice (1-3): ");
+                string classChoice = Console.ReadLine() ?? "1";
+
+                string chosenClass;
+                switch (classChoice)
+                {
+                    case "1":
+                        chosenClass = "Warrior";
+                        break;
+                    case "2":
+                        chosenClass = "Mage";
+                        break;
+                    case "3":
+                        chosenClass = "Rogue";
+                        break;
+                    case "4":
+                        chosenClass = "Phoenix";
+                        break;
+                    default:
+                        UIManager.Write("Invalid choice; defaulting to Warrior.", clearConsole: 1);
+                        chosenClass = "Warrior";
+                        break;
+                }
+
+                // Create a new player creature using the factory method in PlayerCreature.
+                PlayerCreature newPlayer = PlayerCreature.CreatePlayer(name, chosenClass);
+                players.Add(newPlayer);
+                UIManager.Write($"Player {name} has joined the adventure as a {chosenClass}.", clearConsole: 1); // Display the player's name and class
+            }
+
+            // Add players to the player team
+            if (gameState == null)
+            {
+                throw new InvalidOperationException("Game state must be initialized.");
+            }
+
+            var playerTeam = gameState.Teams.FirstOrDefault(team => team.Name == "Player Team");
+            if (playerTeam != null)
+            {
+                playerTeam.Members.AddRange(players);
+            }
+            else
+            {
+                throw new InvalidOperationException("Player team not found in game state.");
+            }
+
+        }
+
+        public static void InitializeEnemies()
+        {
+            if (gameState == null)
+            {
+                throw new InvalidOperationException("Game state must be initialized.");
+            }
+            var enemyTeam = gameState.Teams.FirstOrDefault(team => team.Name == "Enemy Team");
+            if (enemyTeam != null)
+            {
+                enemyTeam.Members.Add(new EnemyCreature("Slim"));
+                enemyTeam.Members.Add(new EnemyCreature("Giant Bug"));
+                // Add more enemies here as needed
+            }
+            else
+            {
+                throw new InvalidOperationException("Enemy team not found in game state.");
+            }
         }
     }
 }
