@@ -70,6 +70,15 @@ namespace RPGCombatProject.Models
                 player.Stamina -= Cost;
             }
             // (For enemy AI, cost deduction can be integrated later.)
+            else if (user is EnemyCreature enemy)
+            {
+                if (enemy.Stamina < Cost)
+                {
+                    UIManager.Write("Not enough stamina to use this ability.");
+                    return;
+                }
+                enemy.Stamina -= Cost;
+            }
 
             // Determine all possible targets based on the ability’s team targeting rules.
             List<Creature> possibleTargets = DetermineTargets(gameState, user);

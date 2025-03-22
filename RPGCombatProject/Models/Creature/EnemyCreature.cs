@@ -125,6 +125,14 @@ namespace RPGCombatProject.Models
                 return;
             }
 
+            
+            bool isTurn = true;
+            while (isTurn)
+            {
+            // Display game state
+            UIManager.DisplayGameState();
+
+
             // Choose an ability based on AI logic.
             Ability? chosenAbility = ChooseAbility(viablePlayers, gameState);
             if (chosenAbility == null)
@@ -140,12 +148,14 @@ namespace RPGCombatProject.Models
             // Execute the chosen ability.
             chosenAbility.Execute(gameState, this);
 
-            // Deduct stamina cost for enemy as well.
-            // (This logic is similar to what is done for players.)
-            if (this.Stamina >= chosenAbility.Cost)
-            {
-                this.Stamina -= chosenAbility.Cost;
+
+                if (this.Stamina <= 0)
+                {
+                    isTurn = false;
+                }
             }
+
+            // Deduct stamina cost for enemy as well.
 
             UIManager.Write($"{Name}'s turn has ended.", clearConsole: 2);
         }
