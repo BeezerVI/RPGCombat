@@ -120,16 +120,23 @@ namespace RPGCombatProject.Models
 
             if (TeamTarget == TargetTeam.Enemies)
             {
-                targets.AddRange(user is PlayerCreature ? gameState.EnemyTeam : gameState.PlayerTeam);
+                targets.AddRange(gameState.Teams
+                    .Where(team => team.Members.Any(member => !member.IsDead && !(member is EnemyCreature)))
+                    .SelectMany(team => team.Members)
+                    .Where(member => !member.IsDead && !(member is EnemyCreature)));
             }
             else if (TeamTarget == TargetTeam.Allies)
             {
-                targets.AddRange(user is PlayerCreature ? gameState.PlayerTeam : gameState.EnemyTeam);
+                targets.AddRange(gameState.Teams
+                    .Where(team => team.Members.Any(member => !member.IsDead && member.GetType() == user.GetType()))
+                    .SelectMany(team => team.Members)
+                    .Where(member => !member.IsDead && member.GetType() == user.GetType()));
             }
             else if (TeamTarget == TargetTeam.Both)
             {
-                targets.AddRange(gameState.PlayerTeam);
-                targets.AddRange(gameState.EnemyTeam);
+                targets.AddRange(gameState.Teams
+                    .SelectMany(team => team.Members)
+                    .Where(member => !member.IsDead));
             }
 
             if (!CanTargetSelf)

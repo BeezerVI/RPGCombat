@@ -11,7 +11,6 @@ namespace RPGCombatProject.Utilityes
     public static class UIManager
     {
         private static GameState? gameState;
-        private static int currentPlayerIndex = 0; // Stores the current player index
 
         /// <summary>
         /// Sets the current game state for UIManager to reference.
@@ -20,15 +19,6 @@ namespace RPGCombatProject.Utilityes
         public static void SetGameState(GameState state)
         {
             gameState = state;
-        }
-        
-        /// <summary>
-        /// Sets the current player index.
-        /// </summary>
-        /// <param name="index">The index of the current player.</param>
-        public static void SetCurrentPlayerIndex(int index)
-        {
-            currentPlayerIndex = index;
         }
 
         /// <summary>
@@ -76,21 +66,10 @@ namespace RPGCombatProject.Utilityes
                 return;
             }
 
-            // Display the enemies
-            PrintCreatureList("Enemies", gameState.EnemyTeam);
-
-            // Display the players
-            PrintCreatureList("Your Team", gameState.PlayerTeam);
-
-            // Display the current player's hand using the stored index.
-            if (currentPlayerIndex >= 0 && currentPlayerIndex < gameState.PlayerTeam.Count && gameState.PlayerTeam[currentPlayerIndex] is Creature currentPlayer)
+            // Iterate over all teams and display their members
+            foreach (var team in gameState.Teams)
             {
-                // Display the current player's combat options (hand)
-                CombatOptions(currentPlayer);
-            }
-            else
-            {
-                Console.WriteLine("Error: Current player is not a PlayerCreature or index out of bounds.");
+                PrintCreatureList(team.Name, team.Members);
             }
         }
 
@@ -108,7 +87,7 @@ namespace RPGCombatProject.Utilityes
                 string status = creature.IsDead ? " [DEAD]" : "";
                 Console.WriteLine($"   {creature.Name}{status}");
                 Console.WriteLine($"   - HP: {creature.Health} / {creature.MaxHealth}" +
-                                  $"{(creature.Shield > 0 ? $" | Shield: {creature.Shield}" : "")}");
+                                $"{(creature.Shield > 0 ? $" | Shield: {creature.Shield}" : "")}");
                 Console.WriteLine($"   - Effects: {EffectList(creature.Effects)}\n");
             }
         }

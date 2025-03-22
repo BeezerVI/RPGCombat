@@ -119,43 +119,39 @@ namespace RPGCombatProject.Models
 
             // Get viable targets from the public game state.
             var gameState = Program.gameState;
-            var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
-            if (viablePlayers.Count == 0)
+            var viableTargets = gameState.Teams
+                .Where(team => team.Members.Any(member => !member.IsDead))
+                .SelectMany(team => team.Members)
+                .Where(member => !member.IsDead && !(member is EnemyCreature))
+                .ToList();
+
+            if (viableTargets.Count == 0)
             {
                 return;
             }
 
-            
             bool isTurn = true;
             while (isTurn)
             {
-            // Display game state
-            UIManager.DisplayGameState();
+                // Display game state
+                UIManager.DisplayGameState();
 
+                // Choose an ability based on AI logic.
+                Ability? chosenAbility = ChooseAbility(viableTargets, gameState);
+                if (chosenAbility == null)
+                {
+                    UIManager.Write($"{Name} has no abilities available to use.");
+                    return;
+                }
 
-            // Choose an ability based on AI logic.
-            Ability? chosenAbility = ChooseAbility(viablePlayers, gameState);
-            if (chosenAbility == null)
-            {
-                UIManager.Write($"{Name} has no abilities available to use.");
-                return;
-            }
-
-            // (Optional) For attack abilities, you might want to ensure the target is the player with the lowest HP.
-            // The Ability.Execute method for non-player creatures defaults to the first valid target.
-            // If needed, you could extend Ability.Execute to accept an explicit target.
-
-            // Execute the chosen ability.
-            chosenAbility.Execute(gameState, this);
-
+                // Execute the chosen ability.
+                chosenAbility.Execute(gameState, this);
 
                 if (this.Stamina <= 0)
                 {
                     isTurn = false;
                 }
             }
-
-            // Deduct stamina cost for enemy as well.
 
             UIManager.Write($"{Name}'s turn has ended.", clearConsole: 2);
         }

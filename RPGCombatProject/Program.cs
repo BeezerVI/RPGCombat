@@ -14,6 +14,11 @@ namespace RPGCombatProject
 
         public static void Main(string[] args)
         {
+            var enemyTeam = new Team("Enemy Team", new List<Creature> { /* enemy creatures */ });
+            var playerTeam = new Team("Player Team", new List<Creature> { /* player creatures */ });
+
+            var gameState = new GameState(new List<Team> { enemyTeam, playerTeam });
+            
             UIManager.Write("Welcome to the RPG Combat Game!", clearConsole : 1);
             
             SetUpGame();
@@ -22,7 +27,7 @@ namespace RPGCombatProject
 
             StartCombatLoop();
 
-            LevelUpPlayers(gameState.PlayerTeam.Cast<PlayerCreature>().ToList());
+           LevelUpPlayers(playerTeam.Members);
 
             UIManager.DisplayGameState(); //for debugging purposes
         }
@@ -92,8 +97,6 @@ namespace RPGCombatProject
                 UIManager.Write($"Player {name} has joined the adventure as a {chosenClass}.", clearConsole : 1); // Display the player's name and class
             }
 
-            gameState = new GameState(enemies, players)!;
-
             if (gameState == null)
             {
                 throw new InvalidOperationException("Game state must be initialized.");
@@ -104,8 +107,8 @@ namespace RPGCombatProject
         {
             while (true)
             {
-                // Combine both teams into one list for turn order.
-                var allCreatures = gameState.PlayerTeam.Concat(gameState.EnemyTeam).ToList();
+                // Combine all teams into one list for turn order.
+                var allCreatures = gameState.Teams.SelectMany(team => team.Members).ToList();
 
                 foreach (var creature in allCreatures)
                 {
@@ -119,9 +122,12 @@ namespace RPGCombatProject
                     creature.PlayTurn();
 
                     // Clean up any dead creatures after each turn.
-                    CleanBattleField(gameState.EnemyTeam, gameState.PlayerTeam);
+                    foreach (var team in gameState.Teams)
+                    {
+                        CleanBattleField(team.Members);
+                    }
 
-                    if (IsCombatOver(gameState.EnemyTeam, gameState.PlayerTeam))
+                    if (IsCombatOver(gameState.Teams))
                         return;
                 }
             }
@@ -130,15 +136,12 @@ namespace RPGCombatProject
         }
 
 
-        static void CleanBattleField(List<Creature> enemyTeam, List<Creature> playerTeam)
+        static void CleanBattleField(List<Creature> Team)
         {
             // Check if any creatures are dead and remove them from the list
-            CheckIfDeadForAllCreatures(enemyTeam);
-            CheckIfDeadForAllCreatures(playerTeam);
+            CheckIfDeadForAllCreatures(Team);
             // Remove dead creatures from the enemy team
-            DeleteDeadCreatures(enemyTeam);
-            // (Optional) You may remove dead players if desired
-            // DeleteDeadCreatures(playerTeam);
+            DeleteDeadCreatures(Team);
         }
 
         /// <summary>
@@ -157,62 +160,61 @@ namespace RPGCombatProject
             creatureTeam.RemoveAll(c => c.IsDead);
         }
 
-        static bool IsCombatOver(List<Creature> enemyTeam, List<Creature> playerTeam)
+        static bool IsCombatOver(List<Team> teams)
         {
-            // Check if there are no enemies left
-            if (enemyTeam.Count == 0)
+            // Count the number of teams that still have living members
+            int teamsWithLivingMembers = teams.Count(team => team.Members.Any(member => !member.IsDead));
+
+            // If only one team has living members, the combat is over
+            if (teamsWithLivingMembers <= 1)
             {
-                UIManager.Write("There are no enemies left. You have won!");
+                var winningTeam = teams.FirstOrDefault(team => team.Members.Any(member => !member.IsDead));
+                if (winningTeam != null)
+                {
+                    UIManager.Write($"The {winningTeam.Name} has won the combat!");
+                }
+                else
+                {
+                    UIManager.Write("All teams have been defeated. Game over!");
+                }
                 return true;
             }
 
-            // Check if there are no players left
-            else if (playerTeam.Count == 0)
-            {
-                UIManager.Write("There are no players left. Game over!");
-                return true;
-            }
-
-            // Check if all enemies are dead
-            else if (enemyTeam.All(e => e.IsDead))
-            {
-                UIManager.Write("You have defeated all enemies!");
-                return true;
-            }
-
-            // Check if all players are dead
-            else if (playerTeam.All(p => p.IsDead))
-            {
-                UIManager.Write("All players have been defeated. Game over!");
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
+            // If more than one team has living members, the combat is not over
+            return false;
         }
 
-        static void LevelUpPlayers(List<PlayerCreature> players)
+        static void LevelUpPlayers(List<Creature> players)
         {
             Console.WriteLine("\n--- Leveling Up ---");
             
             foreach (var player in players)
             {
-                player.LevelUp(); // Give them a level and an Upgrade Point
+                // if (player is not PlayerCreature)
+                // {
+                //     continue;
+                // }
+                if (player is PlayerCreature){
+                    ((PlayerCreature)player).LevelUp(); // Give them a level and an Upgrade Point
 
-                Console.WriteLine($"\n{player.Name} (Level {player.Level}) - Upgrade Points: {player.UpgradePoints}");
-                Console.WriteLine("Would you like to spend your upgrade points now? (Y/N)");
+                    Console.WriteLine($"\n{player.Name} (Level {((PlayerCreature)player).Level}) - Upgrade Points: {((PlayerCreature)player).UpgradePoints}");
+                    Console.WriteLine("Would you like to spend your upgrade points now? (Y/N)");
 
-                string? input = Console.ReadLine();
-                if (input?.ToUpper() == "Y")
-                {
-                    player.UpgradeMenu(); // Allow them to spend upgrade points
+                    string? input = Console.ReadLine();
+                    if (input?.ToUpper() == "Y")
+                    {
+                        ((PlayerCreature)player).UpgradeMenu(); // Allow them to spend upgrade points
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{player.Name} saved their points for later.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"{player.Name} saved their points for later.");
+                    Console.WriteLine($"{player.Name} is not a player creature and cannot be leveled up.");
                 }
+                
             }
 
             Console.WriteLine("--- All Players Finished Leveling Up ---\n");
