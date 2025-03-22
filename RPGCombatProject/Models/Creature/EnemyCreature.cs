@@ -1,19 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPGCombatProject.GameLogic;
 using RPGCombatProject.Utilityes;
+using System.Collections.Generic;
+
 
 namespace RPGCombatProject.Models
 {
     public class EnemyCreature : Creature
-    {
-        // Existing constructor for custom initialization.
-        public EnemyCreature(string name, int maxHealth = 0, int health = 0, int shield = 0, List<Effect>? effects = null)
-            : base(name, maxHealth, health, shield, effects)
+    {   
+        // (Optional) A property to later hold personality information.
+        // public string Personality { get; set; } 
+
+        // Constructor to fully define an enemy with abilities.
+        public EnemyCreature(string name, int maxHealth, int health, int shield, int stamina, int maxStamina, List<Effect>? effects = null)
+            : base(name, maxHealth, health, shield, effects, stamina, maxStamina, hand: null)
         {
+
         }
 
-        // New constructor: When you only supply a name, default stats and AI behavior are assigned.
+        // New constructor: when only a name is supplied, default stats and abilities are assigned.
         public EnemyCreature(string name)
             : base(name, 0, 0, 0, new List<Effect>())
         {
@@ -21,94 +28,126 @@ namespace RPGCombatProject.Models
             switch (name.ToLower())
             {
                 case "slime":
-                    MaxHealth = 40;
-                    Health = 40;
-                    Shield = 0;
+                    this.MaxHealth = 120;
+                    this.Health = 120;
+                    this.Shield = 15;
+                    this.Stamina = 3;
+                    this.MaxStamina = 3;
+                    this.Hand = new List<Ability>
+                    {
+                        Abilities.GetAbility("Sword Strike"),
+                        Abilities.GetAbility("Heavy Slash"),
+                        Abilities.GetAbility("Fortify"),
+                    };
                     break;
                 case "giant bug":
-                    MaxHealth = 30;
-                    Health = 30;
-                    Shield = 8;
+                    this.MaxHealth = 120;
+                    this.Health = 120;
+                    this.Shield = 15;
+                    this.Stamina = 3;
+                    this.MaxStamina = 3;
+                    this.Hand = new List<Ability>
+                    {
+                        Abilities.GetAbility("Sword Strike"),
+                        Abilities.GetAbility("Heavy Slash"),
+                        Abilities.GetAbility("Fortify"),
+                    };
                     break;
                 default:
-                    MaxHealth = 40;
-                    Health = 40;
-                    Shield = 0;
+                    this.MaxHealth = 120;
+                    this.Health = 120;
+                    this.Shield = 15;
+                    this.Stamina = 3;
+                    this.MaxStamina = 3;
+                    this.Hand = new List<Ability>
+                    {
+                        Abilities.GetAbility("Sword Strike"),
+                        Abilities.GetAbility("Heavy Slash"),
+                        Abilities.GetAbility("Fortify"),
+                    };
                     break;
             }
         }
 
         /// <summary>
-        /// Performs the enemy’s AI-based action. This method is designed to work on a list of viable player targets.
+        /// Chooses an ability based on available stamina and basic logic.
         /// </summary>
-        /// <param name="players">The list of alive player creatures.</param>
-        public void Act(List<Creature> players)
+        private Ability? ChooseAbility(List<Creature> viablePlayers, GameState gameState)
         {
-                CheckIfDead();
-                if (IsDead) return;
-                ProcessEffects();
-
-                // Check if the enemy is stunned
-                if (IsStunned())
-                {
-                    UIManager.Write($"{Name} is stunned and skips their turn.");
-                    return;
-                }
-            if (players == null || players.Count == 0) return;
-
-            // Switch on the enemy's name (in lower case) to decide its behavior.
-            switch (Name.ToLower())
+            // Filter for abilities that can be used (cost less than or equal to current stamina)
+            var availableAbilities = this.Hand.Where(a => a.Cost <= this.Stamina).ToList();
+            if (availableAbilities.Count == 0)
             {
-                case "slime":
-                    // For slime: randomly choose a small attack (5 damage) or a big attack (10 damage).
-                    var target = players.OrderBy(p => p.Health).First();
-                    int attackChoice = new Random().Next(2); // returns 0 or 1
-                    if (attackChoice == 0)
-                    {
-                        Console.WriteLine($"{Name} uses a small attack on {target.Name} for 5 damage!");
-                        target.ApplyDamage(5);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{Name} uses a big attack on {target.Name} for 10 damage!");
-                        target.ApplyDamage(10);
-                    }
-                    break;
-
-                case "giant bug":
-                    // For giant bug: deal 10 damage and grant self 8 shield.
-                    var target2 = players.OrderBy(p => p.Health).First();
-                    Console.WriteLine($"{Name} attacks {target2.Name} for 10 damage and gains 8 shield!");
-                    target2.ApplyDamage(10);
-                    Shield += 8;
-                    break;
-
-                default:
-                    // Default behavior: attack the player with the lowest health for 5 damage.
-                    var targetDefault = players.OrderBy(p => p.Health).First();
-                    Console.WriteLine($"{Name} attacks {targetDefault.Name} for 5 damage!");
-                    targetDefault.ApplyDamage(5);
-                    break;
+                return null;
             }
+
+            // If health is low (below 30%), try to use a healing ability if available.
+            if ((double)Health / MaxHealth < 0.3)
+            {
+                var healAbility = availableAbilities.FirstOrDefault(a => a.Type == AbilityType.Heal);
+                if (healAbility != null)
+                {
+                    return healAbility;
+                }
+            }
+
+            // Future: Here you could add personality-based choices (e.g., defensive enemies may prefer Buffs).
+
+            // Default: try to use an attack ability.
+            var attackAbility = availableAbilities.FirstOrDefault(a => a.Type == AbilityType.Attack);
+            if (attackAbility != null)
+            {
+                return attackAbility;
+            }
+
+            // Fallback: return the first available ability.
+            return availableAbilities.First();
         }
-        // Override PlayTurn so enemy AI uses Act.
+
+        /// <summary>
+        /// Overrides PlayTurn to implement the new AI logic.
+        /// </summary>
         public override void PlayTurn()
         {
-            UIManager.Write($"{Name} starts there turn.", waitForInput: false);
+            UIManager.Write($"{Name} begins its turn.", waitForInput: false);
+            ProcessEffects();
             if (IsStunned())
             {
-                UIManager.Write($"{Name} is stunned and skips their turn.");
-                ProcessEffects();
+                UIManager.Write($"{Name} is stunned and skips its turn.");
                 return;
             }
-            ProcessEffects();
 
-            // Retrieve viable players from the public game state.
-            var viablePlayers = Program.gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
-            if (viablePlayers.Count == 0) return;
+            // Get viable targets from the public game state.
+            var gameState = Program.gameState;
+            var viablePlayers = gameState.PlayerTeam.Where(p => !p.IsDead).ToList();
+            if (viablePlayers.Count == 0)
+            {
+                return;
+            }
 
-            Act(viablePlayers);
-            UIManager.Write($"{Name} turn has ended.", clearConsole: 3);
+            // Choose an ability based on AI logic.
+            Ability? chosenAbility = ChooseAbility(viablePlayers, gameState);
+            if (chosenAbility == null)
+            {
+                UIManager.Write($"{Name} has no abilities available to use.");
+                return;
+            }
+
+            // (Optional) For attack abilities, you might want to ensure the target is the player with the lowest HP.
+            // The Ability.Execute method for non-player creatures defaults to the first valid target.
+            // If needed, you could extend Ability.Execute to accept an explicit target.
+
+            // Execute the chosen ability.
+            chosenAbility.Execute(gameState, this);
+
+            // Deduct stamina cost for enemy as well.
+            // (This logic is similar to what is done for players.)
+            if (this.Stamina >= chosenAbility.Cost)
+            {
+                this.Stamina -= chosenAbility.Cost;
+            }
+
+            UIManager.Write($"{Name}'s turn has ended.", clearConsole: 2);
         }
     }
 }

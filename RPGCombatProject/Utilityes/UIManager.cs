@@ -83,7 +83,7 @@ namespace RPGCombatProject.Utilityes
             PrintCreatureList("Your Team", gameState.PlayerTeam);
 
             // Display the current player's hand using the stored index.
-            if (currentPlayerIndex >= 0 && currentPlayerIndex < gameState.PlayerTeam.Count && gameState.PlayerTeam[currentPlayerIndex] is PlayerCreature currentPlayer)
+            if (currentPlayerIndex >= 0 && currentPlayerIndex < gameState.PlayerTeam.Count && gameState.PlayerTeam[currentPlayerIndex] is Creature currentPlayer)
             {
                 // Display the current player's combat options (hand)
                 CombatOptions(currentPlayer);
