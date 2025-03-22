@@ -17,9 +17,9 @@ namespace RPGCombatProject
             var enemyTeam = new Team("Enemy Team", new List<Creature> { /* enemy creatures */ });
             var playerTeam = new Team("Player Team", new List<Creature> { /* player creatures */ });
 
-            var gameState = new GameState(new List<Team> { enemyTeam, playerTeam });
+            gameState = new GameState(new List<Team> { enemyTeam, playerTeam });
             
-            UIManager.Write("Welcome to the RPG Combat Game!", clearConsole : 1);
+            UIManager.Write("Welcome to the RPG Combat Game!", clearConsole: 1);
             
             SetUpGame();
 
@@ -27,10 +27,11 @@ namespace RPGCombatProject
 
             StartCombatLoop();
 
-           LevelUpPlayers(playerTeam.Members);
+            LevelUpPlayers(playerTeam.Members);
 
             UIManager.DisplayGameState(); //for debugging purposes
         }
+
         static void SetUpGame()
         {
             // Set up enemies as before.
@@ -41,7 +42,6 @@ namespace RPGCombatProject
             };
 
             // Ask how many players are participating.
-            //Console.Clear();
             Console.Write("Enter the number of players: ");
             int numPlayers = 0;
             while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers <= 0)
@@ -55,7 +55,7 @@ namespace RPGCombatProject
             for (int i = 0; i < numPlayers; i++)
             {
                 Console.Clear();
-                UIManager.Write(UIManager.CreateCenteredText($"Setting up Player {i + 1}", 10, '-'), clearConsole : 1);
+                UIManager.Write(UIManager.CreateCenteredText($"Setting up Player {i + 1}", 10, '-'), clearConsole: 1);
 
                 // Ask for player's name.
                 Console.Clear();
@@ -86,7 +86,7 @@ namespace RPGCombatProject
                         chosenClass = "Phoenix";
                         break;
                     default:
-                        UIManager.Write("Invalid choice; defaulting to Warrior.", clearConsole : 1);
+                        UIManager.Write("Invalid choice; defaulting to Warrior.", clearConsole: 1);
                         chosenClass = "Warrior";
                         break;
                 }
@@ -94,7 +94,18 @@ namespace RPGCombatProject
                 // Create a new player creature using the factory method in PlayerCreature.
                 PlayerCreature newPlayer = PlayerCreature.CreatePlayer(name, chosenClass);
                 players.Add(newPlayer);
-                UIManager.Write($"Player {name} has joined the adventure as a {chosenClass}.", clearConsole : 1); // Display the player's name and class
+                UIManager.Write($"Player {name} has joined the adventure as a {chosenClass}.", clearConsole: 1); // Display the player's name and class
+            }
+
+            // Add players to the player team
+            var playerTeam = gameState.Teams.FirstOrDefault(team => team.Name == "Player Team");
+            if (playerTeam != null)
+            {
+                playerTeam.Members.AddRange(players);
+            }
+            else
+            {
+                throw new InvalidOperationException("Player team not found in game state.");
             }
 
             if (gameState == null)
@@ -135,13 +146,12 @@ namespace RPGCombatProject
             // UIManager.Write("Combat has fully ended.");
         }
 
-
-        static void CleanBattleField(List<Creature> Team)
+        static void CleanBattleField(List<Creature> team)
         {
             // Check if any creatures are dead and remove them from the list
-            CheckIfDeadForAllCreatures(Team);
-            // Remove dead creatures from the enemy team
-            DeleteDeadCreatures(Team);
+            CheckIfDeadForAllCreatures(team);
+            // Remove dead creatures from the team
+            DeleteDeadCreatures(team);
         }
 
         /// <summary>
@@ -190,11 +200,8 @@ namespace RPGCombatProject
             
             foreach (var player in players)
             {
-                // if (player is not PlayerCreature)
-                // {
-                //     continue;
-                // }
-                if (player is PlayerCreature){
+                if (player is PlayerCreature)
+                {
                     ((PlayerCreature)player).LevelUp(); // Give them a level and an Upgrade Point
 
                     Console.WriteLine($"\n{player.Name} (Level {((PlayerCreature)player).Level}) - Upgrade Points: {((PlayerCreature)player).UpgradePoints}");
@@ -214,7 +221,6 @@ namespace RPGCombatProject
                 {
                     Console.WriteLine($"{player.Name} is not a player creature and cannot be leveled up.");
                 }
-                
             }
 
             Console.WriteLine("--- All Players Finished Leveling Up ---\n");
