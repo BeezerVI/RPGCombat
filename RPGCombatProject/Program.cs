@@ -25,8 +25,12 @@ namespace RPGCombatProject
             
             SetUpGame(); // Set up the game with players and enemies
 
+            int currentRound = 1;
+
             while (true)
             {
+                GenerateEnemiesForRound(currentRound); // Generate new enemies for the current round
+                
                 StartCombatLoop(); // Start the combat loop
 
                 if (playerTeam.Members.All(player => player.IsDead))
@@ -37,6 +41,8 @@ namespace RPGCombatProject
                 }
 
                 LevelUpPlayers(playerTeam.Members); // Level up the players after combat
+
+                currentRound++;
             }
 
         }
@@ -159,5 +165,52 @@ namespace RPGCombatProject
 
             Console.WriteLine("--- All Players Finished Leveling Up ---\n");
         }
+        /// <summary>
+        /// Generates new enemies for the current round. 
+        /// As rounds increase, enemies get tougher and more numerous.
+        /// </summary>
+        /// <param name="round">The current round number (starting at 1).</param>
+        /// <returns>A list of new EnemyCreature objects for this round.</returns>
+        static List<EnemyCreature> GenerateEnemiesForRound(int round)
+        {
+            List<EnemyCreature> newEnemies = new List<EnemyCreature>();
+            // List of possible enemy names (must match names in your JSON)
+            string[] enemyTemplates = new string[] 
+            { 
+                "Slime", "Giant Bug", "Fire Elemental", 
+                "Frost Wraith", "Goblin Shaman", "Dark Knight", "Hydra", 
+                "Shadow Assassin", "Stone Golem", "Necromancer", "Dragon", 
+                "Vampire Lord", "Thunder Titan" 
+            };
+
+            Random rnd = new Random();
+            // For example, number of enemies increases with the round number.
+            int numEnemies = Math.Min(3 + round, enemyTemplates.Length);
+
+            for (int i = 0; i < numEnemies; i++)
+            {
+                // Pick a random enemy template.
+                string templateName = enemyTemplates[rnd.Next(enemyTemplates.Length)];
+                try
+                {
+                    EnemyCreature enemy = EnemyLoader.GetEnemy(templateName);
+
+                    // Scale enemy stats based on the round number.
+                    // Increase health and shield for later rounds.
+                    enemy.MaxHealth += round * 10;
+                    enemy.Health = enemy.MaxHealth;  // Reset health to new max.
+                    enemy.Shield += round * 2;
+                    // Optionally scale other stats or modify abilities.
+                    
+                    newEnemies.Add(enemy);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Error generating enemy: {ex.Message}");
+                }
+            }
+            return newEnemies;
+        }
+
     }
 }

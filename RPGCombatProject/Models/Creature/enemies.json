@@ -3,16 +3,16 @@
         "Name": "Slime",
         "MaxHealth": 40,
         "Shield": 0,
-        "Stamina": 3,
-        "MaxStamina": 3,
+        "Stamina": 2,
+        "MaxStamina": 2,
         "Abilities": ["Sword Strike", "Heavy Slash"]
     },
     {
         "Name": "Giant Bug",
         "MaxHealth": 60,
         "Shield": 5,
-        "Stamina": 4,
-        "MaxStamina": 4,
+        "Stamina": 3,
+        "MaxStamina": 3,
         "Abilities": ["Shield Breaker", "Poison"]
     },
     {
