@@ -282,7 +282,7 @@ namespace RPGCombatProject.Utilityes
             var enemyTeam = gameState.Teams.FirstOrDefault(team => team.Name == "Enemy Team");
             if (enemyTeam != null)
             {
-                enemyTeam.Members.Add(new EnemyCreature("Slim"));
+                enemyTeam.Members.Add(new EnemyCreature("Slime"));
                 enemyTeam.Members.Add(new EnemyCreature("Giant Bug"));
                 // Add more enemies here as needed
             }

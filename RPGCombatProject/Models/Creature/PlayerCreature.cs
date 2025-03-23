@@ -10,8 +10,8 @@ namespace RPGCombatProject.Models
 
         public string ClassName  { get; set; }
 
-        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, List<Effect>? effects = null, int stamina = 3, int maxStamina = 3, List<Ability>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
-            : base(name, maxHealth, health, shield, effects, stamina, maxStamina, hand)
+        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 3, int maxStamina = 3, List<Effect>? effects = null, List<Ability>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
+            : base(name, maxHealth, health, shield, stamina, maxStamina, effects, hand)
         {
             Level = level;
             UpgradePoints = upgradePoints;

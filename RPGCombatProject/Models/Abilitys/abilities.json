@@ -231,5 +231,42 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 6 }
         ]
+    },
+    {
+        "Name": "Burning Touch",
+        "Cost": 2,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 8 },
+            { "EffectName": "burning", "Duration": 2, "Strength": 3 }
+        ]
+    },
+    {
+        "Name": "Frozen Touch",
+        "Cost": 2,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 },
+            { "EffectName": "frozen", "Duration": 1, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Multi-Strike",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "Random",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 5 },
+            { "EffectName": "damage", "Duration": 0, "Strength": 5 },
+            { "EffectName": "damage", "Duration": 0, "Strength": 5 }
+        ]
     }
 ]

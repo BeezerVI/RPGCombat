@@ -70,6 +70,7 @@ namespace RPGCombatProject.Models
             Console.WriteLine($"Looking for ability: {formattedAbilityName}");
             if (abilityRegistry.TryGetValue(formattedAbilityName, out Ability? ability))
             {
+                Console.WriteLine($"Found ability: {ability.Name}");
                 return new Ability(ability.Name, ability.Cost, ability.Type, ability.Targeting, ability.TeamTarget, ability.CanTargetSelf, new List<Effect>(ability.Effects), ability.ChainAction);
             }
             throw new ArgumentException($"Ability '{formattedAbilityName}' not found.");

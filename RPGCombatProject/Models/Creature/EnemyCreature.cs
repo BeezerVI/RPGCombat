@@ -14,60 +14,39 @@ namespace RPGCombatProject.Models
         // public string Personality { get; set; } 
 
         // Constructor to fully define an enemy with abilities.
-        public EnemyCreature(string name, int maxHealth, int health, int shield, int stamina, int maxStamina, List<Effect>? effects = null)
-            : base(name, maxHealth, health, shield, effects, stamina, maxStamina, hand: null)
+        public EnemyCreature(string name, int maxHealth, int health, int shield, int stamina, int maxStamina, List<Effect>? effects = null, List<Ability>? hand = null) : base(name, maxHealth, health, shield, stamina, maxStamina, effects, hand)
         {
 
         }
 
         // New constructor: when only a name is supplied, default stats and abilities are assigned.
-        public EnemyCreature(string name)
-            : base(name, 0, 0, 0, new List<Effect>())
+        public EnemyCreature(string name) : base(name, 0, 0, 0, 0, 0, new List<Effect>(), new List<Ability>())
         {
-            // Set default stats based on enemy type.
-            switch (name.ToLower())
+            try
             {
-                case "slime":
-                    this.MaxHealth = 120;
-                    this.Health = 120;
-                    this.Shield = 15;
-                    this.Stamina = 3;
-                    this.MaxStamina = 3;
-                    this.Hand = new List<Ability>
-                    {
-                        Abilities.GetAbility("Sword Strike"),
-                        Abilities.GetAbility("Heavy Slash"),
-                        Abilities.GetAbility("Fortify"),
-                    };
-                    break;
-                case "giant bug":
-                    this.MaxHealth = 120;
-                    this.Health = 120;
-                    this.Shield = 15;
-                    this.Stamina = 3;
-                    this.MaxStamina = 3;
-                    this.Hand = new List<Ability>
-                    {
-                        Abilities.GetAbility("Sword Strike"),
-                        Abilities.GetAbility("Heavy Slash"),
-                        Abilities.GetAbility("Fortify"),
-                    };
-                    break;
-                default:
-                    this.MaxHealth = 120;
-                    this.Health = 120;
-                    this.Shield = 15;
-                    this.Stamina = 3;
-                    this.MaxStamina = 3;
-                    this.Hand = new List<Ability>
-                    {
-                        Abilities.GetAbility("Sword Strike"),
-                        Abilities.GetAbility("Heavy Slash"),
-                        Abilities.GetAbility("Fortify"),
-                    };
-                    break;
+                var loadedEnemy = EnemyLoader.GetEnemy(name);
+                this.MaxHealth = loadedEnemy.MaxHealth;
+                this.Health = loadedEnemy.MaxHealth;
+                this.Shield = loadedEnemy.Shield;
+                this.Stamina = loadedEnemy.Stamina;
+                this.MaxStamina = loadedEnemy.MaxStamina;
+                this.Hand = loadedEnemy.Hand ?? new List<Ability>(); // Ensure it's always initialized
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Using default stats for enemy: {name}");
+
+                // Fallback default stats
+                this.MaxHealth = 50;
+                this.Health = 50;
+                this.Shield = 0;
+                this.Stamina = 3;
+                this.MaxStamina = 3;
+                this.Hand = new List<Ability> { Abilities.GetAbility("Sword Strike") };
             }
         }
+
 
         /// <summary>
         /// Chooses an ability based on available stamina and basic logic.

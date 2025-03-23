@@ -19,7 +19,7 @@ namespace RPGCombatProject.Models
         public List<Ability> Hand { get; set; }
          public Team? Team { get; set; }
 
-        public Creature(string name, int maxHealth = 100, int health = 100, int shield = 0, List<Effect>? effects = null, int stamina = 1, int maxStamina = 1, List<Ability>? hand = null)
+        public Creature(string name, int maxHealth = 100, int health = 100, int shield = 0, int stamina = 1, int maxStamina = 1,  List<Effect>? effects = null, List<Ability>? hand = null)
         {
             Name = name;
             IsDead = false;

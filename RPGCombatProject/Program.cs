@@ -19,7 +19,7 @@ namespace RPGCombatProject
 
             gameState = new GameState(new List<Team> { enemyTeam, playerTeam });
             
-            UIManager.Write("Welcome to the RPG Combat Game!", clearConsole: 1);
+            UIManager.Write("Welcome to the RPG Combat Game!", clearConsole: 3);
 
             UIManager.SetGameState(gameState); //This is needed for UIManager to display the game state
             

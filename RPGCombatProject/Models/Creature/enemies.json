@@ -1,0 +1,58 @@
+[
+    {
+        "Name": "Slime",
+        "MaxHealth": 40,
+        "Shield": 0,
+        "Stamina": 3,
+        "MaxStamina": 3,
+        "Abilities": ["Sword Strike", "Heavy Slash"]
+    },
+    {
+        "Name": "Giant Bug",
+        "MaxHealth": 60,
+        "Shield": 5,
+        "Stamina": 4,
+        "MaxStamina": 4,
+        "Abilities": ["Shield Breaker", "Poison"]
+    },
+    {
+        "Name": "Fire Elemental",
+        "MaxHealth": 80,
+        "Shield": 0,
+        "Stamina": 5,
+        "MaxStamina": 5,
+        "Abilities": ["Fireball", "Meteor Strike", "Burning Touch"]
+    },
+    {
+        "Name": "Frost Wraith",
+        "MaxHealth": 50,
+        "Shield": 2,
+        "Stamina": 4,
+        "MaxStamina": 4,
+        "Abilities": ["Ice Shard", "Lightning Bolt", "Frozen Touch"]
+    },
+    {
+        "Name": "Goblin Shaman",
+        "MaxHealth": 55,
+        "Shield": 0,
+        "Stamina": 6,
+        "MaxStamina": 6,
+        "Abilities": ["Heal", "Mass Heal", "Weaken", "Stun"]
+    },
+    {
+        "Name": "Dark Knight",
+        "MaxHealth": 100,
+        "Shield": 10,
+        "Stamina": 5,
+        "MaxStamina": 5,
+        "Abilities": ["Heavy Slash", "Piercing Strike", "Fortify"]
+    },
+    {
+        "Name": "Hydra",
+        "MaxHealth": 120,
+        "Shield": 5,
+        "Stamina": 6,
+        "MaxStamina": 6,
+        "Abilities": ["Poison", "Regeneration", "Multi-Strike"]
+    }
+]
