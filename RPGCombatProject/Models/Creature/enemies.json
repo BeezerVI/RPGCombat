@@ -54,5 +54,53 @@
         "Stamina": 6,
         "MaxStamina": 6,
         "Abilities": ["Poison", "Regeneration", "Multi-Strike"]
+    },
+    {
+        "Name": "Shadow Assassin",
+        "MaxHealth": 70,
+        "Shield": 3,
+        "Stamina": 6,
+        "MaxStamina": 6,
+        "Abilities": ["Dagger Strike", "Piercing Strike", "Evasion"]
+    },
+    {
+        "Name": "Stone Golem",
+        "MaxHealth": 150,
+        "Shield": 20,
+        "Stamina": 4,
+        "MaxStamina": 4,
+        "Abilities": ["Hammer Slam", "Fortify", "Rock Smash"]
+    },
+    {
+        "Name": "Necromancer",
+        "MaxHealth": 65,
+        "Shield": 0,
+        "Stamina": 8,
+        "MaxStamina": 8,
+        "Abilities": ["Weaken", "Revive", "Dark Pulse"]
+    },
+    {
+        "Name": "Dragon",
+        "MaxHealth": 200,
+        "Shield": 15,
+        "Stamina": 10,
+        "MaxStamina": 10,
+        "Abilities": ["Fireball", "Meteor Strike", "Roar", "Wing Buffet"]
+    },
+    {
+        "Name": "Vampire Lord",
+        "MaxHealth": 90,
+        "Shield": 5,
+        "Stamina": 7,
+        "MaxStamina": 7,
+        "Abilities": ["Life Drain", "Hypnotize", "Bat Swarm"]
+    },
+    {
+        "Name": "Thunder Titan",
+        "MaxHealth": 160,
+        "Shield": 10,
+        "Stamina": 8,
+        "MaxStamina": 8,
+        "Abilities": ["Lightning Bolt", "Thunder Clap", "Storm Shield"]
     }
 ]

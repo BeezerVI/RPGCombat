@@ -268,5 +268,108 @@
             { "EffectName": "damage", "Duration": 0, "Strength": 5 },
             { "EffectName": "damage", "Duration": 0, "Strength": 5 }
         ]
+    },
+    {
+        "Name": "Evasion",
+        "Cost": 2,
+        "Type": "Buff",
+        "Targeting": "Self",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "dodge", "Duration": 2, "Strength": 3 }
+        ]
+    },
+    {
+        "Name": "Rock Smash",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "bludgeoning", "Duration": 0, "Strength": 15 },
+            { "EffectName": "stun", "Duration": 1, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Dark Pulse",
+        "Cost": 4,
+        "Type": "Debuff",
+        "Targeting": "All",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "weaken", "Duration": 3, "Strength": -3 }
+        ]
+    },
+    {
+        "Name": "Roar",
+        "Cost": 3,
+        "Type": "Debuff",
+        "Targeting": "All",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "fear", "Duration": 2, "Strength": 2 }
+        ]
+    },
+    {
+        "Name": "Wing Buffet",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "All",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 10 },
+            { "EffectName": "knockback", "Duration": 1, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Life Drain",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 8 },
+            { "EffectName": "heal", "Duration": 0, "Strength": 8 }
+        ]
+    },
+    {
+        "Name": "Hypnotize",
+        "Cost": 4,
+        "Type": "Debuff",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "stun", "Duration": 2, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Thunder Clap",
+        "Cost": 3,
+        "Type": "Attack",
+        "Targeting": "All",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 10 },
+            { "EffectName": "stun", "Duration": 1, "Strength": 1 }
+        ]
+    },
+    {
+        "Name": "Storm Shield",
+        "Cost": 3,
+        "Type": "Buff",
+        "Targeting": "Self",
+        "TeamTarget": "Allies",
+        "CanTargetSelf": true,
+        "Effects": [
+            { "EffectName": "shield", "Duration": 0, "Strength": 12 }
+        ]
     }
 ]
