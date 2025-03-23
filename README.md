@@ -8,10 +8,11 @@ I haven’t decided on a name for the game yet, so for now, it’s called **RPGC
 Currently, the game is in very early development, so you won’t see much content yet. There are missing features, incomplete sections, but I do intend to finish the game entirely soon.  
 
 This is a tutorial explaining the new content of the game.  
-[Video Demo NEW 1.03](https://www.youtube.com/watch?v=iRXw389TukM)  
+[Video Demo NEW 1.04](https://youtu.be/TDxLxGdfLmI)  
 
 ## **Old Videos**  
-- [Video Demo 1.02](https://youtu.be/yfPR-MDi1Uo) 
+- [Video Demo 1.03](https://www.youtube.com/watch?v=iRXw389TukM)  
+- [Video Demo 1.02](https://youtu.be/yfPR-MDi1Uo)  
 - [Video Demo 1.01](https://youtu.be/K2lNMMITx70)  
 - [Video Demo 1.00](https://www.youtube.com/watch?v=wr_GwDA3vfk)  
 
@@ -39,7 +40,32 @@ The code is written in **C#**.
 - Add **tons of new content** to the game.  
 
 # **Update Log**  
-### **1.03 - Abilities Revamp and New Status Effects**
+### **1.04 - Dynamic Enemy Generation and Scaling**  
+- **New Enemy Spawning System**:  
+  - Each round, **new enemies** are generated dynamically.  
+  - Enemies are selected from a JSON-based enemy database.  
+  - As rounds progress, **enemies get stronger**, gaining **more HP, shields, and stamina**.  
+  - The number of enemies **increases each round**, making survival harder over time.  
+
+- **Improved Enemy AI**:  
+  - Enemies now **choose their abilities intelligently**, prioritizing the weakest players.  
+  - AI now properly **manages stamina**, ensuring optimal attacks.  
+  - Special AI logic added for **healers**, **buffers**, and **aggressive attackers**.  
+
+- **New Enemies Added**:  
+  - **Fire Elemental**, **Frost Wraith**, **Shadow Assassin**, **Stone Golem**, **Necromancer**, **Dragon**, **Vampire Lord**, **Thunder Titan**, and more!  
+  - Enemies use **new abilities**, making battles more diverse and challenging.  
+
+- **New Abilities Introduced**:  
+  - "Burning Touch" (Fire damage over time)  
+  - "Frozen Touch" (Freezes an enemy, making them skip turns)  
+  - "Multi-Strike" (Hits multiple times in one attack)  
+  - "Rock Smash" (High damage + stun)  
+  - "Dark Pulse" (Weaken effect on all enemies)  
+  - "Roar" (Fear effect causing enemy hesitation)  
+  - "Life Drain" (Steals health from the enemy)  
+
+### **1.03 - Abilities Revamp and New Status Effects**  
 - **Revamping Abilities**:  
   - Characters can now use **abilities** or **cards** to attack creatures.  
   - Simplified ability addition by defining just a few parameters; the code handles the rest.  
@@ -87,3 +113,4 @@ The code is written in **C#**.
 
 ### **1.00 - Initial Release**  
 - Published **RPGCombat** with the first combat system.  
+
