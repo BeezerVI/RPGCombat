@@ -29,8 +29,8 @@ namespace RPGCombatProject
 
             while (true)
             {
-                GenerateEnemiesForRound(currentRound); // Generate new enemies for the current round
-                
+                enemyTeam.Members.AddRange(GenerateEnemiesForRound(currentRound)); // Generate new enemies for the current round
+
                 StartCombatLoop(); // Start the combat loop
 
                 if (playerTeam.Members.All(player => player.IsDead))
@@ -50,7 +50,7 @@ namespace RPGCombatProject
         static void SetUpGame()
         {
             // Initialize enemies
-            UIManager.InitializeEnemies();
+            // UIManager.InitializeEnemies();
 
             UIManager.SetUpPlayers(); // Set up the players
         }
@@ -171,7 +171,7 @@ namespace RPGCombatProject
         /// </summary>
         /// <param name="round">The current round number (starting at 1).</param>
         /// <returns>A list of new EnemyCreature objects for this round.</returns>
-        static List<EnemyCreature> GenerateEnemiesForRound(int round)
+        static List<EnemyCreature> GenerateEnemiesForRound(int round = 1)
         {
             List<EnemyCreature> newEnemies = new List<EnemyCreature>();
             // List of possible enemy names (must match names in your JSON)

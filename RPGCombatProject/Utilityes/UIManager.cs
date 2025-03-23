@@ -137,59 +137,60 @@ namespace RPGCombatProject.Utilityes
 
         public static bool PlayerCombatOptions(Creature currentPlayer)
         {
-            if (currentPlayer is PlayerCreature){
+            if (currentPlayer is PlayerCreature)
+            {
                 if (currentPlayer == null)
-            {
-                Write("Current player is null. Ending turn.");
-                return false;
-            }
-            if (currentPlayer.Hand.Count == 0)
-            {
-                Write("No cards in hand. Ending turn.");
-                return false;
-            }
-            Console.Write("Enter the number of the card you want to play (or 'E' to end turn): ");
-            string? input = Console.ReadLine();
+                {
+                    Write("Current player is null. Ending turn.");
+                    return false;
+                }
+                if (currentPlayer.Hand.Count == 0)
+                {
+                    Write("No cards in hand. Ending turn.");
+                    return false;
+                }
+                Console.Write("Enter the number of the card you want to play (or 'E' to end turn): ");
+                string? input = Console.ReadLine();
 
-            if (input == null)
-            {
-                Write("Input cannot be null. Please enter a valid input.");
+                if (input == null)
+                {
+                    Write("Input cannot be null. Please enter a valid input.");
+                    return true;
+                }
+
+                if (input.ToUpper() == "E")
+                {
+                    Write($"{currentPlayer.Name} has ended their turn.");
+                    return false;
+                }
+
+                if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
+                {
+                    Write("Invalid input. Please enter a valid card number.");
+                    return true;
+                }
+
+                // Get the selected card from the current player's hand.
+                Ability selectedCard = currentPlayer.Hand[cardNumber - 1];
+                Write($"{currentPlayer.Name} played: {selectedCard.Name}", waitForInput: false);
+
+                if (selectedCard.Cost > currentPlayer.Stamina)
+                {
+                    Write("Not enough actions to play this card. Please select another card.");
+                    return true;
+                }
+
+                // Execute ability
+                if (gameState != null)
+                {
+                    selectedCard.Execute(gameState, currentPlayer);
+                }
+                else
+                {
+                    Write("Error: Game state is not set.");
+                }
+
                 return true;
-            }
-
-            if (input.ToUpper() == "E")
-            {
-                Write($"{currentPlayer.Name} has ended their turn.");
-                return false;
-            }
-
-            if (!int.TryParse(input, out int cardNumber) || cardNumber < 1 || cardNumber > currentPlayer.Hand.Count)
-            {
-                Write("Invalid input. Please enter a valid card number.");
-                return true;
-            }
-
-            // Get the selected card from the current player's hand.
-            Ability selectedCard = currentPlayer.Hand[cardNumber - 1];
-            Write($"{currentPlayer.Name} played: {selectedCard.Name}", waitForInput: false);
-
-            if (selectedCard.Cost > currentPlayer.Stamina)
-            {
-                Write("Not enough actions to play this card. Please select another card.");
-                return true;
-            }
-
-            // Execute ability
-            if (gameState != null)
-            {
-                selectedCard.Execute(gameState, currentPlayer);
-            }
-            else
-            {
-                Write("Error: Game state is not set.");
-            }
-
-            return true;
             }
             else
             {

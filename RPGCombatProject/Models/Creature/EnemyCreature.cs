@@ -117,12 +117,13 @@ namespace RPGCombatProject.Models
                 // Display game state
                 UIManager.DisplayGameState();
                 UIManager.CombatOptions(this);
+                UIManager.PlayerCombatOptions(this);
 
                 // Choose an ability based on AI logic.
                 Ability? chosenAbility = ChooseAbility(viableTargets, gameState);
                 if (chosenAbility == null)
                 {
-                    UIManager.Write($"{Name} has no abilities available to use.");
+                    UIManager.Write($"{Name} has no abilities available to use.", clearConsole: 2);
                     return;
                 }
 
