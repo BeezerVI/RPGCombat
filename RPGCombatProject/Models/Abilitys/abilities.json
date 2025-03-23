@@ -229,7 +229,7 @@
         "TeamTarget": "Both",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 6 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 9999 }
         ]
     },
     {
