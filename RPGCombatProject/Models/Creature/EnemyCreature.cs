@@ -109,6 +109,8 @@ namespace RPGCombatProject.Models
                 return;
             }
 
+            Stamina = MaxStamina; // Reset stamina at the start of the turn
+
             bool isTurn = true;
             while (isTurn)
             {

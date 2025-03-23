@@ -25,11 +25,20 @@ namespace RPGCombatProject
             
             SetUpGame(); // Set up the game with players and enemies
 
-            StartCombatLoop(); // Start the combat loop
+            while (true)
+            {
+                StartCombatLoop(); // Start the combat loop
 
-            LevelUpPlayers(playerTeam.Members); // Level up the players after combat
+                if (playerTeam.Members.All(player => player.IsDead))
+                {
+                    UIManager.Write("All Heros Have Fallen");
+                    UIManager.Write(UIManager.CreateCenteredText("--Game Over--", 60, 'X'), clearConsole: 3);
+                    break;
+                }
 
-            UIManager.DisplayGameState(); //for debugging purposes
+                LevelUpPlayers(playerTeam.Members); // Level up the players after combat
+            }
+
         }
 
         static void SetUpGame()
