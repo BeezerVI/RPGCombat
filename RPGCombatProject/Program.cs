@@ -198,7 +198,7 @@ namespace RPGCombatProject
 
             Random rnd = new Random();
             // For example, number of enemies increases with the round number.
-            int numEnemies = Math.Min(3 + round, enemyTemplates.Length);
+            int numEnemies = Math.Min(round, enemyTemplates.Length);
 
             for (int i = 0; i < numEnemies; i++)
             {

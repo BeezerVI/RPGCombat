@@ -3,104 +3,104 @@
         "Name": "Slime",
         "MaxHealth": 32,
         "Shield": 0,
-        "Stamina": 1,
-        "MaxStamina": 1,
+        "Stamina": 2,
+        "MaxStamina": 2,
         "Abilities": ["Sword Strike", "Heavy Slash"]
     },
     {
         "Name": "Giant Bug",
         "MaxHealth": 48,
         "Shield": 4,
-        "Stamina": 1,
-        "MaxStamina": 1,
+        "Stamina": 2,
+        "MaxStamina": 2,
         "Abilities": ["Shield Breaker", "Poison"]
     },
     {
         "Name": "Fire Elemental",
         "MaxHealth": 64,
         "Shield": 0,
-        "Stamina": 2,
-        "MaxStamina": 2,
+        "Stamina": 4,
+        "MaxStamina": 4,
         "Abilities": ["Fireball", "Meteor Strike", "Burning Touch"]
     },
     {
         "Name": "Frost Wraith",
         "MaxHealth": 40,
         "Shield": 1,
-        "Stamina": 1,
-        "MaxStamina": 1,
+        "Stamina": 3,
+        "MaxStamina": 3,
         "Abilities": ["Ice Shard", "Lightning Bolt", "Frozen Touch"]
     },
     {
         "Name": "Goblin Shaman",
         "MaxHealth": 44,
         "Shield": 0,
-        "Stamina": 2,
-        "MaxStamina": 2,
+        "Stamina": 4,
+        "MaxStamina": 4,
         "Abilities": ["Heal", "Mass Heal", "Weaken", "Stun"]
     },
     {
         "Name": "Dark Knight",
         "MaxHealth": 80,
         "Shield": 8,
-        "Stamina": 2,
-        "MaxStamina": 2,
+        "Stamina": 4,
+        "MaxStamina": 4,
         "Abilities": ["Heavy Slash", "Piercing Strike", "Fortify"]
     },
     {
         "Name": "Hydra",
         "MaxHealth": 96,
         "Shield": 4,
-        "Stamina": 2,
-        "MaxStamina": 2,
+        "Stamina": 4,
+        "MaxStamina": 4,
         "Abilities": ["Poison", "Regeneration", "Multi-Strike"]
     },
     {
         "Name": "Shadow Assassin",
         "MaxHealth": 56,
         "Shield": 2,
-        "Stamina": 2,
-        "MaxStamina": 2,
+        "Stamina": 4,
+        "MaxStamina": 4,
         "Abilities": ["Dagger Strike", "Piercing Strike", "Evasion"]
     },
     {
         "Name": "Stone Golem",
         "MaxHealth": 120,
         "Shield": 16,
-        "Stamina": 1,
-        "MaxStamina": 1,
+        "Stamina": 3,
+        "MaxStamina": 3,
         "Abilities": ["Hammer Slam", "Fortify", "Rock Smash"]
     },
     {
         "Name": "Necromancer",
         "MaxHealth": 52,
         "Shield": 0,
-        "Stamina": 3,
-        "MaxStamina": 3,
+        "Stamina": 6,
+        "MaxStamina": 6,
         "Abilities": ["Weaken", "Revive", "Dark Pulse"]
     },
     {
         "Name": "Dragon",
         "MaxHealth": 160,
         "Shield": 12,
-        "Stamina": 4,
-        "MaxStamina": 4,
+        "Stamina": 8,
+        "MaxStamina": 8,
         "Abilities": ["Fireball", "Meteor Strike", "Roar", "Wing Buffet"]
     },
     {
         "Name": "Vampire Lord",
         "MaxHealth": 72,
         "Shield": 4,
-        "Stamina": 2,
-        "MaxStamina": 2,
+        "Stamina": 5,
+        "MaxStamina": 5,
         "Abilities": ["Life Drain", "Hypnotize", "Bat Swarm"]
     },
     {
         "Name": "Thunder Titan",
         "MaxHealth": 128,
         "Shield": 8,
-        "Stamina": 3,
-        "MaxStamina": 3,
+        "Stamina": 6,
+        "MaxStamina": 6,
         "Abilities": ["Lightning Bolt", "Thunder Clap", "Storm Shield"]
     }
 ]

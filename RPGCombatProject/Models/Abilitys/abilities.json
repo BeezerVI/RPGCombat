@@ -7,7 +7,7 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 6 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 8 }
         ]
     },
     {
@@ -18,7 +18,7 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 6 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 8 }
         ]
     },
     {
@@ -97,7 +97,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "heal", "Duration": 0, "Strength": 10 }
+            { "EffectName": "heal", "Duration": 0, "Strength": 15 }
         ]
     },
     {
@@ -108,7 +108,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "heal", "Duration": 0, "Strength": 8 }
+            { "EffectName": "heal", "Duration": 0, "Strength": 12 }
         ]
     },
     {
@@ -119,7 +119,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "heal", "Duration": 3, "Strength": 4 }
+            { "EffectName": "heal", "Duration": 3, "Strength": 5 }
         ]
     },
     {
@@ -141,7 +141,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "shield", "Duration": 0, "Strength": 10 }
+            { "EffectName": "shield", "Duration": 0, "Strength": 15 }
         ]
     },
     {
@@ -152,7 +152,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "shield", "Duration": 0, "Strength": 8 }
+            { "EffectName": "shield", "Duration": 0, "Strength": 12 }
         ]
     },
     {
@@ -229,7 +229,7 @@
         "TeamTarget": "Both",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 9999 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 8 }
         ]
     },
     {
@@ -258,15 +258,15 @@
     },
     {
         "Name": "Multi-Strike",
-        "Cost": 3,
+        "Cost": 2,
         "Type": "Attack",
         "Targeting": "Random",
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 5 },
-            { "EffectName": "damage", "Duration": 0, "Strength": 5 },
-            { "EffectName": "damage", "Duration": 0, "Strength": 5 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 },
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 },
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 }
         ]
     },
     {
@@ -369,7 +369,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "shield", "Duration": 0, "Strength": 12 }
+            { "EffectName": "shield", "Duration": 0, "Strength": 15 }
         ]
     }
 ]
