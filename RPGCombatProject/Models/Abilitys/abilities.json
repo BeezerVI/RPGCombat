@@ -40,7 +40,7 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "piercing_damage", "Duration": 0, "Strength": 8 }
+            { "EffectName": "piercing", "Duration": 0, "Strength": 8 }
         ]
     },
     {

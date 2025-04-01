@@ -38,11 +38,11 @@ namespace RPGCombatProject.Models
                 Console.WriteLine($"Using default stats for enemy: {name}");
 
                 // Fallback default stats
-                this.MaxHealth = 50;
-                this.Health = 50;
+                this.MaxHealth = 20;
+                this.Health = 20;
                 this.Shield = 0;
-                this.Stamina = 3;
-                this.MaxStamina = 3;
+                this.Stamina = 1;
+                this.MaxStamina = 1;
                 this.Hand = new List<Ability> { Abilities.GetAbility("Sword Strike") };
             }
         }

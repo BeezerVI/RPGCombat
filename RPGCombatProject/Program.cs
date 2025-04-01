@@ -31,6 +31,9 @@ namespace RPGCombatProject
             {
                 enemyTeam.Members.AddRange(GenerateEnemiesForRound(currentRound)); // Generate new enemies for the current round
 
+                HealAllMembers(playerTeam.Members); // Heal all players at the start of each round
+                UIManager.Write($"--- Round {currentRound} ---", clearConsole: 2);
+
                 StartCombatLoop(); // Start the combat loop
 
                 if (playerTeam.Members.All(player => player.IsDead))
@@ -92,6 +95,16 @@ namespace RPGCombatProject
             CheckIfDeadForAllCreatures(team);
             // Remove dead creatures from the team
             DeleteDeadCreatures(team);
+        }
+
+        static void HealAllMembers(List<Creature> teamMembers)
+        {
+            // Heal all players at the start of each round
+            foreach (var creature in teamMembers)
+            {
+                // Add logic to heal the creature
+                creature.Health = creature.MaxHealth; // Reset health to max for simplicity
+            }
         }
 
         /// <summary>

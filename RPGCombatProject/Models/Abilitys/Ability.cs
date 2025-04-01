@@ -107,7 +107,7 @@ namespace RPGCombatProject.Models
                     return;
                 }
                 ApplyEffects(target);
-                UIManager.Write($"{user.Name} used {Name} on {target.Name}.");
+                UIManager.Write($"{user.Name} used {Name} on {target.Name}.", clearConsole : 1);
             }
 
             // Execute any chained action after the main effects.
@@ -207,28 +207,28 @@ namespace RPGCombatProject.Models
                 {
                     case "damage":
                         target.ApplyDamage(effect.Strength);
-                        UIManager.Write($"{target.Name} takes {effect.Strength} damage.");
+                        UIManager.Write($"{target.Name} takes {effect.Strength} damage.", waitForInput : false);
                         break;
                     case "heal":
                         target.ApplyHealing(effect.Strength);
-                        UIManager.Write($"{target.Name} heals for {effect.Strength} HP.");
+                        UIManager.Write($"{target.Name} heals for {effect.Strength} HP.", waitForInput : false);
                         break;
                     case "shield":
                         target.ApplyShield(effect.Strength);
-                        UIManager.Write($"{target.Name} gains {effect.Strength} shield.");
+                        UIManager.Write($"{target.Name} gains {effect.Strength} shield.", waitForInput : false);
                         break;
                     case "piercing":
                         target.ApplyPiercingDamage(effect.Strength);
-                        UIManager.Write($"{target.Name} takes {effect.Strength} piercing damage.");
+                        UIManager.Write($"{target.Name} takes {effect.Strength} piercing damage.", waitForInput : false);
                         break;
                     case "bludgeoning":
                         target.ApplyBludgeoningDamage(effect.Strength);
-                        UIManager.Write($"{target.Name} takes {effect.Strength} bludgeoning damage.");
+                        UIManager.Write($"{target.Name} takes {effect.Strength} bludgeoning damage.", waitForInput : false);
                         break;
                     default:
                         // For custom or status effects.
                         target.ApplyEffect(effect);
-                        UIManager.Write($"{target.Name} is affected by {effect.EffectName} (Duration: {effect.Duration}, Strength: {effect.Strength}).");
+                        UIManager.Write($"{target.Name} is affected by {effect.EffectName} (Duration: {effect.Duration}, Strength: {effect.Strength}).", waitForInput : false);
                         break;
                 }
             }
