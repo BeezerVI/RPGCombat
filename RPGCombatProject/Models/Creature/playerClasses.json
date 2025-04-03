@@ -1,0 +1,44 @@
+[
+    {
+      "ClassName": "warrior",
+      "MaxHealth": 120,
+      "Shield": 15,
+      "Stamina": 3,
+      "MaxStamina": 3,
+      "StartingLevel": 1,
+      "DefaultAbilities": ["Sword Strike", "Heavy Slash", "Fortify"]
+    },
+    {
+      "ClassName": "mage",
+      "MaxHealth": 80,
+      "Shield": 5,
+      "Stamina": 4,
+      "MaxStamina": 4,
+      "StartingLevel": 1,
+      "DefaultAbilities": ["Fireball", "Lightning Bolt", "Mass Heal"]
+    },
+    {
+      "ClassName": "rogue",
+      "MaxHealth": 100,
+      "Shield": 10,
+      "Stamina": 4,
+      "MaxStamina": 4,
+      "StartingLevel": 1,
+      "DefaultAbilities": ["Poison", "Stun", "Speed Boost"]
+    },
+    {
+      "ClassName": "phoenix",
+      "MaxHealth": 100,
+      "Shield": 10,
+      "Stamina": 1000,
+      "MaxStamina": 1000,
+      "StartingLevel": 1,
+      "DefaultAbilities": [
+        "Sword Strike", "Dagger Strike", "Heavy Slash", "Piercing Strike", 
+        "Fireball", "Lightning Bolt", "Ice Shard", "Meteor Strike", "Heal", 
+        "Mass Heal", "Regeneration", "Revive", "Fortify", "Magic Barrier", 
+        "Speed Boost", "Weaken", "Poison", "Stun", "Shield Breaker", "Hammer Slam", "Both Test"
+      ]
+    }
+  ]
+  

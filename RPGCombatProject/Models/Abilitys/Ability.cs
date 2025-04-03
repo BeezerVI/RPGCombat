@@ -107,7 +107,7 @@ namespace RPGCombatProject.Models
                     return;
                 }
                 ApplyEffects(target);
-                UIManager.Write($"{user.Name} used {Name} on {target.Name}.", clearConsole : 1);
+                UIManager.Write($"{user.Name} used {Name} on {target.Name}.", clearConsole : 3);
             }
 
             // Execute any chained action after the main effects.

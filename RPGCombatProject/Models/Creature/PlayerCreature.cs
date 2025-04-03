@@ -7,152 +7,14 @@ namespace RPGCombatProject.Models
     {
         public int Level { get; set; }
         public int UpgradePoints { get; set; }
+        public string ClassName { get; set; }
 
-        public string ClassName  { get; set; }
-
-        public PlayerCreature(string name, int maxHealth, int health, int shield = 0, int stamina = 3, int maxStamina = 3, List<Effect>? effects = null, List<Ability>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
+        public PlayerCreature(string name, int maxHealth, int health, int shield, int stamina, int maxStamina, List<Effect>? effects = null, List<Ability>? hand = null, int level = 1, string className = "warrior", int upgradePoints = 0)
             : base(name, maxHealth, health, shield, stamina, maxStamina, effects, hand)
         {
             Level = level;
             UpgradePoints = upgradePoints;
             ClassName = className;
-        }
-
-        // Factory method: creates a new player based on the chosen class.
-        public static PlayerCreature CreatePlayer(string name, string chosenClass)
-        {
-            switch (chosenClass.ToLower())
-            {
-                case "warrior":
-                    return new PlayerCreature(
-                        name,
-                        maxHealth: 120,    // Warrior has higher HP
-                        health: 120,
-                        shield: 15,        // Better starting shield
-                        stamina: 3,
-                        maxStamina: 3,     // Initialize MaxStamina
-                        hand: GetDefaultHand("warrior"),
-                        className: "warrior",
-                        level: 1
-                    );
-                case "mage":
-                    return new PlayerCreature(
-                        name,
-                        maxHealth: 80,     // Mage has lower HP
-                        health: 80,
-                        shield: 5,
-                        stamina: 4,
-                        maxStamina: 4,     // Initialize MaxStamina
-                        hand: GetDefaultHand("mage"),
-                        className: "mage",
-                        level: 1
-                    );
-                case "rogue":
-                    return new PlayerCreature(
-                        name,
-                        maxHealth: 100,    // Rogue has moderate HP
-                        health: 100,
-                        shield: 10,
-                        stamina: 4,
-                        maxStamina: 4,     // Initialize MaxStamina
-                        hand: GetDefaultHand("rogue"),
-                        className: "rogue",
-                        level: 1
-                    );
-
-                case "phoenix":
-                    return new PlayerCreature(
-                        name,
-                        maxHealth: 100,    // Phoenix has moderate HP
-                        health: 100,
-                        shield: 10,
-                        stamina: 1000,
-                        maxStamina: 1000,     // Initialize MaxStamina
-                        hand: GetDefaultHand("phoenix"),
-                        className: "phoenix",
-                        level: 1
-                    );
-
-                default:
-                    // Default to Warrior if an invalid class is chosen.
-                    return new PlayerCreature(
-                        name,
-                        maxHealth: 120,
-                        health: 120,
-                        shield: 15,
-                        stamina: 3,
-                        maxStamina: 3,     // Initialize MaxStamina
-                        hand: GetDefaultHand("warrior"),
-                        className: "warrior",
-                        level: 1
-                    );
-            }
-        }
-
-        // Returns a default hand of Abilitys based on the player's class.
-        private static List<Ability> GetDefaultHand(string playerClass)
-        {
-            switch (playerClass.ToLower())
-            {
-                case "warrior":
-                    return new List<Ability>
-                    {
-                        Abilities.GetAbility("Sword Strike"),
-                        Abilities.GetAbility("Heavy Slash"),
-                        Abilities.GetAbility("Fortify"),
-                    };
-                    
-                case "mage":
-                    return new List<Ability>
-                    {
-                        Abilities.GetAbility("Fireball"),
-                        Abilities.GetAbility("Lightning Bolt"),
-                        Abilities.GetAbility("Mass Heal"),
-                    };
-
-                case "rogue":
-                    return new List<Ability>
-                    {
-                        Abilities.GetAbility("Poison"),
-                        Abilities.GetAbility("Stun"),
-                        Abilities.GetAbility("Speed Boost"),
-                       // Abilities.GetAbility("Dagger Strike"),
-                    };
-
-                case "phoenix":
-                    return new List<Ability>
-                    {
-                        Abilities.GetAbility("Sword Strike"),
-                        Abilities.GetAbility("Dagger Strike"),
-                        Abilities.GetAbility("Heavy Slash"),
-                        Abilities.GetAbility("Piercing Strike"),
-                        Abilities.GetAbility("Fireball"),
-                        Abilities.GetAbility("Lightning Bolt"),
-                        Abilities.GetAbility("Ice Shard"),
-                        Abilities.GetAbility("Meteor Strike"),
-                        Abilities.GetAbility("Heal"),
-                        Abilities.GetAbility("Mass Heal"),
-                        Abilities.GetAbility("Regeneration"),
-                        Abilities.GetAbility("Revive"),
-                        Abilities.GetAbility("Fortify"),
-                        Abilities.GetAbility("Magic Barrier"),
-                        Abilities.GetAbility("Speed Boost"),
-                        Abilities.GetAbility("Weaken"),
-                        Abilities.GetAbility("Poison"),
-                        Abilities.GetAbility("Stun"),
-                        Abilities.GetAbility("Shield Breaker"),
-                        Abilities.GetAbility("Hammer Slam"),
-                        Abilities.GetAbility("Both Test"),
-                    };
-
-                default:
-                    return new List<Ability>
-                    {
-                        Abilities.GetAbility("Sword Strike"),
-                        Abilities.GetAbility("Heavy Slash"),
-                        Abilities.GetAbility("Fortify"),
-                    };
-            }
         }
 
         public override void PlayTurn()
@@ -165,22 +27,19 @@ namespace RPGCombatProject.Models
                     return;
                 }
 
-                Stamina = MaxStamina; // Reset stamina at the start of the turn
-                UIManager.Write($"{Name}'s turn begins.");
+            Stamina = MaxStamina; // Reset stamina at the start of the turn
+            UIManager.Write($"{Name}'s turn begins.");
 
-                bool isTurn = true;
-                while (isTurn)
-                {
-                    // Display game state
-                    UIManager.DisplayGameState();
-                    UIManager.CombatOptions(this);
-
-                    isTurn = UIManager.PlayerCombatOptions(this);
-                }
-                UIManager.Write($"{Name}'s turn is over.");
+            bool isTurn = true;
+            while (isTurn)
+            {
+                // Display game state and handle player options.
+                UIManager.DisplayGameState();
+                UIManager.CombatOptions(this);
+                isTurn = UIManager.PlayerCombatOptions(this);
             }
-
-
+            UIManager.Write($"{Name}'s turn is over.");
+        }
 
         public void UpgradeMenu()
         {
@@ -258,8 +117,8 @@ namespace RPGCombatProject.Models
         public void LevelUp()
         {
             Level += 1;
-            UpgradePoints += 1;
-            Console.WriteLine($"{Name} leveled up to Level {Level}! Gained 1 Upgrade Point.");
+            UpgradePoints += 3;
+            Console.WriteLine($"{Name} leveled up to Level {Level}! Gained 3 Upgrade Point.");
         }
     }
 }

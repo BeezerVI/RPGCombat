@@ -38,7 +38,7 @@ namespace RPGCombatProject.Utilityes
                 Console.Clear();
                 DisplayGameState();
             }
-            else if (clearConsole == 3)
+            else
             {
                 // Do nothing
             }
@@ -100,7 +100,7 @@ namespace RPGCombatProject.Utilityes
         public static string EffectList(List<Effect> effects)
         {
             if (effects.Count == 0) return "None";
-            return string.Join(", ", effects.Select(e => $"{e.EffectName}{new string('|', e.Duration)}{new string('*', e.Strength)}"));
+            return string.Join(", ", effects.Select(e => $"{e.EffectName}{new string('|', e.Duration)}{new string('*', Math.Max(0, e.Strength))}"));
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace RPGCombatProject.Utilityes
                 // Ask for player's name.
                 Console.Clear();
                 Console.Write($"Enter Player {i + 1} name: ");
-                string name = Console.ReadLine() ?? $"Player{i + 1}";
+                string playerName = Console.ReadLine() ?? $"Player{i + 1}";
 
                 // Ask for player's class.
                 Console.WriteLine("Choose a class:");
@@ -245,15 +245,15 @@ namespace RPGCombatProject.Utilityes
                         chosenClass = "Phoenix";
                         break;
                     default:
-                        UIManager.Write("Invalid choice; defaulting to Warrior.", clearConsole: 1);
+                        Write("Invalid choice; defaulting to Warrior.", clearConsole: 1);
                         chosenClass = "Warrior";
                         break;
                 }
 
                 // Create a new player creature using the factory method in PlayerCreature.
-                PlayerCreature newPlayer = PlayerCreature.CreatePlayer(name, chosenClass);
+                PlayerCreature newPlayer = PlayerLoader.CreatePlayer(playerName, chosenClass);
                 players.Add(newPlayer);
-                UIManager.Write($"Player {name} has joined the adventure as a {chosenClass}.", clearConsole: 1); // Display the player's name and class
+                Write($"Player {playerName} has joined the adventure as a {chosenClass}.", clearConsole: 1); // Display the player's name and class
             }
 
             // Add players to the player team
