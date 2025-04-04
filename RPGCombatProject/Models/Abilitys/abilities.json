@@ -18,7 +18,7 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 8 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 9 }
         ]
     },
     {
@@ -29,18 +29,18 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 12 }
+            { "EffectName": "bludgeoning", "Duration": 0, "Strength": 18 }
         ]
     },
     {
         "Name": "Piercing Strike",
-        "Cost": 2,
+        "Cost": 1,
         "Type": "Attack",
         "Targeting": "Single",
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "piercing", "Duration": 0, "Strength": 8 }
+            { "EffectName": "piercing", "Duration": 0, "Strength": 6 }
         ]
     },
     {
@@ -51,7 +51,8 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 10 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 3 },
+            { "EffectName": "burning", "Duration": 2, "Strength": 2 }
         ]
     },
     {
@@ -119,7 +120,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "heal", "Duration": 3, "Strength": 5 }
+            { "EffectName": "regeneration", "Duration": 3, "Strength": 5 }
         ]
     },
     {
@@ -141,7 +142,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "shield", "Duration": 0, "Strength": 15 }
+            { "EffectName": "shield", "Duration": 0, "Strength": 17 }
         ]
     },
     {
@@ -322,8 +323,8 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 10 },
-            { "EffectName": "knockback", "Duration": 1, "Strength": 1 }
+            { "EffectName": "damage", "Duration": 0, "Strength": 3 },
+            { "EffectName": "stun", "Duration": 1, "Strength": 1 }
         ]
     },
     {
@@ -346,7 +347,7 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "stun", "Duration": 2, "Strength": 1 }
+            { "EffectName": "stun", "Duration": 3, "Strength": 1 }
         ]
     },
     {
@@ -357,7 +358,7 @@
         "TeamTarget": "Enemies",
         "CanTargetSelf": false,
         "Effects": [
-            { "EffectName": "damage", "Duration": 0, "Strength": 10 },
+            { "EffectName": "damage", "Duration": 0, "Strength": 6 },
             { "EffectName": "stun", "Duration": 1, "Strength": 1 }
         ]
     },
@@ -369,7 +370,7 @@
         "TeamTarget": "Allies",
         "CanTargetSelf": true,
         "Effects": [
-            { "EffectName": "shield", "Duration": 0, "Strength": 15 }
+            { "EffectName": "shield", "Duration": 0, "Strength": 26 }
         ]
     }
 ]

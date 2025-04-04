@@ -100,8 +100,11 @@ namespace RPGCombatProject.Utilityes
         public static string EffectList(List<Effect> effects)
         {
             if (effects.Count == 0) return "None";
-            return string.Join(", ", effects.Select(e => $"{e.EffectName}{new string('|', e.Duration)}{new string('*', Math.Max(0, e.Strength))}"));
+            return string.Join(", ", effects.Select(e => 
+                $"{e.EffectName}{new string('|', Math.Max(0, e.Duration))}{new string('*', Math.Max(0, e.Strength))}"
+            ));
         }
+
 
         /// <summary>
         /// Creates a centered text banner with a specified width and fill character.

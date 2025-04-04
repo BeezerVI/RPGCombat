@@ -17,7 +17,7 @@ namespace RPGCombatProject
             var enemyTeam = new Team("Enemy Team", new List<Creature> { /* enemy creatures */ });
             var playerTeam = new Team("Player Team", new List<Creature> { /* player creatures */ });
 
-            gameState = new GameState(new List<Team> { enemyTeam, playerTeam });
+            gameState = new GameState(new List<Team> { playerTeam, enemyTeam });
             
             UIManager.Write("Welcome to the RPG Combat Game!", clearConsole: 3);
 
