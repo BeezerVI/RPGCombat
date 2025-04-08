@@ -51,19 +51,23 @@ namespace RPGCombatProject.Models
             string key = chosenClass.Trim().ToLower();
             if (playerClassRegistry.TryGetValue(key, out PlayerClassData? classData) && classData != null)
             {
-                return new PlayerCreature(
+                var player = new PlayerCreature(
                     name,
                     classData.MaxHealth,
                     classData.MaxHealth,  // Start at full health
                     classData.Shield,
                     classData.Stamina,
                     classData.MaxStamina,
-                    new List<Effect>(),  // No predefined effects
-                    GetDefaultHand(classData.DefaultAbilities),       
-                    classData.StartingLevel,
-                    classData.ClassName,
-                    0
+                    effects: null,
+                    hand: GetDefaultHand(classData.DefaultAbilities),
+                    className: classData.ClassName,
+                    level: classData.StartingLevel,
+                    upgradePoints: 0
                 );
+                // Initialize the player's ability progression from the JSON data.
+                player.AbilityProgression = classData.AbilityProgression;
+                player.NextAbilityIndex = 0;
+                return player;
             }
             else
             {
@@ -71,6 +75,7 @@ namespace RPGCombatProject.Models
                 return CreatePlayer(name, "warrior");
             }
         }
+
 
         private static List<Ability> GetDefaultHand(List<string> abilityNames)
         {
@@ -100,5 +105,6 @@ namespace RPGCombatProject.Models
         public List<string> DefaultAbilities { get; set; } = new List<string>();
         public int StartingLevel { get; set; }
         public string ClassName { get; set; } = "";
+        public List<string> AbilityProgression { get; set; } = new List<string>();  // for ability progression.
     }
 }

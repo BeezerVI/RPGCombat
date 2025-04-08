@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using RPGCombatProject.Utilityes;
 
@@ -8,8 +9,12 @@ namespace RPGCombatProject.Models
         public int Level { get; set; }
         public int UpgradePoints { get; set; }
         public string ClassName { get; set; }
+        
+        // New fields for progression
+        public List<string> AbilityProgression { get; set; } = new List<string>();
+        public int NextAbilityIndex { get; set; } = 0;
 
-        public PlayerCreature(string name, int maxHealth, int health, int shield, int stamina, int maxStamina, List<Effect>? effects = null, List<Ability>? hand = null, int level = 1, string className = "warrior", int upgradePoints = 0)
+        public PlayerCreature(string name, int maxHealth, int health, int shield, int stamina, int maxStamina, List<Effect>? effects = null, List<Ability>? hand = null, string className = "warrior", int level = 1, int upgradePoints = 0)
             : base(name, maxHealth, health, shield, stamina, maxStamina, effects, hand)
         {
             Level = level;
@@ -19,14 +24,14 @@ namespace RPGCombatProject.Models
 
         public override void PlayTurn()
             {
+            // Check if the player is stunned
+            if (IsStunned())
+            {
+                UIManager.Write($"{Name} is stunned and skips their turn.");
                 ProcessEffects();
-                // Check if the player is stunned
-                if (IsStunned())
-                {
-                    UIManager.Write($"{Name} is stunned and skips their turn.");
-                    return;
-                }
-
+                return;
+            }
+            ProcessEffects();            
             Stamina = MaxStamina; // Reset stamina at the start of the turn
             UIManager.Write($"{Name}'s turn begins.");
 
@@ -115,10 +120,21 @@ namespace RPGCombatProject.Models
 
         // Call this function after combat to level up and gain upgrade points.
         public void LevelUp()
-        {
-            Level += 1;
-            UpgradePoints += 3;
-            Console.WriteLine($"{Name} leveled up to Level {Level}! Gained 3 Upgrade Point.");
-        }
+            {
+                Level++;
+                UpgradePoints++;
+
+                // Unlock next ability if available
+                if (NextAbilityIndex < AbilityProgression.Count)
+                {
+                    string abilityName = AbilityProgression[NextAbilityIndex];
+                    var ability = Abilities.GetAbility(abilityName);
+                    Hand.Add(ability);
+                    NextAbilityIndex++;
+                    Console.WriteLine($"{Name} learned new ability: {abilityName}!");
+                }
+
+                Console.WriteLine($"{Name} leveled up to Level {Level}! Gained 1 Upgrade Point.");
+            }
     }
 }
