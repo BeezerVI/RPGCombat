@@ -9,8 +9,6 @@ namespace RPGCombatProject.Models
         public int Level { get; set; }
         public int UpgradePoints { get; set; }
         public string ClassName { get; set; }
-        
-        // New fields for progression
         public List<string> AbilityProgression { get; set; } = new List<string>();
         public int NextAbilityIndex { get; set; } = 0;
 
