@@ -22,8 +22,8 @@ namespace RPGCombatProject.Models
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Creature", fileName);
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Error: {filePath} not found.");
-                UIManager.Write("Error loading enemies. Press any key to exit.", clearConsole : 3);
+                Console.WriteLine($"❌ Error: {filePath} not found.");
+                UIManager.Write("Error loading enemies. Press any key to exit.", clearConsole: 3);
                 return;
             }
 
@@ -36,39 +36,57 @@ namespace RPGCombatProject.Models
                 {
                     foreach (var enemyData in enemies)
                     {
-                        List<Ability> abilities = new List<Ability>();
-                        foreach (var abilityName in enemyData.Abilities)
+                        try
                         {
-                            try
+                            if (string.IsNullOrWhiteSpace(enemyData.Name))
                             {
-                                abilities.Add(Abilities.GetAbility(abilityName));
+                                Console.WriteLine("⚠️ Skipping enemy with missing name.");
+                                continue;
                             }
-                            catch (ArgumentException)
+
+                            List<Ability> abilities = new List<Ability>();
+                            if (enemyData.Abilities != null)
                             {
-                                Console.WriteLine($"Warning: Ability '{abilityName}' not found for enemy '{enemyData.Name}'.");
+                                foreach (var abilityName in enemyData.Abilities)
+                                {
+                                    try
+                                    {
+                                        abilities.Add(Abilities.GetAbility(abilityName));
+                                    }
+                                    catch (ArgumentException)
+                                    {
+                                        Console.WriteLine($"⚠️ Warning: Ability '{abilityName}' not found for enemy '{enemyData.Name}'.");
+                                    }
+                                }
                             }
+
+                            var enemy = new EnemyCreature(
+                                enemyData.Name,
+                                enemyData.MaxHealth,
+                                enemyData.MaxHealth,
+                                enemyData.Shield,
+                                enemyData.Stamina,
+                                enemyData.MaxStamina,
+                                new List<Effect>(),  // Optional: add default effects
+                                abilities
+                            );
+
+                            enemyRegistry[enemyData.Name.ToLower()] = enemy;
+                            Console.WriteLine($"✅ Loaded enemy: {enemyData.Name}");
                         }
-
-                        var enemy = new EnemyCreature(
-                            enemyData.Name,
-                            enemyData.MaxHealth,
-                            enemyData.MaxHealth,  // Start at full health
-                            enemyData.Shield,
-                            enemyData.Stamina,
-                            enemyData.MaxStamina,
-                            new List<Effect>(),  // No predefined effects for now
-                            abilities
-                        );
-
-                        enemyRegistry[enemyData.Name.ToLower()] = enemy;
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"⚠️ Failed to load enemy entry: {enemyData?.Name ?? "unknown"} - {ex.Message}");
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load enemies: {ex.Message}");
+                Console.WriteLine($"❌ Failed to load enemies.json: {ex.Message}");
             }
         }
+
 
         // Retrieves an enemy by name
         public static EnemyCreature GetEnemy(string enemyName)

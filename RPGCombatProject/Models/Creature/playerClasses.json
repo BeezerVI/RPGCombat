@@ -40,7 +40,7 @@
     "DefaultAbilities": [
       "Sword Strike", "Dagger Strike", "Heavy Slash", "Piercing Strike", 
       "Fireball", "Lightning Bolt", "Ice Shard", "Meteor Strike", "Heal", 
-      "Mass Heal", "Regeneration", "Revive", "Fortify", "Magic Barrier",
+      "Mass Heal", "Regeneration", "Revive", "Fortify", "Magic Barrier", "Sword Strike", "Why",
        "Weaken", "Poison", "Stun", "Shield Breaker", "Hammer Slam"
     ],
     "AbilityProgression": ["Both Test", "Speed Boost"]

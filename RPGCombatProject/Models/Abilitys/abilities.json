@@ -9,7 +9,7 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 8 }
         ],
-        "UpgradedTo": "Sword Strike II"
+        "UpgradedTo": "Why"
     },
     {
         "Name": "Dagger Strike",
@@ -407,7 +407,7 @@
         "UpgradedTo": null
     },
     {
-        "Name": "Sword Strike II",
+        "Name": "Why",
         "Cost": 1,
         "Type": "Attack",
         "Targeting": "Single",

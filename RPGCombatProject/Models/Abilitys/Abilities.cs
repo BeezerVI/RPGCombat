@@ -26,42 +26,55 @@ namespace RPGCombatProject.Models
                 return;
             }
 
+            string json = File.ReadAllText(filePath);
+            List<AbilityData>? abilities;
             try
             {
-                string json = File.ReadAllText(filePath);
-                var abilities = JsonSerializer.Deserialize<List<AbilityData>>(json);
-
-                if (abilities != null)
-                {
-                    foreach (var abilityData in abilities)
-                    {
-                        var effects = new List<Effect>();
-                        foreach (var effect in abilityData.Effects)
-                        {
-                            effects.Add(new Effect(effect.EffectName, effect.Duration, effect.Strength));
-                        }
-
-                        var ability = new Ability(
-                            abilityData.Name, 
-                            abilityData.Cost,
-                            Enum.Parse<AbilityType>(abilityData.Type),           // Convert string to AbilityType enum
-                            Enum.Parse<TargetingMethod>(abilityData.Targeting),  // Convert string to TargetingMethod enum
-                            Enum.Parse<TargetTeam>(abilityData.TeamTarget),      // Convert string to TargetTeam enum
-                            abilityData.CanTargetSelf,                           // Self-targeting flag
-                            effects,                                              // List of effect objects
-                            null,                                                 // ChainAction (currently not using)
-                            abilityData.UpgradedTo?.Trim()                        // UpgradedTo
-                        );
-
-                        abilityRegistry[abilityData.Name.ToLower()] = ability;
-                    }
-                }
+                abilities = JsonSerializer.Deserialize<List<AbilityData>>(json);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load abilities: {ex.Message}");
+                Console.WriteLine($"❌ JSON parse failed: {ex}");
+                throw; // so you see the stack trace in the console
             }
+
+            if (abilities == null)
+            {
+                Console.WriteLine("❌ abilities.json deserialized to null.");
+                return;
+            }
+
+            foreach (var abilityData in abilities)
+            {
+                try
+                {
+                    var effects = new List<Effect>();
+                    foreach (var effect in abilityData.Effects)
+                        effects.Add(new Effect(effect.EffectName, effect.Duration, effect.Strength));
+
+                    var ability = new Ability(
+                        abilityData.Name,
+                        abilityData.Cost,
+                        Enum.Parse<AbilityType>(abilityData.Type),
+                        Enum.Parse<TargetingMethod>(abilityData.Targeting),
+                        Enum.Parse<TargetTeam>(abilityData.TeamTarget),
+                        abilityData.CanTargetSelf,
+                        effects,
+                        null,
+                        abilityData.UpgradedTo?.Trim()
+                    );
+                    abilityRegistry[abilityData.Name.ToLower()] = ability;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"⚠️ Failed to load ability “{abilityData.Name}”: {ex.Message}");
+                    // continue;  // skip this one and keep loading the rest
+                }
+            }
+
+            Console.WriteLine($"✅ Loaded {abilityRegistry.Count} abilities: {string.Join(", ", abilityRegistry.Keys)}");
         }
+
 
 
         // Retrieves an ability by name

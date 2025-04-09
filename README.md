@@ -5,15 +5,14 @@ I started this project out of curiosity to see if it was possible to create a fu
 
 I haven’t decided on a name for the game yet, so for now, it’s called **RPGCombat**! RPGCombat is a roguelike game where you play cards to defeat enemies, encounter events, and experience much, much more!  
 
-Currently, the game is in very early development, so you won’t see much content yet. There are missing features, incomplete sections, but I do intend to finish the game entirely soon.  
-
 This is a tutorial explaining the new content of the game.  
-[Video Demo NEW 1.04](https://youtu.be/TDxLxGdfLmI)  
+[Video Demo NEW 1.05](https://youtu.be/placeholder)  
 
-## **Old Videos**  
+## **Old Videos**
+- [Video Demo 1.04](https://www.youtube.com/watch?v=TDxLxGdfLmI)  
 - [Video Demo 1.03](https://www.youtube.com/watch?v=iRXw389TukM)  
-- [Video Demo 1.02](https://youtu.be/yfPR-MDi1Uo)  
-- [Video Demo 1.01](https://youtu.be/K2lNMMITx70)  
+- [Video Demo 1.02](https://www.youtube.com/watch?v=yfPR-MDi1Uo)  
+- [Video Demo 1.01](https://www.youtube.com/watch?v=K2lNMMITx70)  
 - [Video Demo 1.00](https://www.youtube.com/watch?v=wr_GwDA3vfk)  
 
 # Development Environment  
@@ -34,12 +33,17 @@ The code is written in **C#**.
 - [MonsterWorld](https://scratch.mit.edu/projects/228016745/) - Game of Inspiration on Scratch.  
 
 # **Future Work**  
-- Add **more enemies** and **abilities**.  
-- Create **new encounters** with unique choices.  
-- Expand the **upgrade system** with more perks.  
-- Add **tons of new content** to the game.  
+- None (for now)  
 
-# **Update Log**  
+ # **Update Log**
+ ### **1.05 - Updated Upgrading System and Leveling Up Abilities/New Class Features** 
+ - **Upgraded Upgrading System**  
+     - Player can now select abilities that can upgrade.  
+ - **New Class Structure**  
+     - Changed how all classes are stored in a JSON file. Added new class functions.  
+ - **Class Progressions with Abilities**  
+     - Each level, the player gains a new ability from a set list stored in the player’s class.  
+
 ### **1.04 - Dynamic Enemy Generation and Scaling**  
 - **New Enemy Spawning System**:  
   - Each round, **new enemies** are generated dynamically.  

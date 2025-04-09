@@ -22,7 +22,7 @@ namespace RPGCombatProject.Models
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Creature", fileName);
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Error: {filePath} not found.");
+                Console.WriteLine($"❌ Error: {filePath} not found.");
                 return;
             }
 
@@ -35,15 +35,32 @@ namespace RPGCombatProject.Models
                 {
                     foreach (var playerClass in classes)
                     {
-                        playerClassRegistry[playerClass.ClassName.ToLower()] = playerClass;
+                        try
+                        {
+                            if (!string.IsNullOrWhiteSpace(playerClass.ClassName))
+                            {
+                                string key = playerClass.ClassName.ToLower();
+                                playerClassRegistry[key] = playerClass;
+                                Console.WriteLine($"✅ Loaded player class: {playerClass.ClassName}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("⚠️ Skipping a class entry with missing ClassName.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"⚠️ Failed to load player class '{playerClass?.ClassName ?? "unknown"}': {ex.Message}");
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load player classes: {ex.Message}");
+                Console.WriteLine($"❌ Failed to read player class file: {ex.Message}");
             }
         }
+
 
         // Creates a new PlayerCreature using the data loaded from JSON.
         public static PlayerCreature CreatePlayer(string name, string chosenClass)
