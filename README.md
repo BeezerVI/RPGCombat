@@ -40,9 +40,11 @@ The code is written in **C#**.
  - **Upgraded Upgrading System**  
      - Player can now select abilities that can upgrade.  
  - **New Class Structure**  
-     - Changed how all classes are stored in a JSON file. Added new class functions.  
+     - Changed how all classes are stored in a JSON file. Added new class functions.
+     - fixed class loading erorrs 
  - **Class Progressions with Abilities**  
      - Each level, the player gains a new ability from a set list stored in the player’s class.  
+ - **Fixed JSON potential loading errors**
 
 ### **1.04 - Dynamic Enemy Generation and Scaling**  
 - **New Enemy Spawning System**:  
