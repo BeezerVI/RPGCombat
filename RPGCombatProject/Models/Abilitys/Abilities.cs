@@ -44,11 +44,13 @@ namespace RPGCombatProject.Models
                         var ability = new Ability(
                             abilityData.Name, 
                             abilityData.Cost,
-                            Enum.Parse<AbilityType>(abilityData.Type),
-                            Enum.Parse<TargetingMethod>(abilityData.Targeting),
-                            Enum.Parse<TargetTeam>(abilityData.TeamTarget),
-                            abilityData.CanTargetSelf,
-                            effects
+                            Enum.Parse<AbilityType>(abilityData.Type),           // Convert string to AbilityType enum
+                            Enum.Parse<TargetingMethod>(abilityData.Targeting),  // Convert string to TargetingMethod enum
+                            Enum.Parse<TargetTeam>(abilityData.TeamTarget),      // Convert string to TargetTeam enum
+                            abilityData.CanTargetSelf,                           // Self-targeting flag
+                            effects,                                              // List of effect objects
+                            null,                                                 // ChainAction (currently not using)
+                            abilityData.UpgradedTo?.Trim()                        // UpgradedTo
                         );
 
                         abilityRegistry[abilityData.Name.ToLower()] = ability;
@@ -71,7 +73,18 @@ namespace RPGCombatProject.Models
             if (abilityRegistry.TryGetValue(formattedAbilityName, out Ability? ability))
             {
                 //Console.WriteLine($"Found ability: {ability.Name}");
-                return new Ability(ability.Name, ability.Cost, ability.Type, ability.Targeting, ability.TeamTarget, ability.CanTargetSelf, new List<Effect>(ability.Effects), ability.ChainAction);
+                return new Ability
+                (
+                    ability.Name, 
+                    ability.Cost, 
+                    ability.Type, 
+                    ability.Targeting, 
+                    ability.TeamTarget, 
+                    ability.CanTargetSelf, 
+                    new List<Effect>(ability.Effects), 
+                    ability.ChainAction, 
+                    ability.UpgradedTo
+                );
             }
             throw new ArgumentException($"Ability '{formattedAbilityName}' not found.");
         }
@@ -87,6 +100,7 @@ namespace RPGCombatProject.Models
         public string TeamTarget { get; set; } = string.Empty;
         public bool CanTargetSelf { get; set; }
         public List<EffectData> Effects { get; set; } = new List<EffectData>();
+        public string? UpgradedTo { get; set; }
     }
 
     public class EffectData

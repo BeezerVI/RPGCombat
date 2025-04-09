@@ -41,11 +41,12 @@ namespace RPGCombatProject.Models
         public TargetTeam TeamTarget { get; set; }
         public bool CanTargetSelf { get; set; }
         public List<Effect> Effects { get; set; }
+        public string? UpgradedTo { get; set; }
 
         // Optional chained action, allowing follow-up logic (for example, prompting a heal after damage)
         public Action<GameState, Creature>? ChainAction { get; set; }
 
-        public Ability(string name, int cost, AbilityType type, TargetingMethod targeting, TargetTeam teamTarget, bool canTargetSelf, List<Effect>? effects = null, Action<GameState, Creature>? chainAction = null)
+        public Ability(string name, int cost, AbilityType type, TargetingMethod targeting, TargetTeam teamTarget, bool canTargetSelf, List<Effect>? effects = null, Action<GameState, Creature>? chainAction = null, string? upgradedTo = null)
         {
             Name = name;
             Cost = cost;
@@ -55,6 +56,7 @@ namespace RPGCombatProject.Models
             CanTargetSelf = canTargetSelf;
             Effects = effects ?? new List<Effect>();
             ChainAction = chainAction;
+            UpgradedTo = upgradedTo;
         }
 
         // Executes the ability: deducts cost, selects targets, applies effects, and runs any chained actions.

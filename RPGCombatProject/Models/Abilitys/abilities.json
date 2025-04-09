@@ -8,7 +8,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 8 }
-        ]
+        ],
+        "UpgradedTo": "Sword Strike II"
     },
     {
         "Name": "Dagger Strike",
@@ -19,7 +20,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 9 }
-        ]
+        ],
+        "UpgradedTo": "Piercing Strike"
     },
     {
         "Name": "Heavy Slash",
@@ -30,7 +32,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "bludgeoning", "Duration": 0, "Strength": 18 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Piercing Strike",
@@ -41,7 +44,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "piercing", "Duration": 0, "Strength": 6 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Fireball",
@@ -53,7 +57,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 3 },
             { "EffectName": "burning", "Duration": 2, "Strength": 2 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Lightning Bolt",
@@ -65,7 +70,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 10 },
             { "EffectName": "stun", "Duration": 1, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Ice Shard",
@@ -77,7 +83,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 5 },
             { "EffectName": "slow", "Duration": 2, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Meteor Strike",
@@ -88,7 +95,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 15 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Heal",
@@ -99,7 +107,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "heal", "Duration": 0, "Strength": 15 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Mass Heal",
@@ -110,7 +119,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "heal", "Duration": 0, "Strength": 12 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Regeneration",
@@ -121,7 +131,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "regeneration", "Duration": 3, "Strength": 5 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Revive",
@@ -132,7 +143,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "revive", "Duration": 0, "Strength": 50 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Fortify",
@@ -143,7 +155,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "shield", "Duration": 0, "Strength": 17 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Magic Barrier",
@@ -154,7 +167,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "shield", "Duration": 0, "Strength": 12 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Speed Boost",
@@ -165,7 +179,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "speed", "Duration": 3, "Strength": 2 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Weaken",
@@ -176,7 +191,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "weaken", "Duration": 3, "Strength": -2 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Poison",
@@ -187,7 +203,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "poison", "Duration": 4, "Strength": 3 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Stun",
@@ -198,7 +215,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "stun", "Duration": 1, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Shield Breaker",
@@ -209,7 +227,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "bludgeoning", "Duration": 0, "Strength": 18 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Hammer Slam",
@@ -220,7 +239,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "bludgeoning", "Duration": 0, "Strength": 10 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Both Test",
@@ -231,7 +251,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 8 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Burning Touch",
@@ -243,7 +264,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 8 },
             { "EffectName": "burning", "Duration": 2, "Strength": 3 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Frozen Touch",
@@ -255,7 +277,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 6 },
             { "EffectName": "frozen", "Duration": 1, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Multi-Strike",
@@ -268,7 +291,8 @@
             { "EffectName": "damage", "Duration": 0, "Strength": 6 },
             { "EffectName": "damage", "Duration": 0, "Strength": 6 },
             { "EffectName": "damage", "Duration": 0, "Strength": 6 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Evasion",
@@ -279,7 +303,8 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "dodge", "Duration": 2, "Strength": 3 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Rock Smash",
@@ -291,7 +316,8 @@
         "Effects": [
             { "EffectName": "bludgeoning", "Duration": 0, "Strength": 15 },
             { "EffectName": "stun", "Duration": 1, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Dark Pulse",
@@ -302,7 +328,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "weaken", "Duration": 3, "Strength": -3 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Roar",
@@ -313,7 +340,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "fear", "Duration": 2, "Strength": 2 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Wing Buffet",
@@ -325,7 +353,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 3 },
             { "EffectName": "stun", "Duration": 1, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Life Drain",
@@ -337,7 +366,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 8 },
             { "EffectName": "heal", "Duration": 0, "Strength": 8 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Hypnotize",
@@ -348,7 +378,8 @@
         "CanTargetSelf": false,
         "Effects": [
             { "EffectName": "stun", "Duration": 3, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Thunder Clap",
@@ -360,7 +391,8 @@
         "Effects": [
             { "EffectName": "damage", "Duration": 0, "Strength": 6 },
             { "EffectName": "stun", "Duration": 1, "Strength": 1 }
-        ]
+        ],
+        "UpgradedTo": null
     },
     {
         "Name": "Storm Shield",
@@ -371,6 +403,19 @@
         "CanTargetSelf": true,
         "Effects": [
             { "EffectName": "shield", "Duration": 0, "Strength": 26 }
-        ]
+        ],
+        "UpgradedTo": null
+    },
+    {
+        "Name": "Sword Strike II",
+        "Cost": 1,
+        "Type": "Attack",
+        "Targeting": "Single",
+        "TeamTarget": "Enemies",
+        "CanTargetSelf": false,
+        "Effects": [
+            { "EffectName": "damage", "Duration": 0, "Strength": 10 }
+        ],
+        "UpgradedTo": null
     }
 ]

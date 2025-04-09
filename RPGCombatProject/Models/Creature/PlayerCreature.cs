@@ -51,16 +51,14 @@ namespace RPGCombatProject.Models
                 Console.WriteLine($"\n--- Upgrade Store (Points: {UpgradePoints}) ---");
                 Console.WriteLine("1. Increase Max HP by 10 (Cost: 1)");
                 Console.WriteLine("2. Increase Stamina by 1 (Cost: 2)");
-                Console.WriteLine("3. Upgrade Abilities (Unlock new Ability / improve existing ones) (Cost: 1)");
+                Console.WriteLine("3. Upgrade an Ability (Cost: 1)");
                 Console.WriteLine("4. Save Upgrade Points for later");
                 Console.Write("Enter your choice (1-4): ");
 
                 string? input = Console.ReadLine();
-                int choice;
-                if (!int.TryParse(input, out choice))
+                if (!int.TryParse(input, out int choice))
                 {
-                    Console.WriteLine("Invalid choice. Try again.");
-                    continue;
+                    Console.WriteLine("Invalid choice. Try again."); continue;
                 }
 
                 switch (choice)
@@ -78,7 +76,6 @@ namespace RPGCombatProject.Models
                             Console.WriteLine("Not enough Upgrade Points!");
                         }
                         break;
-
                     case 2:
                         if (UpgradePoints >= 2)
                         {
@@ -92,26 +89,39 @@ namespace RPGCombatProject.Models
                             Console.WriteLine("Not enough Upgrade Points!");
                         }
                         break;
-
                     case 3:
-                        if (UpgradePoints >= 1)
+                        if (UpgradePoints < 1)
                         {
-                            Console.WriteLine("Ability upgrade is not implemented yet.");
-                            UpgradePoints -= 1;
+                            Console.WriteLine("Not enough points!"); break;
                         }
-                        else
+                        // List upgradable abilities
+                        var upgradable = Hand.Where(a => !string.IsNullOrEmpty(a.UpgradedTo)).ToList();
+                        if (!upgradable.Any())
                         {
-                            Console.WriteLine("Not enough Upgrade Points!");
+                            Console.WriteLine("No abilities available to upgrade."); break;
                         }
+                        Console.WriteLine("Select ability to upgrade:");
+                        for (int i = 0; i < upgradable.Count; i++)
+                            Console.WriteLine($"{i+1}. {upgradable[i].Name} -> {upgradable[i].UpgradedTo}");
+                        Console.Write("Choice: ");
+                        if (int.TryParse(Console.ReadLine(), out int idx)
+                            && idx >= 1 && idx <= upgradable.Count)
+                        {
+                            var oldAbility = upgradable[idx-1];
+                            var newAbility = Abilities.GetAbility(oldAbility.UpgradedTo!);
+                            Hand.Remove(oldAbility);
+                            Hand.Add(newAbility);
+                            UpgradePoints--;
+                            Console.WriteLine($"Upgraded {oldAbility.Name} to {newAbility.Name}!");
+                        }
+                        else Console.WriteLine("Invalid selection.");
                         break;
-
                     case 4:
                         Console.WriteLine($"{Name} saved their Upgrade Points for later.");
                         return;
 
                     default:
-                        Console.WriteLine("Invalid choice. Try again.");
-                        break;
+                        Console.WriteLine("Invalid choice."); break;
                 }
             }
         }
