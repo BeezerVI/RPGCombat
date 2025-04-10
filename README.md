@@ -6,7 +6,7 @@ I started this project out of curiosity to see if it was possible to create a fu
 I haven’t decided on a name for the game yet, so for now, it’s called **RPGCombat**! RPGCombat is a roguelike game where you play cards to defeat enemies, encounter events, and experience much, much more!  
 
 This is a tutorial explaining the new content of the game.  
-[Video Demo NEW 1.05](https://youtu.be/placeholder)  
+[Video Demo NEW 1.05](https://www.youtube.com/watch?v=578_Zwh_nrE)  
 
 ## **Old Videos**  
 - [Video Demo 1.04](https://www.youtube.com/watch?v=TDxLxGdfLmI)  
